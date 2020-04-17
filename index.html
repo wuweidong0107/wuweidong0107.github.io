@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wuweidong0107.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"wuweidong0107.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="keywords" content="Embedded, Linux, OpenWrt, Buildroot, Opensource, Android">
@@ -176,7 +176,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-04-17 08:24:42 / 修改时间：13:03:26" itemprop="dateCreated datePublished" datetime="2020-04-17T08:24:42+08:00">2020-04-17</time>
+              <time title="创建时间：2020-04-17 08:24:42 / 修改时间：13:36:21" itemprop="dateCreated datePublished" datetime="2020-04-17T08:24:42+08:00">2020-04-17</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -200,101 +200,14 @@
 
       
           <h1 id="一、缘起"><a href="#一、缘起" class="headerlink" title="一、缘起"></a>一、缘起</h1><p>前天闲着无聊的时候，逛了一下hackaday，发现一个由2个国内的小伙伴发起的 PiSugar 项目很受欢迎，于是我就跟进了解了一下。</p>
-<h2 id="PiSugar是什么？"><a href="#PiSugar是什么？" class="headerlink" title="PiSugar是什么？"></a>PiSugar是什么？</h2><p>参考链接：  </p>
-<ul>
-<li>官网： <a href="https://www.pisugar.com/" target="_blank" rel="noopener">https://www.pisugar.com/</a></li>
-<li>github： <a href="https://github.com/PiSugar" target="_blank" rel="noopener">https://github.com/PiSugar</a></li>
-</ul>
-<p><img src="/images/pisugar2.jpg" alt=""></p>
-<p>个人看法：  </p>
-<ul>
-<li>精美的 Raspberry Pi zero 电源模块 +  开源的电源管理程序</li>
-<li>优秀的产品</li>
-</ul>
-<h2 id="对我造成了什么影响？"><a href="#对我造成了什么影响？" class="headerlink" title="对我造成了什么影响？"></a>对我造成了什么影响？</h2><p>头脑里冒出几个想法：</p>
-<ul>
-<li>我能不能用 Pi 折腾点东西？</li>
-<li>我能不能给 Pi 折腾点东西？</li>
-<li>为什么不现在就开始折腾？</li>
-<li>我应该需要一个网站来记录和分享我的进步吧？</li>
-</ul>
-<p>定下这么大的目标我能实现吗？不用担心太多，先走最最最简单的那一步：</p>
-<ul>
-<li>搭建一个相关的网站<br>如果最最最简单的那一步都比较困难，那就再继续分解这个步骤。</li>
-</ul>
-<h1 id="二、小站的诞生"><a href="#二、小站的诞生" class="headerlink" title="二、小站的诞生"></a>二、小站的诞生</h1><h2 id="我需要一个域名"><a href="#我需要一个域名" class="headerlink" title="我需要一个域名"></a>我需要一个域名</h2><p>早上跑步的时候想到了几个域名：</p>
-<ul>
-<li>pimate ?</li>
-<li>pibuddy ?</li>
-</ul>
-<p>都被人注册了，下午跟同事聊天的时候提了这个事，发现 pihacker 也不错，花了5分钟注册下来了。</p>
-<p><strong>购买域名</strong></p>
-<ul>
-<li>访问namesilo： <a href="https://www.namesilo.com" target="_blank" rel="noopener">https://www.namesilo.com</a></li>
-<li>填写个人信息，非常宽松，跟 godaddy 相比好太多;</li>
-<li>下单，支付宝支付。  </li>
-</ul>
-<p>人生中的第一个域名就到手了<del>~</del></p>
-<h2 id="如何生成网站的内容？"><a href="#如何生成网站的内容？" class="headerlink" title="如何生成网站的内容？"></a>如何生成网站的内容？</h2><p>我的需求：</p>
-<ul>
-<li>静态页面: 能有文字 + 图片即可;</li>
-<li>markdown 编写</li>
-<li>文章可分类</li>
-<li>简洁美观</li>
-</ul>
-<p>同事推荐我用 hexo， 那就先用着咯，我这个人就是有啥用啥…不讲究！</p>
-<h3 id="如何安装hexo？"><a href="#如何安装hexo？" class="headerlink" title="如何安装hexo？"></a>如何安装hexo？</h3><p>参考链接：  </p>
-<ul>
-<li><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/</a></li>
-</ul>
-<p>什么是hexo ?</p>
-<ul>
-<li><p>Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。</p>
-</li>
-<li><p>安装命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> 自行 install Node.js / Git</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> npm install hexo-cli -g</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> hexo init </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">...</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">INFO  Start blogging with Hexo!</span></pre></td></tr></table></figure>
-<p>到这里，hexo就算安装完毕了，已经具备用 hexo 来写文章的环境了！  </p>
-</li>
-</ul>
-<p>这时，我可以夸张地对别人说：我的网站即将准备好啦！由于没有文章，目前里面一个页面都没有….</p>
-<h3 id="配置hexo"><a href="#配置hexo" class="headerlink" title="配置hexo"></a>配置hexo</h3><p><strong>如何配置服务器 ?</strong></p>
-<ul>
-<li><p>在 github 上新建一个名为你的用户名.github.io 的仓库，假设你的github用户名是 yourname，那么你就新建 yourname.github.io 的仓库。</p>
-</li>
-<li><p>后面就可以通过：</p>
-<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span><span class="comment">//yourname.github.io</span></span></pre></td></tr></table></figure>
-<p>就可以访问到自己的hexo 博客了。</p>
-</li>
-<li><p>配置hexo部署目的地：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> vi hexo/_config.yml</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Deployment</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># Docs: https://hexo.io/docs/deployment.html</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">deploy:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">  type: git</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">  repo: https://github.com/yourname/yourname.github.io</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">  branch: master</span></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p><strong>如何换主题 ?</strong></p>
-<ul>
-<li>选用：<a href="https://muse.theme-next.org" target="_blank" rel="noopener">https://muse.theme-next.org</a><br>设置部署目的地：<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cd hexo</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>git clone <span class="symbol">https:</span>/<span class="regexp">/github.com/theme</span>-<span class="keyword">next</span>/hexo-theme-<span class="keyword">next</span> themes/<span class="keyword">next</span></span></pre></td></tr></table></figure></li>
-<li>设置主题:<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">vi</span> hexo/_config.yml</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">## Theme<span class="variable">s:</span> http<span class="variable">s:</span>//hexo.io/themes/</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">theme: <span class="keyword">next</span></span></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h3 id="如何使用hexo写文章？"><a href="#如何使用hexo写文章？" class="headerlink" title="如何使用hexo写文章？"></a>如何使用hexo写文章？</h3><ul>
-<li>最基本的操作：<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> hexo new <span class="string">"文章标题"</span>   <span class="comment"># 创建markdown文件</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> hexo clean</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> hexo generate     <span class="comment"># 将markdowan转换为html</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> hexo deploy       <span class="comment"># 将html等网站文件部署到github服务器(http://yourname.github.io)</span></span></span></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h2 id="为我的网站绑定域名"><a href="#为我的网站绑定域名" class="headerlink" title="为我的网站绑定域名"></a>为我的网站绑定域名</h2><ul>
-<li>访问<a href="https://www.namesilo.com" target="_blank" rel="noopener">https://www.namesilo.com</a></li>
-<li>domain manager -&gt; Manage DNS for this domain</li>
-<li>Apply github Template</li>
-<li>些许修改，最终如下：<br><img src="/images/pihacker-dns.png" alt=""></li>
-</ul>
-<h1 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h1><ul>
-<li>原来现在搭一个网站那么容易;</li>
-<li>感谢Hexo;</li>
-<li>感谢GitHub;</li>
-<li>一个想法的诞生几乎不消耗任何精力和成本，所以再好的想法都是廉价的，只有持续付出努力才能让想法变得有价值，我能坚持下去吗？我也不知道<del>~</del></li>
-</ul>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/17/%E5%B0%8F%E7%AB%99%E7%9A%84%E8%AF%9E%E7%94%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -344,7 +257,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-16 13:07:39" itemprop="dateModified" datetime="2020-04-16T13:07:39+08:00">2020-04-16</time>
+                <time title="修改时间：2020-04-17 13:36:42" itemprop="dateModified" datetime="2020-04-17T13:36:42+08:00">2020-04-17</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -368,50 +281,14 @@
 
       
           <p>​很多时候，因为天赋和家庭背景的问题，我们无法成为最优秀的那个人，甚至达不到优秀。就好像我们读书的时候考第一名的永远只有一个，但是只要你足够勤奋和律己，那么至少可以争取到前50%的排名。投射到工作上，工作后，需要学习的知识都是自由选择的，涉猎的知识范围只会越来越广，如果你还想着要做最优秀的工程师，那你肯定会被现实重挫的。所以不要想着去做一个优秀的工程师，要想着如何去做一个合格的工程师，对我自己而言，则进一步缩小要求：如何做一个合格的嵌入式软件工程师。</p>
-<p>为了鞭笞自己多读书，增加成就感，远离浮躁，给自己整理个学习清单吧。<br>下列书籍或者视频都是我自己亲自接触过，并且认为值得嵌入式软件工程师学习的资料，排名不分优先级。</p>
-<p>备注:</p>
-<ul>
-<li>finish 表示至少完整阅读过一次，不代表完全吸收，一本书看一遍跟看三遍的效果是完全不一样的；</li>
-<li>reading 表示阅读过，未完成，括号内表示大概的进度；</li>
-<li>not start 表示还没开始阅读，嘿嘿，没学过就没学过，敢于面对自己的不足，不丢人；</li>
-<li>trying，尝试阅读中；</li>
-</ul>
-<h1 id="一、书籍"><a href="#一、书籍" class="headerlink" title="一、书籍"></a>一、书籍</h1><ul>
-<li>《嵌入式Linux 应用开发完全手册》，finish</li>
-<li>《Linux 设备驱动开发详解》，finish</li>
-<li>《Linux 设备驱动程序》，not start</li>
-<li>《一步步写嵌入式操作系统》，finish</li>
-<li>《Linux Shell 脚步攻略》，finish</li>
-<li>《pro git》，finish</li>
-<li>《深入理解 Linux内核》，reading (1/10)</li>
-<li>《Linux 内核设计与实现》，reading (4/5)</li>
-<li>《C++ GUI Qt4 编程》，reading (9/20)</li>
-<li>《Qt Creator 快速入门》，trying</li>
-<li>《Qt 5.9 C++开发指南》，trying</li>
-<li>《C++ 语言程序设计》，郑莉/董渊，reading (9/10)</li>
-<li>《Unix 环境高级编程》，reading (1/2)</li>
-<li>《Python 编程快速上手》，finish</li>
-<li>《python编程:从入门到实践》，reading (1/2)</li>
-<li>《Android 系统源代码情景分析》，reading (1/3)</li>
-<li>《Linux 程序设计》，not start</li>
-<li>《Unix 环境高级编程》，reading (1/3)<br>待续…</li>
-</ul>
-<h1 id="二、视频"><a href="#二、视频" class="headerlink" title="二、视频"></a>二、视频</h1><ul>
-<li>《韦东山第一期》，finish</li>
-<li>《韦东山第二期》，finish</li>
-<li>《韦东山第三期》，finish</li>
-<li>《韦东山第四期》，reading (1/5)<br>待续…</li>
-</ul>
-<h1 id="三、值得阅读的源码"><a href="#三、值得阅读的源码" class="headerlink" title="三、值得阅读的源码"></a>三、值得阅读的源码</h1><ul>
-<li>mjpg-streamer</li>
-<li>libevent</li>
-<li>uhttpd</li>
-<li>gstreamer</li>
-<li>qtcore</li>
-</ul>
-<p>待续…</p>
-<p>本文会不定期更新，请在公众号[嵌入式系统砖家]主菜单查看.</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/12/08/%E4%B8%80%E4%B8%AA%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%9A%84%E8%87%AA%E6%88%91%E4%BF%AE%E5%85%BB/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -551,7 +428,7 @@
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script>
-<script src="/js/schemes/pisces.js"></script>
+<script src="/js/schemes/muse.js"></script>
 <script src="/js/next-boot.js"></script>
 
 
