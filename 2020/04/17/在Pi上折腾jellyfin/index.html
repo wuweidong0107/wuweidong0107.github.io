@@ -20,17 +20,18 @@
     var CONFIG = {"hostname":"wuweidong0107.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="计划折腾一下 Jellyfin, 目的：  改善家里观片体验 (首要目的); 掌握如何使用 JellyFin; 了解 .net core 在嵌入式设备上的运行效果; 了解 JellyFin 的实现;  目前选用的 Pi：   NanoPi-NEO2">
+  <meta name="description" content="计划折腾一下 Jellyfin, 目的：  改善家里观片体验 (首要目的); 掌握如何使用 JellyFin; 了解 .net core 在嵌入式设备上的运行效果; 了解 JellyFin 的实现;  目前选用的 Pi：   NanoPi-NEO2&#x2F;K1-Plus">
 <meta name="keywords" content="nanopi, jellyfin">
 <meta property="og:type" content="article">
 <meta property="og:title" content="在Pi上折腾Jellyfin">
 <meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;04&#x2F;17&#x2F;%E5%9C%A8Pi%E4%B8%8A%E6%8A%98%E8%85%BEjellyfin&#x2F;index.html">
 <meta property="og:site_name" content="piHacker(老男孩折腾开发板)">
-<meta property="og:description" content="计划折腾一下 Jellyfin, 目的：  改善家里观片体验 (首要目的); 掌握如何使用 JellyFin; 了解 .net core 在嵌入式设备上的运行效果; 了解 JellyFin 的实现;  目前选用的 Pi：   NanoPi-NEO2">
+<meta property="og:description" content="计划折腾一下 Jellyfin, 目的：  改善家里观片体验 (首要目的); 掌握如何使用 JellyFin; 了解 .net core 在嵌入式设备上的运行效果; 了解 JellyFin 的实现;  目前选用的 Pi：   NanoPi-NEO2&#x2F;K1-Plus">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;neo2.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;jellyfin.png">
-<meta property="og:updated_time" content="2020-04-20T00:42:58.792Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;pi_jellyfin&#x2F;xmind-20200419.png">
+<meta property="og:updated_time" content="2020-04-20T01:39:22.423Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;neo2.png">
 
@@ -188,7 +189,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-20 08:42:58" itemprop="dateModified" datetime="2020-04-20T08:42:58+08:00">2020-04-20</time>
+                <time title="修改时间：2020-04-20 09:39:22" itemprop="dateModified" datetime="2020-04-20T09:39:22+08:00">2020-04-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -221,11 +222,37 @@
 </ul>
 <p>目前选用的 Pi： </p>
 <ul>
-<li>NanoPi-NEO2</li>
+<li>NanoPi-NEO2/K1-Plus</li>
 </ul>
 <a id="more"></a>
 
 <p>预期效果, 敬请期待：<br><img src="/images/jellyfin.png" alt=""></p>
+<h1 id="2020-04-19-开始折腾"><a href="#2020-04-19-开始折腾" class="headerlink" title="2020-04-19 开始折腾"></a>2020-04-19 开始折腾</h1><p>周末回了趟老家，只推进了一点点。</p>
+<p><strong>目前做了什么？</strong><br><img src="/images/pi_jellyfin/xmind-20200419.png" alt=""></p>
+<ul>
+<li>开始阅读官方文档，初步了解Jellyfin</li>
+<li>在PC Ubuntu-16.04 通过apt-get install 的方式安装Jellyfin：<ul>
+<li>结果：失败; </li>
+<li>原因：Jellyfin已经不再对Ubuntu-16.04进行支持;</li>
+<li>解决方法：官方推荐使用docker;</li>
+</ul>
+</li>
+<li>在K1-Plus + OpenWrt 上 使用docker 运行Jellyfin：<ul>
+<li>结果：成功，可通过 IP 访问到Jellyfin server;</li>
+</ul>
+</li>
+<li>在K1-Plus + OpenWrt 上通过samba 挂载华硕路由器上的硬盘(我个人的简易NAS，上面存在我的各种视频文件，包括电影、美剧、家庭影片)<ul>
+<li>结果：失败</li>
+<li>原因：定位中;</li>
+</ul>
+</li>
+</ul>
+<p><strong>接下来要做什么？</strong></p>
+<ul>
+<li>了解如何使用Docker Docker;</li>
+<li>解决无法通过samba挂载NAS硬盘的问题;</li>
+<li>阅读更多官方文档;</li>
+</ul>
 
     </div>
 
@@ -322,6 +349,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#2020-04-19-开始折腾"><span class="nav-number">1.</span> <span class="nav-text">2020-04-19 开始折腾</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
