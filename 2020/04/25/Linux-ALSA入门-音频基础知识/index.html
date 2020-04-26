@@ -20,20 +20,20 @@
     var CONFIG = {"hostname":"wuweidong0107.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="​很多时候，因为天赋和家庭背景的问题，我们无法成为最优秀的那个人，甚至达不到优秀。就好像我们读书的时候考第一名的永远只有一个，但是只要你足够勤奋和律己，那么至少可以争取到前50%的排名。投射到工作上，工作后，需要学习的知识都是自由选择的，涉猎的知识范围只会越来越广，如果你还想着要做最优秀的工程师，那你肯定会被现实重挫的。所以不要想着去做一个优秀的工程师，要想着如何去做一个合格的工程师，对我自己而">
-<meta name="keywords" content="thinking,program， life">
+  <meta name="description" content="这部分知识很重要，因为这里面的很多概念会出现在CPU手册和Codec手册里，所以了解这些基础知识是我们看懂手册的基本前提。我希望自己能不断地更新和完善这一块知识点，这篇文章会不定期更新。 相关参考：    &amp;lt;韦东山Android 视频教程&amp;gt; 第001节_声音的采集与存储 &amp;lt;深入理解Android内核设计思想&amp;gt; 第 13.1 章节  早期的留声机是如何工作的？参考：https">
+<meta name="keywords" content="driver,alsa">
 <meta property="og:type" content="article">
-<meta property="og:title" content="嵌入式软件工程师的自我修养">
-<meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2019&#x2F;12&#x2F;08&#x2F;%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%9A%84%E8%87%AA%E6%88%91%E4%BF%AE%E5%85%BB&#x2F;index.html">
+<meta property="og:title" content="Linux-ALSA入门-音频基础知识">
+<meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;04&#x2F;25&#x2F;Linux-ALSA%E5%85%A5%E9%97%A8-%E9%9F%B3%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86&#x2F;index.html">
 <meta property="og:site_name" content="piHacker(老男孩折腾开发板)">
-<meta property="og:description" content="​很多时候，因为天赋和家庭背景的问题，我们无法成为最优秀的那个人，甚至达不到优秀。就好像我们读书的时候考第一名的永远只有一个，但是只要你足够勤奋和律己，那么至少可以争取到前50%的排名。投射到工作上，工作后，需要学习的知识都是自由选择的，涉猎的知识范围只会越来越广，如果你还想着要做最优秀的工程师，那你肯定会被现实重挫的。所以不要想着去做一个优秀的工程师，要想着如何去做一个合格的工程师，对我自己而">
+<meta property="og:description" content="这部分知识很重要，因为这里面的很多概念会出现在CPU手册和Codec手册里，所以了解这些基础知识是我们看懂手册的基本前提。我希望自己能不断地更新和完善这一块知识点，这篇文章会不定期更新。 相关参考：    &amp;lt;韦东山Android 视频教程&amp;gt; 第001节_声音的采集与存储 &amp;lt;深入理解Android内核设计思想&amp;gt; 第 13.1 章节  早期的留声机是如何工作的？参考：https">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;embedded-study.jpg">
-<meta property="og:updated_time" content="2020-04-22T00:37:12.690Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;linux_alsa&#x2F;analog_record.jpg">
+<meta property="og:updated_time" content="2020-04-25T23:39:15.557Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;embedded-study.jpg">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;linux_alsa&#x2F;analog_record.jpg">
 
-<link rel="canonical" href="https://wuweidong0107.github.io/2019/12/08/%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%9A%84%E8%87%AA%E6%88%91%E4%BF%AE%E5%85%BB/">
+<link rel="canonical" href="https://wuweidong0107.github.io/2020/04/25/Linux-ALSA%E5%85%A5%E9%97%A8-%E9%9F%B3%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
 
 
 <script id="page-configurations">
@@ -46,7 +46,7 @@
   };
 </script>
 
-  <title>嵌入式软件工程师的自我修养 | piHacker(老男孩折腾开发板)</title>
+  <title>Linux-ALSA入门-音频基础知识 | piHacker(老男孩折腾开发板)</title>
   
 
 
@@ -187,7 +187,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2019/12/08/%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%9A%84%E8%87%AA%E6%88%91%E4%BF%AE%E5%85%BB/">
+    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/04/25/Linux-ALSA%E5%85%A5%E9%97%A8-%E9%9F%B3%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -200,7 +200,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          嵌入式软件工程师的自我修养
+          Linux-ALSA入门-音频基础知识
         </h1>
 
         <div class="post-meta">
@@ -210,14 +210,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2019-12-08 12:46:18" itemprop="dateCreated datePublished" datetime="2019-12-08T12:46:18+08:00">2019-12-08</time>
+              <time title="创建时间：2020-04-25 20:20:30" itemprop="dateCreated datePublished" datetime="2020-04-25T20:20:30+08:00">2020-04-25</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-22 08:37:12" itemprop="dateModified" datetime="2020-04-22T08:37:12+08:00">2020-04-22</time>
+                <time title="修改时间：2020-04-26 07:39:15" itemprop="dateModified" datetime="2020-04-26T07:39:15+08:00">2020-04-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -225,12 +225,12 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%BC%96%E7%A8%8B%E9%9A%8F%E6%83%B3/" itemprop="url" rel="index"><span itemprop="name">编程随想</span></a>
+                  <a href="/categories/Linux%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8/" itemprop="url" rel="index"><span itemprop="name">Linux设备驱动</span></a>
                 </span>
             </span>
 
           
-            <span id="/2019/12/08/%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%9A%84%E8%87%AA%E6%88%91%E4%BF%AE%E5%85%BB/" class="post-meta-item leancloud_visitors" data-flag-title="嵌入式软件工程师的自我修养" title="阅读次数">
+            <span id="/2020/04/25/Linux-ALSA%E5%85%A5%E9%97%A8-%E9%9F%B3%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="post-meta-item leancloud_visitors" data-flag-title="Linux-ALSA入门-音频基础知识" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -254,54 +254,29 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><img src="/images/embedded-study.jpg" alt=""></p>
-<p>​很多时候，因为天赋和家庭背景的问题，我们无法成为最优秀的那个人，甚至达不到优秀。就好像我们读书的时候考第一名的永远只有一个，但是只要你足够勤奋和律己，那么至少可以争取到前50%的排名。投射到工作上，工作后，需要学习的知识都是自由选择的，涉猎的知识范围只会越来越广，如果你还想着要做最优秀的工程师，那你肯定会被现实重挫的。所以不要想着去做一个优秀的工程师，要想着如何去做一个合格的工程师，对我自己而言，则进一步缩小要求：如何做一个合格的嵌入式软件工程师。</p>
+        <p>这部分知识很重要，因为这里面的很多概念会出现在CPU手册和Codec手册里，所以了解这些基础知识是我们看懂手册的基本前提。我希望自己能不断地更新和完善这一块知识点，这篇文章会不定期更新。</p>
+<p><strong>相关参考：</strong>  </p>
+<ul>
+<li>&lt;韦东山Android 视频教程&gt; 第001节_声音的采集与存储</li>
+<li>&lt;深入理解Android内核设计思想&gt; 第 13.1 章节</li>
+</ul>
+<h1 id="早期的留声机是如何工作的？"><a href="#早期的留声机是如何工作的？" class="headerlink" title="早期的留声机是如何工作的？"></a>早期的留声机是如何工作的？</h1><p>参考：<br><a href="https://www.altpress.com/news/entry/see_a_vinyl_record_at_1000x_magnification" target="_blank" rel="noopener">https://www.altpress.com/news/entry/see_a_vinyl_record_at_1000x_magnification</a></p>
+<p><a href="http://www.programmersought.com/article/893420233/;jsessionid=789D1E9A94F935DE8460495507ABADFF" target="_blank" rel="noopener">http://www.programmersought.com/article/893420233/;jsessionid=789D1E9A94F935DE8460495507ABADFF</a></p>
+<p><img src="/images/linux_alsa/analog_record.jpg" alt=""></p>
+<p>留声机是一款通过模拟信号记录、重现声音的机器，简单来说就是一种用来放送唱片录音的电动设备。</p>
+<p><strong>如何记录声音?</strong><br>人发出声音—&gt;振动膜振动—&gt;探针振动，且在旋转的盘面刻下条纹</p>
+<p><strong>如何播放声音?</strong><br>旋转唱片—&gt;条纹带动探针振动—&gt;带动振动膜振动—&gt;发声</p>
+<p><strong>模拟信号记录音频的缺点</strong> </p>
+<ul>
+<li>原始的唱片成为母盘，很珍贵，复制的唱片无法得到一模一样的条纹; </li>
+<li>不便于存储和传播;  </li>
+</ul>
+<p>解决办法：改用数字化的方式记录声音;</p>
 <a id="more"></a>
 
-<p>为了鞭笞自己多读书，增加成就感，远离浮躁，给自己整理个学习清单吧。<br>下列书籍或者视频都是我自己亲自接触过，并且认为值得嵌入式软件工程师学习的资料，排名不分优先级。</p>
-<p>备注:</p>
-<ul>
-<li>finish 表示至少完整阅读过一次，不代表完全吸收，一本书看一遍跟看三遍的效果是完全不一样的；</li>
-<li>reading 表示阅读过，未完成，括号内表示大概的进度；</li>
-<li>not start 表示还没开始阅读，嘿嘿，没学过就没学过，敢于面对自己的不足，不丢人；</li>
-<li>trying，尝试阅读中；</li>
-</ul>
-<h1 id="一、书籍"><a href="#一、书籍" class="headerlink" title="一、书籍"></a>一、书籍</h1><ul>
-<li>《嵌入式Linux 应用开发完全手册》，finish</li>
-<li>《Linux 设备驱动开发详解》，finish</li>
-<li>《Linux 设备驱动程序》，not start</li>
-<li>《一步步写嵌入式操作系统》，finish</li>
-<li>《Linux Shell 脚步攻略》，finish</li>
-<li>《pro git》，finish</li>
-<li>《深入理解 Linux内核》，reading (1/10)</li>
-<li>《Linux 内核设计与实现》，reading (4/5)</li>
-<li>《C++ GUI Qt4 编程》，reading (9/20)</li>
-<li>《Qt Creator 快速入门》，trying</li>
-<li>《Qt 5.9 C++开发指南》，trying</li>
-<li>《C++ 语言程序设计》，郑莉/董渊，reading (9/10)</li>
-<li>《Unix 环境高级编程》，reading (1/2)</li>
-<li>《Python 编程快速上手》，finish</li>
-<li>《python编程:从入门到实践》，reading (1/2)</li>
-<li>《Android 系统源代码情景分析》，reading (1/3)</li>
-<li>《Linux 程序设计》，not start</li>
-<li>《Unix 环境高级编程》，reading (1/3)<br>待续…</li>
-</ul>
-<h1 id="二、视频"><a href="#二、视频" class="headerlink" title="二、视频"></a>二、视频</h1><ul>
-<li>《韦东山第一期》，finish</li>
-<li>《韦东山第二期》，finish</li>
-<li>《韦东山第三期》，finish</li>
-<li>《韦东山第四期》，reading (1/5)<br>待续…</li>
-</ul>
-<h1 id="三、值得阅读的源码"><a href="#三、值得阅读的源码" class="headerlink" title="三、值得阅读的源码"></a>三、值得阅读的源码</h1><ul>
-<li>mjpg-streamer</li>
-<li>libevent</li>
-<li>uhttpd</li>
-<li>gstreamer</li>
-<li>qtcore</li>
-</ul>
-<p>待续…</p>
-<p>本文会不定期更新，请在公众号[嵌入式系统砖家]主菜单查看.</p>
-
+<h1 id="数字化的音频录制和播放"><a href="#数字化的音频录制和播放" class="headerlink" title="数字化的音频录制和播放"></a>数字化的音频录制和播放</h1><p><strong>如何记录声音?</strong><br>人发出声音—&gt;受声音影响的电阻—&gt;测量电阻的电压—&gt;记录电压值</p>
+<p><strong>如何播放声音?</strong>   </p>
+<h1 id="音频采样"><a href="#音频采样" class="headerlink" title="音频采样"></a>音频采样</h1><h1 id="音频存储"><a href="#音频存储" class="headerlink" title="音频存储"></a>音频存储</h1><h1 id="其他音频知识"><a href="#其他音频知识" class="headerlink" title="其他音频知识"></a>其他音频知识</h1><h2 id="一些术语"><a href="#一些术语" class="headerlink" title="一些术语"></a>一些术语</h2>
     </div>
 
     
@@ -345,8 +320,8 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/thinking/" rel="tag"><i class="fa fa-tag"></i> thinking</a>
-              <a href="/tags/program%EF%BC%8C-life/" rel="tag"><i class="fa fa-tag"></i> program， life</a>
+              <a href="/tags/driver/" rel="tag"><i class="fa fa-tag"></i> driver</a>
+              <a href="/tags/alsa/" rel="tag"><i class="fa fa-tag"></i> alsa</a>
           </div>
 
         
@@ -359,11 +334,11 @@
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2020/04/17/%E5%B0%8F%E7%AB%99%E7%9A%84%E8%AF%9E%E7%94%9F/" rel="next" title="小站的诞生">
-      小站的诞生 <i class="fa fa-chevron-right"></i>
+    <a href="/2020/04/23/SHELL%E5%85%A5%E9%97%A8-%E6%8C%96%E6%8E%98RetroPie/" rel="prev" title="SHELL入门_挖掘RetroPie">
+      <i class="fa fa-chevron-left"></i> SHELL入门_挖掘RetroPie
     </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -422,7 +397,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、书籍"><span class="nav-number">1.</span> <span class="nav-text">一、书籍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、视频"><span class="nav-number">2.</span> <span class="nav-text">二、视频</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、值得阅读的源码"><span class="nav-number">3.</span> <span class="nav-text">三、值得阅读的源码</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#早期的留声机是如何工作的？"><span class="nav-number">1.</span> <span class="nav-text">早期的留声机是如何工作的？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数字化的音频录制和播放"><span class="nav-number">2.</span> <span class="nav-text">数字化的音频录制和播放</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#音频采样"><span class="nav-number">3.</span> <span class="nav-text">音频采样</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#音频存储"><span class="nav-number">4.</span> <span class="nav-text">音频存储</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他音频知识"><span class="nav-number">5.</span> <span class="nav-text">其他音频知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一些术语"><span class="nav-number">5.1.</span> <span class="nav-text">一些术语</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
