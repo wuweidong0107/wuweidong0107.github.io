@@ -181,6 +181,91 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/04/27/DesignPattern%E5%85%A5%E9%97%A8-%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="piHacker">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="piHacker(老男孩折腾开发板)">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/04/27/DesignPattern%E5%85%A5%E9%97%A8-%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">DesignPattern入门_策略模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-04-27 09:26:53 / 修改时间：09:38:28" itemprop="dateCreated datePublished" datetime="2020-04-27T09:26:53+08:00">2020-04-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/" itemprop="url" rel="index"><span itemprop="name">软件设计</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="生活实例"><a href="#生活实例" class="headerlink" title="生活实例"></a>生活实例</h1><p><strong>需求</strong><br>模拟现实生活中的鸭子，鸭子会游泳，鸣叫，飞。</p>
+<h2 id="设计思路"><a href="#设计思路" class="headerlink" title="设计思路"></a>设计思路</h2><h3 id="思路1"><a href="#思路1" class="headerlink" title="思路1"></a>思路1</h3><p><img src="/images/designpattern/strategy/duck-1.png" alt=""></p>
+<p>一个父类 Duck 定义 鸭子 的一些特性，子类继承它的特性，并覆盖(override) 父类的部分特性。至此没什么问题，子类共同拥有父类的特性，消除了代码的重复性。</p>
+<p><strong>新的需求:</strong><br>一些鸭子(例如野鸭)是会飞的，我们要让 Duck 具有 fly() 的特性</p>
+<h3 id="思路2"><a href="#思路2" class="headerlink" title="思路2"></a>思路2</h3><p>在 Duck 类中加上 fly() 方法:<br><img src="/images/designpattern/strategy/duck-2.png" alt=""></p>
+<p><strong>引入新的问题:</strong><br>在父类 Duck 类中增加 fly() 后，导致所有的子类鸭子都会fly 了，而真实的情况是：橡皮鸭子 RubberDuck 不应该会 fly。<br><img src="/images/designpattern/strategy/duck-3.png" alt=""></p>
+<p><strong>反思</strong></p>
+<ul>
+<li>对代码的局部修改，影响层面不只是局部;</li>
+<li>继承虽然能复用代码，但是它并不完美;</li>
+</ul>
+<h3 id="思路3"><a href="#思路3" class="headerlink" title="思路3"></a>思路3</h3><p>在RubberDuck 中override fly() 方法，方法内什么都不做:<br><img src="/images/designpattern/strategy/duck-4.png" alt=""></p>
+<p><strong>反思:</strong><br>利用继承来提供Duck的行为的做法，存在什么缺点？</p>
+<ol>
+<li>大量的代码在多个Duck子类中冗余，例如RubberDuck的fly()</li>
+<li>父类Duck的改动会牵连所有子类Duck也要跟着改动</li>
+</ol>
+<p>[未完，待续…]</p>
+<h1 id="抽象总结"><a href="#抽象总结" class="headerlink" title="抽象总结"></a>抽象总结</h1><h2 id="抽象说明"><a href="#抽象说明" class="headerlink" title="抽象说明"></a>抽象说明</h2><h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/04/25/Linux-ALSA%E5%85%A5%E9%97%A8-%E9%9F%B3%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -212,7 +297,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-26 07:39:15" itemprop="dateModified" datetime="2020-04-26T07:39:15+08:00">2020-04-26</time>
+                <time title="修改时间：2020-04-26 12:44:36" itemprop="dateModified" datetime="2020-04-26T12:44:36+08:00">2020-04-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -302,9 +387,24 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-04-23 09:03:55 / 修改时间：10:12:51" itemprop="dateCreated datePublished" datetime="2020-04-23T09:03:55+08:00">2020-04-23</time>
+              <time title="创建时间：2020-04-23 09:03:55" itemprop="dateCreated datePublished" datetime="2020-04-23T09:03:55+08:00">2020-04-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-27 09:28:02" itemprop="dateModified" datetime="2020-04-27T09:28:02+08:00">2020-04-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%84%9A%E6%9C%AC%E8%AF%AD%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">脚本语言</span></a>
+                </span>
             </span>
 
           
@@ -843,18 +943,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>

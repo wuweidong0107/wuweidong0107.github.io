@@ -29,7 +29,7 @@
 <meta property="og:description" content="这部分知识很重要，因为这里面的很多概念会出现在CPU手册和Codec手册里，所以了解这些基础知识是我们看懂手册的基本前提。我希望自己能不断地更新和完善这一块知识点，这篇文章会不定期更新。 相关参考：    &amp;lt;韦东山Android 视频教程&amp;gt; 第001节_声音的采集与存储 &amp;lt;深入理解Android内核设计思想&amp;gt; 第 13.1 章节  早期的留声机是如何工作的？参考：https">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;linux_alsa&#x2F;analog_record.jpg">
-<meta property="og:updated_time" content="2020-04-25T23:39:15.557Z">
+<meta property="og:updated_time" content="2020-04-26T04:44:36.052Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;linux_alsa&#x2F;analog_record.jpg">
 
@@ -217,7 +217,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-26 07:39:15" itemprop="dateModified" datetime="2020-04-26T07:39:15+08:00">2020-04-26</time>
+                <time title="修改时间：2020-04-26 12:44:36" itemprop="dateModified" datetime="2020-04-26T12:44:36+08:00">2020-04-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -269,7 +269,9 @@
 
 <h1 id="数字化的音频录制和播放"><a href="#数字化的音频录制和播放" class="headerlink" title="数字化的音频录制和播放"></a>数字化的音频录制和播放</h1><p><strong>如何记录声音?</strong><br>人发出声音—&gt;受声音影响的电阻—&gt;测量电阻的电压—&gt;记录电压值</p>
 <p><strong>如何播放声音?</strong>   </p>
-<h1 id="音频采样"><a href="#音频采样" class="headerlink" title="音频采样"></a>音频采样</h1><h1 id="音频存储"><a href="#音频存储" class="headerlink" title="音频存储"></a>音频存储</h1><h1 id="其他音频知识"><a href="#其他音频知识" class="headerlink" title="其他音频知识"></a>其他音频知识</h1><h2 id="一些术语"><a href="#一些术语" class="headerlink" title="一些术语"></a>一些术语</h2>
+<h1 id="音频采样"><a href="#音频采样" class="headerlink" title="音频采样"></a>音频采样</h1><h1 id="音频存储"><a href="#音频存储" class="headerlink" title="音频存储"></a>音频存储</h1><h2 id="WAV"><a href="#WAV" class="headerlink" title="WAV"></a>WAV</h2><p>参考：<br><a href="https://en.wikipedia.org/wiki/WAV" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/WAV</a><br><a href="http://soundfile.sapp.org/doc/WaveFormat/" target="_blank" rel="noopener">http://soundfile.sapp.org/doc/WaveFormat/</a></p>
+<h2 id="MP3"><a href="#MP3" class="headerlink" title="MP3"></a>MP3</h2><p>参考：<br><a href="https://www.engineersgarage.com/article_page/，" target="_blank" rel="noopener">https://www.engineersgarage.com/article_page/，</a><br><a href="https://en.wikipedia.org/wiki/MP3" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/MP3</a></p>
+<h3 id="MP3干了什么？"><a href="#MP3干了什么？" class="headerlink" title="MP3干了什么？"></a>MP3干了什么？</h3><h3 id="为什么需要MP3？"><a href="#为什么需要MP3？" class="headerlink" title="为什么需要MP3？"></a>为什么需要MP3？</h3><h3 id="MP3如何做到压缩文件的同时尽量不损失音质呢？"><a href="#MP3如何做到压缩文件的同时尽量不损失音质呢？" class="headerlink" title="MP3如何做到压缩文件的同时尽量不损失音质呢？"></a>MP3如何做到压缩文件的同时尽量不损失音质呢？</h3><h1 id="其他音频知识"><a href="#其他音频知识" class="headerlink" title="其他音频知识"></a>其他音频知识</h1><h2 id="一些术语"><a href="#一些术语" class="headerlink" title="一些术语"></a>一些术语</h2>
     </div>
 
     
@@ -331,7 +333,10 @@
     <a href="/2020/04/23/SHELL%E5%85%A5%E9%97%A8-%E6%8C%96%E6%8E%98RetroPie/" rel="prev" title="SHELL入门_挖掘RetroPie">
       <i class="fa fa-chevron-left"></i> SHELL入门_挖掘RetroPie
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/04/27/DesignPattern%E5%85%A5%E9%97%A8-%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" rel="next" title="DesignPattern入门_策略模式">
+      DesignPattern入门_策略模式 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -390,7 +395,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#早期的留声机是如何工作的？"><span class="nav-number">1.</span> <span class="nav-text">早期的留声机是如何工作的？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数字化的音频录制和播放"><span class="nav-number">2.</span> <span class="nav-text">数字化的音频录制和播放</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#音频采样"><span class="nav-number">3.</span> <span class="nav-text">音频采样</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#音频存储"><span class="nav-number">4.</span> <span class="nav-text">音频存储</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他音频知识"><span class="nav-number">5.</span> <span class="nav-text">其他音频知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一些术语"><span class="nav-number">5.1.</span> <span class="nav-text">一些术语</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#早期的留声机是如何工作的？"><span class="nav-number">1.</span> <span class="nav-text">早期的留声机是如何工作的？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数字化的音频录制和播放"><span class="nav-number">2.</span> <span class="nav-text">数字化的音频录制和播放</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#音频采样"><span class="nav-number">3.</span> <span class="nav-text">音频采样</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#音频存储"><span class="nav-number">4.</span> <span class="nav-text">音频存储</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#WAV"><span class="nav-number">4.1.</span> <span class="nav-text">WAV</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MP3"><span class="nav-number">4.2.</span> <span class="nav-text">MP3</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MP3干了什么？"><span class="nav-number">4.2.1.</span> <span class="nav-text">MP3干了什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么需要MP3？"><span class="nav-number">4.2.2.</span> <span class="nav-text">为什么需要MP3？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MP3如何做到压缩文件的同时尽量不损失音质呢？"><span class="nav-number">4.2.3.</span> <span class="nav-text">MP3如何做到压缩文件的同时尽量不损失音质呢？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他音频知识"><span class="nav-number">5.</span> <span class="nav-text">其他音频知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一些术语"><span class="nav-number">5.1.</span> <span class="nav-text">一些术语</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -404,18 +409,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
