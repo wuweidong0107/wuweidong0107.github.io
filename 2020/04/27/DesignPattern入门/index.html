@@ -33,7 +33,7 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck-3.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck-4.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck-5.png">
-<meta property="og:updated_time" content="2020-04-28T01:38:08.516Z">
+<meta property="og:updated_time" content="2020-04-28T01:42:05.173Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck-1.png">
 
@@ -221,7 +221,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-28 09:38:08" itemprop="dateModified" datetime="2020-04-28T09:38:08+08:00">2020-04-28</time>
+                <time title="修改时间：2020-04-28 09:42:05" itemprop="dateModified" datetime="2020-04-28T09:42:05+08:00">2020-04-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -262,22 +262,22 @@
 <a id="more"></a>
 
 <h3 id="阶段2"><a href="#阶段2" class="headerlink" title="阶段2"></a>阶段2</h3><p>在 Duck 类中加上 fly() 方法:<br><img src="/images/designpattern/strategy/duck-2.png" alt=""></p>
-<p><strong>引入新的问题:</strong><br>在父类 Duck 类中增加 fly() 后，导致所有的子类鸭子都会fly 了，而真实的情况是：橡皮鸭子 RubberDuck 不应该会 fly。<br><img src="/images/designpattern/strategy/duck-3.png" alt=""></p>
+<p><strong>引入新的问题:</strong><br>在父类 Duck 类中增加 fly() 后，导致所有的子类鸭子都会 fly 了，而真实的情况是：橡皮鸭子 RubberDuck 不应该会 fly。<br><img src="/images/designpattern/strategy/duck-3.png" alt=""></p>
 <p><strong>反思</strong></p>
 <ul>
 <li>对代码的局部修改，影响层面不只是局部;</li>
 <li>继承虽然能复用代码，但是它并不完美;</li>
 </ul>
-<h3 id="阶段3"><a href="#阶段3" class="headerlink" title="阶段3"></a>阶段3</h3><p><strong>这样是否可行？</strong><br>在RubberDuck 中override fly() 方法，方法内什么都不做:<br><img src="/images/designpattern/strategy/duck-4.png" alt=""></p>
+<h3 id="阶段3"><a href="#阶段3" class="headerlink" title="阶段3"></a>阶段3</h3><p><strong>这样是否可行？</strong><br>在 RubberDuck 中override fly() 方法，方法内什么都不做:<br><img src="/images/designpattern/strategy/duck-4.png" alt=""></p>
 <p><strong>仍有缺点：</strong>  </p>
 <ol>
-<li>大量的代码在多个Duck子类中冗余，例如RubberDuck的fly()</li>
-<li>父类Duck的改动会牵连所有子类Duck也要跟着改动</li>
+<li>大量的代码在多个 Duck 子类中冗余，例如 RubberDuck 的 fly();</li>
+<li>父类 Duck 的改动会牵连所有子类 Duck 也要跟着改动;</li>
 </ol>
 <h2 id="使用接口效果如何？"><a href="#使用接口效果如何？" class="headerlink" title="使用接口效果如何？"></a>使用接口效果如何？</h2><h3 id="阶段4"><a href="#阶段4" class="headerlink" title="阶段4"></a>阶段4</h3><p>让部分而非全部鸭子可飞或者可叫。<br><img src="/images/designpattern/strategy/duck-5.png" alt=""></p>
-<p>把fly()从父类中提取出来定义为Flyable 接口，只有会飞的鸭子才实现此接口。quack()也类似地定义为Quackable 接口。　　</p>
-<p>例如橡皮鸭 RubberDuck 不会飞，所有它不实现Flyable接口。</p>
-<p><strong>思考</strong><br>这样避免了 “阶段3” 中 类似RubberDuck-&gt;fly()的冗余代码，但是又造成了fly()毫无复用性的问题(Java 接口内不能有代码实现)</p>
+<p>把 fly() 从父类中提取出来定义为 Flyable 接口，只有会飞的鸭子才实现此接口。quack()也类似地定义为Quackable 接口。　　</p>
+<p>例如橡皮鸭 RubberDuck 不会飞，所有它不实现 Flyable 接口。</p>
+<p><strong>思考</strong><br>这样避免了 “阶段3” 中 类似 RubberDuck-&gt;fly() 的冗余代码，但是又造成了 fly() 毫无复用性的问题(Java 接口内不能有代码实现)</p>
 <h2 id="更多实践"><a href="#更多实践" class="headerlink" title="更多实践"></a>更多实践</h2><p>哪些开源软件使用或者借鉴了该设计模式？</p>
 <p>[未完，待续…]</p>
 
