@@ -212,7 +212,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-29 09:43:16" itemprop="dateModified" datetime="2020-04-29T09:43:16+08:00">2020-04-29</time>
+                <time title="修改时间：2020-04-29 09:45:11" itemprop="dateModified" datetime="2020-04-29T09:45:11+08:00">2020-04-29</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -246,10 +246,12 @@
 <h3 id="阶段2"><a href="#阶段2" class="headerlink" title="阶段2"></a>阶段2</h3><p>在 Duck 类中加上 fly() 方法：<br><img src="/images/designpattern/strategy/duck2.png" alt=""></p>
 <p><strong>引入新的问题:</strong><br>在父类 Duck 类中增加 fly() 后，导致所有的子类鸭子都会fly 了。  </p>
 <p>而真实的情况是：橡皮鸭子 RubberDuck 不应该会 fly。<br><img src="/images/designpattern/strategy/duck3.png" alt=""></p>
-<p><strong>反思:</strong></p>
+<p><strong>思考:</strong></p>
 <ol>
-<li>对代码的局部修改，影响层面不只是局部;</li>
-<li>继承虽然能复用代码，但是它并不完美;</li>
+<li><p>对代码的局部修改，影响层面不只是局部;</p>
+</li>
+<li><p>继承虽然能复用代码，但是它并不完美;</p>
+</li>
 </ol>
 <h3 id="阶段3"><a href="#阶段3" class="headerlink" title="阶段3"></a>阶段3</h3><p>在RubberDuck 中override fly() 方法，方法内什么都不做。<br><img src="/images/designpattern/strategy/duck4.png" alt=""></p>
 <p><strong>利用继承来提供Duck的行为的做法，存在什么缺点？</strong>  </p>
