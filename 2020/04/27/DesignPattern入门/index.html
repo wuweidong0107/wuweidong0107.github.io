@@ -35,7 +35,7 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck5.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck6.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck7.png">
-<meta property="og:updated_time" content="2020-04-29T01:37:45.649Z">
+<meta property="og:updated_time" content="2020-04-29T01:43:16.637Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck1.png">
 
@@ -223,7 +223,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-29 09:37:45" itemprop="dateModified" datetime="2020-04-29T09:37:45+08:00">2020-04-29</time>
+                <time title="修改时间：2020-04-29 09:43:16" itemprop="dateModified" datetime="2020-04-29T09:43:16+08:00">2020-04-29</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -262,7 +262,8 @@
 <p>一个父类 Duck 定义 鸭子 的一些特性，子类继承它的特性，并覆盖(override) 父类的部分特性。至此没什么问题，子类共同拥有父类的特性，消除了代码的重复性。</p>
 <p><strong>新的需求:</strong><br>一些鸭子(例如野鸭)是会飞的，我们要让 Duck 具有 fly() 的特性。</p>
 <h3 id="阶段2"><a href="#阶段2" class="headerlink" title="阶段2"></a>阶段2</h3><p>在 Duck 类中加上 fly() 方法：<br><img src="/images/designpattern/strategy/duck2.png" alt=""></p>
-<p><strong>引入新的问题:</strong><br>在父类 Duck 类中增加 fly() 后，导致所有的子类鸭子都会fly 了，而真实的情况是：橡皮鸭子 RubberDuck 不应该会 fly。<br><img src="/images/designpattern/strategy/duck3.png" alt=""></p>
+<p><strong>引入新的问题:</strong><br>在父类 Duck 类中增加 fly() 后，导致所有的子类鸭子都会fly 了。  </p>
+<p>而真实的情况是：橡皮鸭子 RubberDuck 不应该会 fly。<br><img src="/images/designpattern/strategy/duck3.png" alt=""></p>
 <p><strong>反思:</strong></p>
 <ol>
 <li>对代码的局部修改，影响层面不只是局部;</li>
@@ -271,34 +272,49 @@
 <h3 id="阶段3"><a href="#阶段3" class="headerlink" title="阶段3"></a>阶段3</h3><p>在RubberDuck 中override fly() 方法，方法内什么都不做。<br><img src="/images/designpattern/strategy/duck4.png" alt=""></p>
 <p><strong>利用继承来提供Duck的行为的做法，存在什么缺点？</strong>  </p>
 <ol>
-<li>大量的代码在多个 Duck 子类中冗余，例如 RubberDuck 的 fly();</li>
-<li>父类Duck的改动会牵连所有子类Duck也要跟着改动</li>
+<li><p>大量的代码在多个 Duck 子类中冗余，例如 RubberDuck 的 fly();</p>
+</li>
+<li><p>父类Duck的改动会牵连所有子类Duck也要跟着改动</p>
+</li>
 </ol>
 <h2 id="使用接口效果如何？"><a href="#使用接口效果如何？" class="headerlink" title="使用接口效果如何？"></a>使用接口效果如何？</h2><h3 id="阶段4"><a href="#阶段4" class="headerlink" title="阶段4"></a>阶段4</h3><p>让部分而非全部鸭子可飞或者可叫。<br><img src="/images/designpattern/strategy/duck5.png" alt=""></p>
-<p>把 fly()从父类中提取出来定义为 Flyable 接口，只有会飞的鸭子才实现此接口<br>。quack() 也类似地定义为 Quackable 接口。例如橡皮鸭 RubberDuck 不会飞，所有它不实现 Flyable 接口。</p>
+<p>把 fly()从父类中提取出来定义为 Flyable 接口，只有会飞的鸭子才实现此接口<br>。quack() 也类似地定义为 Quackable 接口。</p>
+<p>例如橡皮鸭 RubberDuck 不会飞，所有它不实现 Flyable 接口。</p>
 <p><strong>思考:</strong>  </p>
 <ol>
-<li>这样避免了 “阶段3” 中类似 RubberDuck-&gt;fly() 的冗余代码，但是又造成了 fly() 毫无复用性的问题( Java 接口内不能有代码实现);</li>
-<li>设计原则：把会变化的部分独立出来，不要和不需要变化的代码混在一起(Identify the aspects of your application that vary and separate them from what stays the same.);</li>
-<li>各种设计模式都有一样的目的：把会变化的部分取出并封装起来，以便以后轻易的改动和扩展此部分，而不影响不需要变化的其他部分;</li>
-<li>软件开发的不变真理: 软件总是要变化的;</li>
+<li><p>这样避免了 “阶段3” 中类似 RubberDuck-&gt;fly() 的冗余代码，但是又造成了 fly() 毫无复用性的问题( Java 接口内不能有代码实现);</p>
+</li>
+<li><p>设计原则：把会变化的部分独立出来，不要和不需要变化的代码混在一起(Identify the aspects of your application that vary and separate them from what stays the same.);</p>
+</li>
+<li><p>各种设计模式都有一样的目的：把会变化的部分取出并封装起来，以便以后轻易的改动和扩展此部分，而不影响不需要变化的其他部分;</p>
+</li>
+<li><p>软件开发的不变真理: 软件总是要变化的;</p>
+</li>
 </ol>
 <h2 id="划分变化与不变的部分"><a href="#划分变化与不变的部分" class="headerlink" title="划分变化与不变的部分"></a>划分变化与不变的部分</h2><p><strong>总结前面的做法:</strong>  </p>
 <ol>
-<li>阶段2: 行为(fly 和 quake)来自于 Duck 类内具体实现(concrete implementation);</li>
-<li>阶段4: 行为来自于继承某个接口的子类内的专属实现(specialized implementation);</li>
-<li>无论是阶段2还是阶段4，都是针对具体实现编程。即每一种会飞的鸭子，都必须要有自己专属的关于 fly 的具体实现(例如 MallarDuck-&gt;fly() / RedheadDuck-&gt;fly())，而无法共用同一类 fly 的方式(例如FlyWithWings / FlyWithRocket / FlyNoWay);</li>
+<li><p>阶段2: 行为(fly 和 quake)来自于 Duck 类内具体实现(concrete implementation);</p>
+</li>
+<li><p>阶段4: 行为来自于继承某个接口的子类内的专属实现(specialized implementation);</p>
+</li>
+<li><p>无论是阶段2还是阶段4，都是针对具体实现编程。即每一种会飞的鸭子，都必须要有自己专属的关于 fly 的具体实现(例如 MallarDuck-&gt;fly() / RedheadDuck-&gt;fly())，而无法共用同一类 fly 的方式(例如FlyWithWings / FlyWithRocket / FlyNoWay);</p>
+</li>
 </ol>
 <p><strong>提取出变化的部分：</strong><br>将会变化的鸭子的行为(包括fly行为和quake行为)从 Duck 类中提取出来。<br><img src="/images/designpattern/strategy/duck6.png" alt=""></p>
 <h2 id="设计鸭子的行为"><a href="#设计鸭子的行为" class="headerlink" title="设计鸭子的行为"></a>设计鸭子的行为</h2><h3 id="阶段5"><a href="#阶段5" class="headerlink" title="阶段5"></a>阶段5</h3><p>用接口代表(represent)行为，定义2个接口：FlyBehavior and QuackBehavior。</p>
-<p><strong>行为的每一个具体实现(implementation)都会实现(implement) 对应的接口：</strong><br><img src="/images/designpattern/strategy/duck7.png" alt=""></p>
+<p>行为的每一个具体实现(implementation)都会实现(implement) 对应的接口：</p>
+<p><img src="/images/designpattern/strategy/duck7.png" alt=""></p>
 <p><strong>思考:</strong></p>
 <ol>
-<li>设计原则：要针对接口编程，不要针对具体实现(implementation)编程 / Program to an interface, not an implementation;</li>
-<li>这里的接口是一个“抽象概念”，并不是专门指Java 里的interface;</li>
-<li>针对接口编程的另一个说法是针对超类型(supertype)编程，超类型在编程语法上一般是一个抽象类(abstract class)或者接口(interface);</li>
+<li><p>设计原则：要针对接口编程，不要针对具体实现(implementation)编程 / Program to an interface, not an implementation;</p>
+</li>
+<li><p>这里的接口是一个“抽象概念”，并不是专门指Java 里的interface;</p>
+</li>
+<li><p>针对接口编程的另一个说法是针对超类型(supertype)编程，超类型在编程语法上一般是一个抽象类(abstract class)或者接口(interface);</p>
+</li>
 </ol>
 <p><strong>设计鸭子的行为:</strong><br>…</p>
+<h2 id="更多实践"><a href="#更多实践" class="headerlink" title="更多实践"></a>更多实践</h2><p>有哪些开源项目使用或者借鉴了策略模式？</p>
 
     </div>
 
@@ -420,7 +436,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#策略模式"><span class="nav-number">1.</span> <span class="nav-text">策略模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#利用继承？"><span class="nav-number">1.1.</span> <span class="nav-text">利用继承？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段1"><span class="nav-number">1.1.1.</span> <span class="nav-text">阶段1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段2"><span class="nav-number">1.1.2.</span> <span class="nav-text">阶段2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段3"><span class="nav-number">1.1.3.</span> <span class="nav-text">阶段3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用接口效果如何？"><span class="nav-number">1.2.</span> <span class="nav-text">使用接口效果如何？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段4"><span class="nav-number">1.2.1.</span> <span class="nav-text">阶段4</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#划分变化与不变的部分"><span class="nav-number">1.3.</span> <span class="nav-text">划分变化与不变的部分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设计鸭子的行为"><span class="nav-number">1.4.</span> <span class="nav-text">设计鸭子的行为</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段5"><span class="nav-number">1.4.1.</span> <span class="nav-text">阶段5</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#策略模式"><span class="nav-number">1.</span> <span class="nav-text">策略模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#利用继承？"><span class="nav-number">1.1.</span> <span class="nav-text">利用继承？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段1"><span class="nav-number">1.1.1.</span> <span class="nav-text">阶段1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段2"><span class="nav-number">1.1.2.</span> <span class="nav-text">阶段2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段3"><span class="nav-number">1.1.3.</span> <span class="nav-text">阶段3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用接口效果如何？"><span class="nav-number">1.2.</span> <span class="nav-text">使用接口效果如何？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段4"><span class="nav-number">1.2.1.</span> <span class="nav-text">阶段4</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#划分变化与不变的部分"><span class="nav-number">1.3.</span> <span class="nav-text">划分变化与不变的部分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设计鸭子的行为"><span class="nav-number">1.4.</span> <span class="nav-text">设计鸭子的行为</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段5"><span class="nav-number">1.4.1.</span> <span class="nav-text">阶段5</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更多实践"><span class="nav-number">1.5.</span> <span class="nav-text">更多实践</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
