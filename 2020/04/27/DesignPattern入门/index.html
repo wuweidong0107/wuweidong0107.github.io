@@ -20,13 +20,13 @@
     var CONFIG = {"hostname":"wuweidong0107.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="相关参考:  Head First Design Pattern  策略模式需求模拟现实生活中的鸭子，鸭子会游泳，鸣叫，飞。 利用继承？阶段1 一个父类 Duck 定义 鸭子 的一些特性，子类继承它的特性，并覆盖(override) 父类的部分特性。至此没什么问题，子类共同拥有父类的特性，消除了代码的重复性。 新的需求:一些鸭子(例如野鸭)是会飞的，我们要让 Duck 具有 fly() 的特性。">
+  <meta name="description" content="相关参考:  Head First Design Pattern android源码设计模式解析与实战  策略模式需求模拟现实生活中的鸭子，鸭子会游泳，鸣叫，飞。 利用继承？阶段1 一个父类 Duck 定义 鸭子 的一些特性，子类继承它的特性，并覆盖(override) 父类的部分特性。至此没什么问题，子类共同拥有父类的特性，消除了代码的重复性。 新的需求:一些鸭子(例如野鸭)是会飞的，我们要让">
 <meta name="keywords" content="tools,designpattern">
 <meta property="og:type" content="article">
-<meta property="og:title" content="DesignPattern入门_策略模式">
+<meta property="og:title" content="DesignPattern入门">
 <meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;04&#x2F;27&#x2F;DesignPattern%E5%85%A5%E9%97%A8&#x2F;index.html">
 <meta property="og:site_name" content="piHacker(嵌入式系统砖家)">
-<meta property="og:description" content="相关参考:  Head First Design Pattern  策略模式需求模拟现实生活中的鸭子，鸭子会游泳，鸣叫，飞。 利用继承？阶段1 一个父类 Duck 定义 鸭子 的一些特性，子类继承它的特性，并覆盖(override) 父类的部分特性。至此没什么问题，子类共同拥有父类的特性，消除了代码的重复性。 新的需求:一些鸭子(例如野鸭)是会飞的，我们要让 Duck 具有 fly() 的特性。">
+<meta property="og:description" content="相关参考:  Head First Design Pattern android源码设计模式解析与实战  策略模式需求模拟现实生活中的鸭子，鸭子会游泳，鸣叫，飞。 利用继承？阶段1 一个父类 Duck 定义 鸭子 的一些特性，子类继承它的特性，并覆盖(override) 父类的部分特性。至此没什么问题，子类共同拥有父类的特性，消除了代码的重复性。 新的需求:一些鸭子(例如野鸭)是会飞的，我们要让">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck1.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck2.png">
@@ -35,7 +35,10 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck5.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck6.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck7.png">
-<meta property="og:updated_time" content="2020-04-29T01:45:11.590Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck8.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck9.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck10.png">
+<meta property="og:updated_time" content="2020-04-30T01:37:43.535Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck1.png">
 
@@ -52,7 +55,7 @@
   };
 </script>
 
-  <title>DesignPattern入门_策略模式 | piHacker(嵌入式系统砖家)</title>
+  <title>DesignPattern入门 | piHacker(嵌入式系统砖家)</title>
   
 
 
@@ -206,7 +209,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          DesignPattern入门_策略模式
+          DesignPattern入门
         </h1>
 
         <div class="post-meta">
@@ -223,7 +226,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-29 09:45:11" itemprop="dateModified" datetime="2020-04-29T09:45:11+08:00">2020-04-29</time>
+                <time title="修改时间：2020-04-30 09:37:43" itemprop="dateModified" datetime="2020-04-30T09:37:43+08:00">2020-04-30</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -256,11 +259,14 @@
         <p><strong>相关参考:</strong></p>
 <ul>
 <li>Head First Design Pattern</li>
+<li>android源码设计模式解析与实战</li>
 </ul>
 <h1 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h1><p><strong>需求</strong><br>模拟现实生活中的鸭子，鸭子会游泳，鸣叫，飞。</p>
 <h2 id="利用继承？"><a href="#利用继承？" class="headerlink" title="利用继承？"></a>利用继承？</h2><h3 id="阶段1"><a href="#阶段1" class="headerlink" title="阶段1"></a>阶段1</h3><p><img src="/images/designpattern/strategy/duck1.png" alt=""></p>
 <p>一个父类 Duck 定义 鸭子 的一些特性，子类继承它的特性，并覆盖(override) 父类的部分特性。至此没什么问题，子类共同拥有父类的特性，消除了代码的重复性。</p>
 <p><strong>新的需求:</strong><br>一些鸭子(例如野鸭)是会飞的，我们要让 Duck 具有 fly() 的特性。</p>
+<a id="more"></a>
+
 <h3 id="阶段2"><a href="#阶段2" class="headerlink" title="阶段2"></a>阶段2</h3><p>在 Duck 类中加上 fly() 方法：<br><img src="/images/designpattern/strategy/duck2.png" alt=""></p>
 <p><strong>引入新的问题:</strong><br>在父类 Duck 类中增加 fly() 后，导致所有的子类鸭子都会fly 了。  </p>
 <p>而真实的情况是：橡皮鸭子 RubberDuck 不应该会 fly。<br><img src="/images/designpattern/strategy/duck3.png" alt=""></p>
@@ -303,10 +309,10 @@
 </li>
 </ol>
 <p><strong>提取出变化的部分：</strong><br>将会变化的鸭子的行为(包括fly行为和quake行为)从 Duck 类中提取出来。<br><img src="/images/designpattern/strategy/duck6.png" alt=""></p>
-<h2 id="设计鸭子的行为"><a href="#设计鸭子的行为" class="headerlink" title="设计鸭子的行为"></a>设计鸭子的行为</h2><h3 id="阶段5"><a href="#阶段5" class="headerlink" title="阶段5"></a>阶段5</h3><p>用接口代表(represent)行为，定义2个接口：FlyBehavior and QuackBehavior。</p>
+<h2 id="设计鸭子的行为"><a href="#设计鸭子的行为" class="headerlink" title="设计鸭子的行为"></a>设计鸭子的行为</h2><h3 id="阶段5"><a href="#阶段5" class="headerlink" title="阶段5"></a>阶段5</h3><p><strong>让鸭子的行为可以动态改变</strong><br>用接口代表(represent)行为，定义2个接口：FlyBehavior and QuackBehavior。</p>
 <p>行为的每一个具体实现(implementation)都会实现(implement) 对应的接口：</p>
 <p><img src="/images/designpattern/strategy/duck7.png" alt=""></p>
-<p><strong>思考:</strong></p>
+<p><strong>前人的经验</strong></p>
 <ol>
 <li><p>设计原则：要针对接口编程，不要针对具体实现(implementation)编程 / Program to an interface, not an implementation;</p>
 </li>
@@ -315,7 +321,25 @@
 <li><p>针对接口编程的另一个说法是针对超类型(supertype)编程，超类型在编程语法上一般是一个抽象类(abstract class)或者接口(interface);</p>
 </li>
 </ol>
-<p><strong>设计鸭子的行为:</strong><br>…</p>
+<p><strong>实现鸭子的行为</strong><br><img src="/images/designpattern/strategy/duck8.png" alt=""></p>
+<p>这样做有什么好处？  </p>
+<ol>
+<li><p>多个行为之间相互独立，可以轻松地添加更多的行为接口;</p>
+</li>
+<li><p>可以轻松地添加更多的行为实现;<br> 例如添加一个用火箭来飞行的行为：<br> 添加了一个FlyRocketPowered类，它实现FlyBehavior接口即可</p>
+</li>
+<li><p>具体的行为实现都被封装在XXXBehavior接口内，使用者不用关心具体的行为细节;</p>
+</li>
+<li><p>行为接口 XXXBehavior 可以供其他 client 复用，例如鸡;</p>
+</li>
+</ol>
+<p><strong>整合鸭子的行为</strong></p>
+<ol>
+<li><p>在 Duck 类中加入行为实例xxxBehavior 和行为执行函数 performXXX();<br><img src="/images/designpattern/strategy/duck9.png" alt=""></p>
+</li>
+<li><p>实现performQuack();<br><img src="/images/designpattern/strategy/duck10.png" alt=""></p>
+</li>
+</ol>
 <h2 id="更多实践"><a href="#更多实践" class="headerlink" title="更多实践"></a>更多实践</h2><p>有哪些开源项目使用或者借鉴了策略模式？</p>
 
     </div>
