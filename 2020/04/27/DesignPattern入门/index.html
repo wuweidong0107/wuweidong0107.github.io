@@ -23,7 +23,7 @@
   <meta name="description" content="对于技术领域的知识点，我个人喜欢简单地划分为2类：  基础类 工具类  我判断一个知识点属于哪一类的主要依据有2点：  这个知识点是否经久不衰; 这个知识点是否没有替代品;  如果上述2点都满足，则我会认为这是基础类知识，属于可以长期投资的价值股;典型的例如操作系统、数据结构、Linux环境编程、软件模式(设计模式、架构模式…)等我会归类为基础类知识;   而例如 Qt、Git、Docker、甚至">
 <meta name="keywords" content="tools,designpattern">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Design Pattern 入门">
+<meta property="og:title" content="Design Pattern 系统_策略模式">
 <meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;04&#x2F;27&#x2F;DesignPattern%E5%85%A5%E9%97%A8&#x2F;index.html">
 <meta property="og:site_name" content="piHacker(嵌入式系统砖家)">
 <meta property="og:description" content="对于技术领域的知识点，我个人喜欢简单地划分为2类：  基础类 工具类  我判断一个知识点属于哪一类的主要依据有2点：  这个知识点是否经久不衰; 这个知识点是否没有替代品;  如果上述2点都满足，则我会认为这是基础类知识，属于可以长期投资的价值股;典型的例如操作系统、数据结构、Linux环境编程、软件模式(设计模式、架构模式…)等我会归类为基础类知识;   而例如 Qt、Git、Docker、甚至">
@@ -42,7 +42,7 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck13.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck14.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck15.png">
-<meta property="og:updated_time" content="2020-05-06T01:24:01.645Z">
+<meta property="og:updated_time" content="2020-05-06T01:24:59.522Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck1.png">
 
@@ -59,7 +59,7 @@
   };
 </script>
 
-  <title>Design Pattern 入门 | piHacker(嵌入式系统砖家)</title>
+  <title>Design Pattern 系统_策略模式 | piHacker(嵌入式系统砖家)</title>
   
 
 
@@ -213,7 +213,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Design Pattern 入门
+          Design Pattern 系统_策略模式
         </h1>
 
         <div class="post-meta">
@@ -230,7 +230,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-05-06 09:24:01" itemprop="dateModified" datetime="2020-05-06T09:24:01+08:00">2020-05-06</time>
+                <time title="修改时间：2020-05-06 09:24:59" itemprop="dateModified" datetime="2020-05-06T09:24:59+08:00">2020-05-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -279,13 +279,13 @@
 <li>Android 源码设计模式解析与实战</li>
 <li>Android Design Patterns and Best Practice</li>
 </ul>
-<h1 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h1><p><strong>需求：</strong><br>模拟现实生活中的鸭子，鸭子会游泳，鸣叫，飞。</p>
-<h2 id="利用继承？"><a href="#利用继承？" class="headerlink" title="利用继承？"></a>利用继承？</h2><h3 id="阶段1"><a href="#阶段1" class="headerlink" title="阶段1"></a>阶段1</h3><p><img src="/images/designpattern/strategy/duck1.png" alt=""></p>
+<p><strong>需求：</strong><br>模拟现实生活中的鸭子，鸭子会游泳，鸣叫，飞。</p>
+<h1 id="利用继承？"><a href="#利用继承？" class="headerlink" title="利用继承？"></a>利用继承？</h1><h2 id="阶段1"><a href="#阶段1" class="headerlink" title="阶段1"></a>阶段1</h2><p><img src="/images/designpattern/strategy/duck1.png" alt=""></p>
 <p>一个父类 Duck 定义 鸭子 的一些特性，子类继承它的特性，并覆盖(override) 父类的部分特性。至此没什么问题，子类共同拥有父类的特性，消除了代码的重复性。</p>
 <p><strong>新的需求：</strong><br>一些鸭子(例如野鸭)是会飞的，我们要让 Duck 具有 fly() 的特性。</p>
 <a id="more"></a>
 
-<h3 id="阶段2"><a href="#阶段2" class="headerlink" title="阶段2"></a>阶段2</h3><p>在 Duck 类中加上 fly() 方法：<br><img src="/images/designpattern/strategy/duck2.png" alt=""></p>
+<h2 id="阶段2"><a href="#阶段2" class="headerlink" title="阶段2"></a>阶段2</h2><p>在 Duck 类中加上 fly() 方法：<br><img src="/images/designpattern/strategy/duck2.png" alt=""></p>
 <p><strong>引入新的问题：</strong><br>在父类 Duck 类中增加 fly() 后，导致所有的子类鸭子都会fly 了。  </p>
 <p>而真实的情况是：橡皮鸭子 RubberDuck 不应该会 fly。<br><img src="/images/designpattern/strategy/duck3.png" alt=""></p>
 <p><strong>思考：</strong></p>
@@ -295,7 +295,7 @@
 <li><p>继承虽然能复用代码，但是它并不完美;</p>
 </li>
 </ol>
-<h3 id="阶段3"><a href="#阶段3" class="headerlink" title="阶段3"></a>阶段3</h3><p>在RubberDuck 中override fly() 方法，方法内什么都不做。<br><img src="/images/designpattern/strategy/duck4.png" alt=""></p>
+<h2 id="阶段3"><a href="#阶段3" class="headerlink" title="阶段3"></a>阶段3</h2><p>在RubberDuck 中override fly() 方法，方法内什么都不做。<br><img src="/images/designpattern/strategy/duck4.png" alt=""></p>
 <p><strong>利用继承来提供Duck的行为的做法，存在什么缺点？</strong>  </p>
 <ol>
 <li><p>大量的代码在多个 Duck 子类中冗余，例如 RubberDuck 的 fly();</p>
@@ -303,7 +303,7 @@
 <li><p>父类Duck的改动会牵连所有子类Duck也要跟着改动</p>
 </li>
 </ol>
-<h2 id="使用接口效果如何？"><a href="#使用接口效果如何？" class="headerlink" title="使用接口效果如何？"></a>使用接口效果如何？</h2><h3 id="阶段4"><a href="#阶段4" class="headerlink" title="阶段4"></a>阶段4</h3><p>让部分而非全部鸭子可飞或者可叫。<br><img src="/images/designpattern/strategy/duck5.png" alt=""></p>
+<h1 id="使用接口效果如何？"><a href="#使用接口效果如何？" class="headerlink" title="使用接口效果如何？"></a>使用接口效果如何？</h1><h2 id="阶段4"><a href="#阶段4" class="headerlink" title="阶段4"></a>阶段4</h2><p>让部分而非全部鸭子可飞或者可叫。<br><img src="/images/designpattern/strategy/duck5.png" alt=""></p>
 <p>把 fly()从父类中提取出来定义为 Flyable 接口，只有会飞的鸭子才实现此接口<br>。quack() 也类似地定义为 Quackable 接口。</p>
 <p>例如橡皮鸭 RubberDuck 不会飞，所有它不实现 Flyable 接口。</p>
 <p><strong>思考：</strong>  </p>
@@ -317,7 +317,7 @@
 <li><p>软件开发的不变真理： 软件总是要变化的;</p>
 </li>
 </ol>
-<h2 id="划分变化与不变的部分"><a href="#划分变化与不变的部分" class="headerlink" title="划分变化与不变的部分"></a>划分变化与不变的部分</h2><p><strong>总结前面的做法：</strong>  </p>
+<h1 id="划分变化与不变的部分"><a href="#划分变化与不变的部分" class="headerlink" title="划分变化与不变的部分"></a>划分变化与不变的部分</h1><p><strong>总结前面的做法：</strong>  </p>
 <ol>
 <li><p>阶段2： 行为(fly 和 quake)来自于 Duck 类内具体实现(concrete implementation);</p>
 </li>
@@ -327,7 +327,7 @@
 </li>
 </ol>
 <p><strong>提取出变化的部分：</strong><br>将会变化的鸭子的行为(包括fly行为和quake行为)从 Duck 类中提取出来。<br><img src="/images/designpattern/strategy/duck6.png" alt=""></p>
-<h2 id="设计鸭子的行为"><a href="#设计鸭子的行为" class="headerlink" title="设计鸭子的行为"></a>设计鸭子的行为</h2><h3 id="阶段5"><a href="#阶段5" class="headerlink" title="阶段5"></a>阶段5</h3><p><strong>让鸭子的行为可以动态改变：</strong><br>用接口代表(represent)行为，定义2个接口：FlyBehavior and QuackBehavior。</p>
+<h1 id="设计鸭子的行为"><a href="#设计鸭子的行为" class="headerlink" title="设计鸭子的行为"></a>设计鸭子的行为</h1><h2 id="阶段5"><a href="#阶段5" class="headerlink" title="阶段5"></a>阶段5</h2><p><strong>让鸭子的行为可以动态改变：</strong><br>用接口代表(represent)行为，定义2个接口：FlyBehavior and QuackBehavior。</p>
 <p>行为的每一个具体实现(implementation)都会实现(implement) 对应的接口：</p>
 <p><img src="/images/designpattern/strategy/duck7.png" alt=""></p>
 <p><strong>前人的经验：</strong>  </p>
@@ -372,7 +372,7 @@
 </li>
 </ol>
 <p><strong>到这里，模拟鸭子的整个设计就已经完成了，整个设计框图如下：</strong><br><img src="/images/designpattern/strategy/duck12.png" alt=""></p>
-<h2 id="测试当前代码"><a href="#测试当前代码" class="headerlink" title="测试当前代码"></a>测试当前代码</h2><p>测试代码：</p>
+<h1 id="测试当前代码"><a href="#测试当前代码" class="headerlink" title="测试当前代码"></a>测试当前代码</h1><p>测试代码：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MiniDuckSimulator</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">        Duck mallard = <span class="keyword">new</span> MallardDuck();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">        mallard.performQuack();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">        mallard.performFly();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">        mallard.setFlyBehavior(<span class="keyword">new</span> FlyRocketPowered());</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">        mallard.performFly();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
 <p>测试效果：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">%</span><span class="bash">java MiniDuckSimulator</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">Quack</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">I’m flying!!</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">I'm flying with a rocker</span></pre></td></tr></table></figure>
@@ -383,7 +383,7 @@
 <li>设计原则：多用组合，少用继承(Favor composition over inheritance);</li>
 <li>模拟鸭子使用的设计模式：策略模式;</li>
 </ol>
-<h3 id="什么是策略模式？"><a href="#什么是策略模式？" class="headerlink" title="什么是策略模式？"></a>什么是策略模式？</h3><p>指对象有某个行为，但是在不同的场景中，该行为有不同的实现算法。</p>
+<h2 id="什么是策略模式？"><a href="#什么是策略模式？" class="headerlink" title="什么是策略模式？"></a>什么是策略模式？</h2><p>指对象有某个行为，但是在不同的场景中，该行为有不同的实现算法。</p>
 <p><strong>策略模式三要素：</strong></p>
 <ol>
 <li>定义了一族算法（业务规则）;</li>
@@ -391,8 +391,8 @@
 <li>这族的算法可互换代替（interchangeable）;</li>
 </ol>
 <p><strong>再举一个例子：</strong><br>在一款游戏里，有不同的角色(国王、皇后、骑士…)，角色有不同的武器(斧头、剑、刀)，该怎么设计？<br><img src="/images/designpattern/strategy/duck13.png" alt=""></p>
-<h2 id="最后的总结"><a href="#最后的总结" class="headerlink" title="最后的总结"></a>最后的总结</h2><p><img src="/images/designpattern/strategy/duck14.png" alt=""><br><img src="/images/designpattern/strategy/duck15.png" alt=""></p>
-<h2 id="更多实践"><a href="#更多实践" class="headerlink" title="更多实践"></a>更多实践</h2><p>有哪些开源项目使用或者借鉴了策略模式？</p>
+<h1 id="最后的总结"><a href="#最后的总结" class="headerlink" title="最后的总结"></a>最后的总结</h1><p><img src="/images/designpattern/strategy/duck14.png" alt=""><br><img src="/images/designpattern/strategy/duck15.png" alt=""></p>
+<h1 id="更多实践"><a href="#更多实践" class="headerlink" title="更多实践"></a>更多实践</h1><p>有哪些开源项目使用或者借鉴了策略模式？</p>
 <ul>
 <li>Android</li>
 </ul>
@@ -521,7 +521,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#下面是正文-认识策略模式"><span class="nav-number">1.</span> <span class="nav-text">下面是正文(认识策略模式)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#策略模式"><span class="nav-number"></span> <span class="nav-text">策略模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#利用继承？"><span class="nav-number">1.</span> <span class="nav-text">利用继承？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段1"><span class="nav-number">1.1.</span> <span class="nav-text">阶段1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段2"><span class="nav-number">1.2.</span> <span class="nav-text">阶段2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段3"><span class="nav-number">1.3.</span> <span class="nav-text">阶段3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用接口效果如何？"><span class="nav-number">2.</span> <span class="nav-text">使用接口效果如何？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段4"><span class="nav-number">2.1.</span> <span class="nav-text">阶段4</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#划分变化与不变的部分"><span class="nav-number">3.</span> <span class="nav-text">划分变化与不变的部分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设计鸭子的行为"><span class="nav-number">4.</span> <span class="nav-text">设计鸭子的行为</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段5"><span class="nav-number">4.1.</span> <span class="nav-text">阶段5</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试当前代码"><span class="nav-number">5.</span> <span class="nav-text">测试当前代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是策略模式？"><span class="nav-number">5.1.</span> <span class="nav-text">什么是策略模式？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最后的总结"><span class="nav-number">6.</span> <span class="nav-text">最后的总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更多实践"><span class="nav-number">7.</span> <span class="nav-text">更多实践</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#下面是正文-认识策略模式"><span class="nav-number">1.</span> <span class="nav-text">下面是正文(认识策略模式)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#利用继承？"><span class="nav-number"></span> <span class="nav-text">利用继承？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#阶段1"><span class="nav-number">1.</span> <span class="nav-text">阶段1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#阶段2"><span class="nav-number">2.</span> <span class="nav-text">阶段2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#阶段3"><span class="nav-number">3.</span> <span class="nav-text">阶段3</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用接口效果如何？"><span class="nav-number"></span> <span class="nav-text">使用接口效果如何？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#阶段4"><span class="nav-number">1.</span> <span class="nav-text">阶段4</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#划分变化与不变的部分"><span class="nav-number"></span> <span class="nav-text">划分变化与不变的部分</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#设计鸭子的行为"><span class="nav-number"></span> <span class="nav-text">设计鸭子的行为</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#阶段5"><span class="nav-number">1.</span> <span class="nav-text">阶段5</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试当前代码"><span class="nav-number"></span> <span class="nav-text">测试当前代码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是策略模式？"><span class="nav-number">1.</span> <span class="nav-text">什么是策略模式？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最后的总结"><span class="nav-number"></span> <span class="nav-text">最后的总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#更多实践"><span class="nav-number"></span> <span class="nav-text">更多实践</span></a></div>
       </div>
       <!--/noindex-->
 
