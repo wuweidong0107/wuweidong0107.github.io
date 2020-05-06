@@ -21,10 +21,10 @@
   </script>
 
   <meta name="description" content="对于技术领域的知识点，我个人喜欢简单地划分为2类：  基础类 工具类  我判断一个知识点属于哪一类的主要依据有2点：  这个知识点是否经久不衰; 这个知识点是否没有替代品;  如果上述2点都满足，则我会认为这是基础类知识，属于可以长期投资的价值股;典型的例如操作系统、数据结构、Linux环境编程、软件模式(设计模式、架构模式…)等我会归类为基础类知识;   而例如 Qt、Git、Docker、甚至">
-<meta name="keywords" content="tools,designpattern">
+<meta name="keywords" content="designpattern">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Design Pattern 系统_策略模式">
-<meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;04&#x2F;27&#x2F;DesignPattern%E5%85%A5%E9%97%A8&#x2F;index.html">
+<meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;04&#x2F;27&#x2F;DesignPattern%E5%85%A5%E9%97%A8_%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F&#x2F;index.html">
 <meta property="og:site_name" content="piHacker(嵌入式系统砖家)">
 <meta property="og:description" content="对于技术领域的知识点，我个人喜欢简单地划分为2类：  基础类 工具类  我判断一个知识点属于哪一类的主要依据有2点：  这个知识点是否经久不衰; 这个知识点是否没有替代品;  如果上述2点都满足，则我会认为这是基础类知识，属于可以长期投资的价值股;典型的例如操作系统、数据结构、Linux环境编程、软件模式(设计模式、架构模式…)等我会归类为基础类知识;   而例如 Qt、Git、Docker、甚至">
 <meta property="og:locale" content="zh-CN">
@@ -42,11 +42,11 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck13.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck14.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck15.png">
-<meta property="og:updated_time" content="2020-05-06T01:26:59.467Z">
+<meta property="og:updated_time" content="2020-05-06T01:33:22.439Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck1.png">
 
-<link rel="canonical" href="https://wuweidong0107.github.io/2020/04/27/DesignPattern%E5%85%A5%E9%97%A8/">
+<link rel="canonical" href="https://wuweidong0107.github.io/2020/04/27/DesignPattern%E5%85%A5%E9%97%A8_%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/">
 
 
 <script id="page-configurations">
@@ -200,7 +200,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/04/27/DesignPattern%E5%85%A5%E9%97%A8/">
+    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/04/27/DesignPattern%E5%85%A5%E9%97%A8_%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -230,7 +230,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-05-06 09:26:59" itemprop="dateModified" datetime="2020-05-06T09:26:59+08:00">2020-05-06</time>
+                <time title="修改时间：2020-05-06 09:33:22" itemprop="dateModified" datetime="2020-05-06T09:33:22+08:00">2020-05-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -273,6 +273,8 @@
 <p>如果上述2点都满足，则我会认为这是基础类知识，属于可以长期投资的价值股;<br>典型的例如操作系统、数据结构、Linux环境编程、软件模式(设计模式、架构模式…)等我会归类为基础类知识;  </p>
 <p>而例如 Qt、Git、Docker、甚至各种编程语言(C、C++、Java、Python)等知识点我都会暂时归类为工具类。不要误会，这些都只是我个人的喜好，并没有要贬低你心爱的技术的意思，只要是你在工作里需要重度使用的技术，你都应该把它归类为基础类，以便提醒自己需要深耕该技术。  </p>
 <p>说了这么多，无非是想告诉你，我认为设计模式很重要，仅此而已。即便你从事的是底层软件相关的工作，你只用 C 语言进行开发，情况也是一样的。</p>
+<a id="more"></a>
+
 <p><strong>下面是正文(认识策略模式)</strong></p>
 <p><strong>相关参考：</strong></p>
 <ul>
@@ -284,8 +286,6 @@
 <h1 id="利用继承？"><a href="#利用继承？" class="headerlink" title="利用继承？"></a>利用继承？</h1><h2 id="阶段1"><a href="#阶段1" class="headerlink" title="阶段1"></a>阶段1</h2><p><img src="/images/designpattern/strategy/duck1.png" alt=""></p>
 <p>一个父类 Duck 定义 鸭子 的一些特性，子类继承它的特性，并覆盖(override) 父类的部分特性。至此没什么问题，子类共同拥有父类的特性，消除了代码的重复性。</p>
 <p><strong>新的需求：</strong><br>一些鸭子(例如野鸭)是会飞的，我们要让 Duck 具有 fly() 的特性。</p>
-<a id="more"></a>
-
 <h2 id="阶段2"><a href="#阶段2" class="headerlink" title="阶段2"></a>阶段2</h2><p>在 Duck 类中加上 fly() 方法：<br><img src="/images/designpattern/strategy/duck2.png" alt=""></p>
 <p><strong>引入新的问题：</strong><br>在父类 Duck 类中增加 fly() 后，导致所有的子类鸭子都会fly 了。  </p>
 <p>而真实的情况是：橡皮鸭子 RubberDuck 不应该会 fly。<br><img src="/images/designpattern/strategy/duck3.png" alt=""></p>
@@ -398,6 +398,7 @@
 <li>Android</li>
 </ul>
 <p>还等什么？ 赶紧分析起来吧~~</p>
+<p>你和我各有一个苹果，如果我们交换苹果的话，我们还是只有一个苹果。但当你和我各有一个想法，我们交换想法的话，我们就都有两个想法了。如果你也对嵌入式系统相关技术感兴趣，并且想和更多人互相交流学习的话，请关注我的公众号：ESexpert，一起来学习吧，欢迎收藏 / 转发 / 批评。</p>
 
     </div>
 
@@ -442,7 +443,6 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/tools/" rel="tag"><i class="fa fa-tag"></i> tools</a>
               <a href="/tags/designpattern/" rel="tag"><i class="fa fa-tag"></i> designpattern</a>
           </div>
 
@@ -547,7 +547,7 @@
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
