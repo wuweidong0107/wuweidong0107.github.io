@@ -20,13 +20,13 @@
     var CONFIG = {"hostname":"wuweidong0107.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="title： Design Pattern 入门date： 2020-04-27 09：26：53categories： 软件设计tags： [tools, designpattern]  对于技术领域的知识点，我个人喜欢简单地划分为2类：  基础类 工具类  我判断一个知识点属于哪一类的主要依据有2点：  这个知识点是否经久不衰; 这个知识点是否没有替代品;  如果上述2点都满足，则我会认为这">
-<meta name="keywords" content="Embedded, Linux, OpenWrt, Buildroot, Opensource, Android">
+  <meta name="description" content="对于技术领域的知识点，我个人喜欢简单地划分为2类：  基础类 工具类  我判断一个知识点属于哪一类的主要依据有2点：  这个知识点是否经久不衰; 这个知识点是否没有替代品;  如果上述2点都满足，则我会认为这是基础类知识，属于可以长期投资的价值股;典型的例如操作系统、数据结构、Linux环境编程、软件模式(设计模式、架构模式…)等我会归类为基础类知识;   而例如 Qt、Git、Docker、甚至">
+<meta name="keywords" content="tools,designpattern">
 <meta property="og:type" content="article">
-<meta property="og:title" content="DesignPattern入门">
-<meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;05&#x2F;06&#x2F;DesignPattern%E5%85%A5%E9%97%A8&#x2F;index.html">
+<meta property="og:title" content="Design Pattern 入门">
+<meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;04&#x2F;27&#x2F;DesignPattern%E5%85%A5%E9%97%A8&#x2F;index.html">
 <meta property="og:site_name" content="piHacker(嵌入式系统砖家)">
-<meta property="og:description" content="title： Design Pattern 入门date： 2020-04-27 09：26：53categories： 软件设计tags： [tools, designpattern]  对于技术领域的知识点，我个人喜欢简单地划分为2类：  基础类 工具类  我判断一个知识点属于哪一类的主要依据有2点：  这个知识点是否经久不衰; 这个知识点是否没有替代品;  如果上述2点都满足，则我会认为这">
+<meta property="og:description" content="对于技术领域的知识点，我个人喜欢简单地划分为2类：  基础类 工具类  我判断一个知识点属于哪一类的主要依据有2点：  这个知识点是否经久不衰; 这个知识点是否没有替代品;  如果上述2点都满足，则我会认为这是基础类知识，属于可以长期投资的价值股;典型的例如操作系统、数据结构、Linux环境编程、软件模式(设计模式、架构模式…)等我会归类为基础类知识;   而例如 Qt、Git、Docker、甚至">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck1.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck2.png">
@@ -42,11 +42,11 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck13.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck14.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck15.png">
-<meta property="og:updated_time" content="2020-05-06T01:20:58.087Z">
+<meta property="og:updated_time" content="2020-05-06T01:24:01.645Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;designpattern&#x2F;strategy&#x2F;duck1.png">
 
-<link rel="canonical" href="https://wuweidong0107.github.io/2020/05/06/DesignPattern%E5%85%A5%E9%97%A8/">
+<link rel="canonical" href="https://wuweidong0107.github.io/2020/04/27/DesignPattern%E5%85%A5%E9%97%A8/">
 
 
 <script id="page-configurations">
@@ -59,7 +59,7 @@
   };
 </script>
 
-  <title>DesignPattern入门 | piHacker(嵌入式系统砖家)</title>
+  <title>Design Pattern 入门 | piHacker(嵌入式系统砖家)</title>
   
 
 
@@ -200,7 +200,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/05/06/DesignPattern%E5%85%A5%E9%97%A8/">
+    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/04/27/DesignPattern%E5%85%A5%E9%97%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -213,7 +213,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          DesignPattern入门
+          Design Pattern 入门
         </h1>
 
         <div class="post-meta">
@@ -223,7 +223,23 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-05-06 09:20:58" itemprop="dateCreated datePublished" datetime="2020-05-06T09:20:58+08:00">2020-05-06</time>
+              <time title="创建时间：2020-04-27 09:26:53" itemprop="dateCreated datePublished" datetime="2020-04-27T09:26:53+08:00">2020-04-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-06 09:24:01" itemprop="dateModified" datetime="2020-05-06T09:24:01+08:00">2020-05-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/" itemprop="url" rel="index"><span itemprop="name">软件设计</span></a>
+                </span>
             </span>
 
           
@@ -244,10 +260,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <hr>
-<p>title： Design Pattern 入门<br>date： 2020-04-27 09：26：53<br>categories： 软件设计<br>tags： [tools, designpattern]</p>
-<hr>
-<p><strong>对于技术领域的知识点，我个人喜欢简单地划分为2类：</strong></p>
+        <p><strong>对于技术领域的知识点，我个人喜欢简单地划分为2类：</strong></p>
 <ol>
 <li>基础类</li>
 <li>工具类</li>
@@ -426,6 +439,11 @@
 
 
       <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/tools/" rel="tag"><i class="fa fa-tag"></i> tools</a>
+              <a href="/tags/designpattern/" rel="tag"><i class="fa fa-tag"></i> designpattern</a>
+          </div>
 
         
   <div class="post-widgets">
@@ -438,10 +456,13 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/04/30/%E6%9E%84%E9%80%A0%E5%A4%8D%E5%8F%A4%E6%B8%B8%E6%88%8Fdocker%E9%95%9C%E5%83%8F/" rel="prev" title="构造复古游戏docker镜像">
-      <i class="fa fa-chevron-left"></i> 构造复古游戏docker镜像
+    <a href="/2020/04/25/Linux-ALSA%E5%85%A5%E9%97%A8-%E9%9F%B3%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" rel="prev" title="Linux-ALSA入门-音频基础知识">
+      <i class="fa fa-chevron-left"></i> Linux-ALSA入门-音频基础知识
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/04/30/%E6%9E%84%E9%80%A0%E5%A4%8D%E5%8F%A4%E6%B8%B8%E6%88%8Fdocker%E9%95%9C%E5%83%8F/" rel="next" title="构造复古游戏docker镜像">
+      构造复古游戏docker镜像 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -521,11 +542,11 @@
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>

@@ -181,96 +181,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/05/06/DesignPattern%E5%85%A5%E9%97%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="piHacker">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="piHacker(嵌入式系统砖家)">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/05/06/DesignPattern%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">DesignPattern入门</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-05-06 09:20:58" itemprop="dateCreated datePublished" datetime="2020-05-06T09:20:58+08:00">2020-05-06</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-<p>title： Design Pattern 入门<br>date： 2020-04-27 09：26：53<br>categories： 软件设计<br>tags： [tools, designpattern]</p>
-<hr>
-<p><strong>对于技术领域的知识点，我个人喜欢简单地划分为2类：</strong></p>
-<ol>
-<li>基础类</li>
-<li>工具类</li>
-</ol>
-<p><strong>我判断一个知识点属于哪一类的主要依据有2点：</strong></p>
-<ol>
-<li>这个知识点是否经久不衰;</li>
-<li>这个知识点是否没有替代品;</li>
-</ol>
-<p>如果上述2点都满足，则我会认为这是基础类知识，属于可以长期投资的价值股;<br>典型的例如操作系统、数据结构、Linux环境编程、软件模式(设计模式、架构模式…)等我会归类为基础类知识;  </p>
-<p>而例如 Qt、Git、Docker、甚至各种编程语言(C、C++、Java、Python)等知识点我都会暂时归类为工具类。不要误会，这些都只是我个人的喜好，并没有要贬低你心爱的技术的意思，只要是你在工作里需要重度使用的技术，你都应该把它归类为基础类，以便提醒自己需要深耕该技术。  </p>
-<p>说了这么多，无非是想告诉你，我认为设计模式很重要，仅此而已。即便你从事的是底层软件相关的工作，你只用 C 语言进行开发，情况也是一样的。</p>
-<h2 id="下面是正文-认识策略模式"><a href="#下面是正文-认识策略模式" class="headerlink" title="下面是正文(认识策略模式)"></a><strong>下面是正文(认识策略模式)</strong></h2><p><strong>相关参考：</strong></p>
-<ul>
-<li>Head First Design Pattern</li>
-<li>Android 源码设计模式解析与实战</li>
-<li>Android Design Patterns and Best Practice</li>
-</ul>
-<h1 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h1><p><strong>需求：</strong><br>模拟现实生活中的鸭子，鸭子会游泳，鸣叫，飞。</p>
-<h2 id="利用继承？"><a href="#利用继承？" class="headerlink" title="利用继承？"></a>利用继承？</h2><h3 id="阶段1"><a href="#阶段1" class="headerlink" title="阶段1"></a>阶段1</h3><p><img src="/images/designpattern/strategy/duck1.png" alt=""></p>
-<p>一个父类 Duck 定义 鸭子 的一些特性，子类继承它的特性，并覆盖(override) 父类的部分特性。至此没什么问题，子类共同拥有父类的特性，消除了代码的重复性。</p>
-<p><strong>新的需求：</strong><br>一些鸭子(例如野鸭)是会飞的，我们要让 Duck 具有 fly() 的特性。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/05/06/DesignPattern%E5%85%A5%E9%97%A8/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/04/30/%E6%9E%84%E9%80%A0%E5%A4%8D%E5%8F%A4%E6%B8%B8%E6%88%8Fdocker%E9%95%9C%E5%83%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -325,6 +235,109 @@
 <li>工作或者学习累了，就去里面揍人。</li>
 </ul>
 
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/04/27/DesignPattern%E5%85%A5%E9%97%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="piHacker">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="piHacker(嵌入式系统砖家)">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/04/27/DesignPattern%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">Design Pattern 入门</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-27 09:26:53" itemprop="dateCreated datePublished" datetime="2020-04-27T09:26:53+08:00">2020-04-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-06 09:24:01" itemprop="dateModified" datetime="2020-05-06T09:24:01+08:00">2020-05-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/" itemprop="url" rel="index"><span itemprop="name">软件设计</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><strong>对于技术领域的知识点，我个人喜欢简单地划分为2类：</strong></p>
+<ol>
+<li>基础类</li>
+<li>工具类</li>
+</ol>
+<p><strong>我判断一个知识点属于哪一类的主要依据有2点：</strong></p>
+<ol>
+<li>这个知识点是否经久不衰;</li>
+<li>这个知识点是否没有替代品;</li>
+</ol>
+<p>如果上述2点都满足，则我会认为这是基础类知识，属于可以长期投资的价值股;<br>典型的例如操作系统、数据结构、Linux环境编程、软件模式(设计模式、架构模式…)等我会归类为基础类知识;  </p>
+<p>而例如 Qt、Git、Docker、甚至各种编程语言(C、C++、Java、Python)等知识点我都会暂时归类为工具类。不要误会，这些都只是我个人的喜好，并没有要贬低你心爱的技术的意思，只要是你在工作里需要重度使用的技术，你都应该把它归类为基础类，以便提醒自己需要深耕该技术。  </p>
+<p>说了这么多，无非是想告诉你，我认为设计模式很重要，仅此而已。即便你从事的是底层软件相关的工作，你只用 C 语言进行开发，情况也是一样的。</p>
+<h2 id="下面是正文-认识策略模式"><a href="#下面是正文-认识策略模式" class="headerlink" title="下面是正文(认识策略模式)"></a><strong>下面是正文(认识策略模式)</strong></h2><p><strong>相关参考：</strong></p>
+<ul>
+<li>Head First Design Pattern</li>
+<li>Android 源码设计模式解析与实战</li>
+<li>Android Design Patterns and Best Practice</li>
+</ul>
+<h1 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h1><p><strong>需求：</strong><br>模拟现实生活中的鸭子，鸭子会游泳，鸣叫，飞。</p>
+<h2 id="利用继承？"><a href="#利用继承？" class="headerlink" title="利用继承？"></a>利用继承？</h2><h3 id="阶段1"><a href="#阶段1" class="headerlink" title="阶段1"></a>阶段1</h3><p><img src="/images/designpattern/strategy/duck1.png" alt=""></p>
+<p>一个父类 Duck 定义 鸭子 的一些特性，子类继承它的特性，并覆盖(override) 父类的部分特性。至此没什么问题，子类共同拥有父类的特性，消除了代码的重复性。</p>
+<p><strong>新的需求：</strong><br>一些鸭子(例如野鸭)是会飞的，我们要让 Duck 具有 fly() 的特性。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/27/DesignPattern%E5%85%A5%E9%97%A8/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1027,11 +1040,11 @@
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
