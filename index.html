@@ -195,7 +195,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/05/09/Linux-Input%E5%85%A5%E9%97%A8-%E4%B8%80%E4%BA%9B%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90/" class="post-title-link" itemprop="url">Linux-Input入门-一次快乐的代码分析</a>
+            <a href="/2020/05/09/Linux-Input%E5%85%A5%E9%97%A8-%E4%B8%80%E4%BA%9B%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90/" class="post-title-link" itemprop="url">Linux-Input入门-一次愉快的代码分析</a>
         </h2>
 
         <div class="post-meta">
@@ -204,10 +204,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-05-09 14:18:46 / 修改时间：14:51:03" itemprop="dateCreated datePublished" datetime="2020-05-09T14:18:46+08:00">2020-05-09</time>
+              <time title="创建时间：2020-05-09 14:18:46" itemprop="dateCreated datePublished" datetime="2020-05-09T14:18:46+08:00">2020-05-09</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-11 07:31:50" itemprop="dateModified" datetime="2020-05-11T07:31:50+08:00">2020-05-11</time>
+              </span>
 
           
 
@@ -220,11 +226,20 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>学生时代留下的关于输入子系统的学习笔记，写得不好，对我个人而言很有纪念意义，另外或许对初学者来说还是有些许参考价值。因此我重新校对了一下内容，并且再丰富了一下，在这里分享给大家。</p>
-<p>看他人如何分析代码最关键的目的是了解别人是怎么思考和探索的，其次才是获取内容相关的知识点。即吃别人的鱼不如学别人怎么钓鱼。</p>
-<p>相关参考：</p>
+          <p>看他人如何分析代码最关键的目的是了解别人是怎么思考和探索的，其次才是获取内容相关的知识点。即吃别人的鱼不如学别人怎么钓鱼。</p>
+<p>本文是我学生时代留下的关于输入子系统的学习笔记，对我个人而言很有纪念意义，对初学者来说也许有一丢丢参考价值。</p>
+<p>最近工作上需要驱动一些输入设备，不由得感慨：Input 子系统设计得真好，这么多年了 Input core 的设计和 API 可以认为是仅发生了察觉不到的变化，这就是驱动界的典范子系统啊。反过来想想，Input 子系统之所以这么经典，恰恰是因为Input device driver 的数量太多了，如果设计得不够好，那将是 Maintainer 们的噩梦(整日疲于修改成吨的Input device driver)。</p>
+<p>Linux 内核/驱动开发并不是特殊的存在，它仍然属于软件开发，或许它有许多自己独有的软件设计模式，但是上层软件开发的很多原则和方法仍然是适用的，不展开来讲了，那样就扯太远了。</p>
+<p><strong>下面是正文</strong></p>
+<p><strong>相关参考：</strong></p>
 <ul>
-<li>韦东山嵌入式 Linux 视频教程第二期: 第13课 输入子系统</li>
+<li>韦东山嵌入式 Linux 视频教程第二期: 第13课 输入子系统 (Linux-2.6)</li>
+<li>Essential Linux Device Drivers</li>
+</ul>
+<p>关注并且后台回复“ELDD”即可下载。</p>
+<p><strong>预备知识：</strong>  </p>
+<ul>
+<li>Linux 字符设备驱动</li>
 </ul>
           <!--noindex-->
             <div class="post-button">
