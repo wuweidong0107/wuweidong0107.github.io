@@ -29,7 +29,7 @@
 <meta property="og:description" content="看他人如何分析代码最关键的目的是了解别人是怎么思考和探索的，其次才是获取内容相关的知识点。即吃别人的鱼不如学别人怎么钓鱼。 本文是我学生时代留下的关于输入子系统的学习笔记，对我个人而言很有纪念意义，对初学者来说也许有一丢丢参考价值。 最近工作上需要驱动一些输入设备，不由得感慨：Input 子系统设计得真好，这么多年了 Input core 的设计和 API 可以认为是仅发生了察觉不到的变化，这就是">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;linux_input&#x2F;wds&#x2F;1.png">
-<meta property="og:updated_time" content="2020-05-11T00:15:13.449Z">
+<meta property="og:updated_time" content="2020-05-11T00:19:13.483Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;linux_input&#x2F;wds&#x2F;1.png">
 
@@ -217,7 +217,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-05-11 08:15:13" itemprop="dateModified" datetime="2020-05-11T08:15:13+08:00">2020-05-11</time>
+                <time title="修改时间：2020-05-11 08:19:13" itemprop="dateModified" datetime="2020-05-11T08:19:13+08:00">2020-05-11</time>
               </span>
 
           
@@ -242,6 +242,8 @@
 <p>本文是我学生时代留下的关于输入子系统的学习笔记，对我个人而言很有纪念意义，对初学者来说也许有一丢丢参考价值。</p>
 <p>最近工作上需要驱动一些输入设备，不由得感慨：Input 子系统设计得真好，这么多年了 Input core 的设计和 API 可以认为是仅发生了察觉不到的变化，这就是驱动界的典范子系统啊。反过来想想，Input 子系统之所以这么经典，恰恰是因为Input device driver 的数量太多了，如果设计得不够好，那将是 Maintainer 们的噩梦(整日疲于修改成吨的Input device driver)。</p>
 <p>Linux 内核/驱动开发并不是特殊的存在，它仍然属于软件开发，或许它有许多自己独有的软件设计模式，但是上层软件开发的很多原则和方法仍然是适用的，不展开来讲了，那样就扯太远了。</p>
+<a id="more"></a>
+
 <p><strong>下面是正文</strong></p>
 <p><strong>相关参考：</strong></p>
 <ul>
@@ -253,8 +255,6 @@
 <ul>
 <li>Linux 字符设备驱动</li>
 </ul>
-<a id="more"></a>
-
 <h1 id="查看入口"><a href="#查看入口" class="headerlink" title="查看入口"></a>查看入口</h1><p>在 drivers/input/input.c 中，查看模块入口函数 input_init()：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">err = register_chrdev(INPUT_MAJOR, <span class="string">"input"</span>, &amp;input_fops);</span></pre></td></tr></table></figure>
 
