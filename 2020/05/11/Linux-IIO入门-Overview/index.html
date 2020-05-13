@@ -20,15 +20,18 @@
     var CONFIG = {"hostname":"wuweidong0107.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="keywords" content="Embedded, Linux, OpenWrt, Buildroot, Opensource, Android">
-<meta property="og:type" content="website">
-<meta property="og:title" content="piHacker(嵌入式系统砖家)">
-<meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;archives&#x2F;2019&#x2F;index.html">
+  <meta name="description" content="相关参考：  https:&#x2F;&#x2F;wiki.st.com&#x2F;stm32mpu&#x2F;wiki&#x2F;IIO_overview">
+<meta name="keywords" content="Embedded, Linux, OpenWrt, Buildroot, Opensource, Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux-IIO入门_Overview">
+<meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;05&#x2F;11&#x2F;Linux-IIO%E5%85%A5%E9%97%A8-Overview&#x2F;index.html">
 <meta property="og:site_name" content="piHacker(嵌入式系统砖家)">
+<meta property="og:description" content="相关参考：  https:&#x2F;&#x2F;wiki.st.com&#x2F;stm32mpu&#x2F;wiki&#x2F;IIO_overview">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-05-11T07:17:42.976Z">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://wuweidong0107.github.io/archives/2019/">
+<link rel="canonical" href="https://wuweidong0107.github.io/2020/05/11/Linux-IIO%E5%85%A5%E9%97%A8-Overview/">
 
 
 <script id="page-configurations">
@@ -36,12 +39,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>归档 | piHacker(嵌入式系统砖家)</title>
+  <title>Linux-IIO入门_Overview | piHacker(嵌入式系统砖家)</title>
   
 
 
@@ -175,50 +178,130 @@
         <div class="content-wrap">
           
 
-          <div class="content archive">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <span class="collection-header">嗯..! 目前共计 14 篇日志。 继续努力。</span>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/05/11/Linux-IIO%E5%85%A5%E9%97%A8-Overview/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="piHacker">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="piHacker(嵌入式系统砖家)">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux-IIO入门_Overview
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-05-11 15:16:28 / 修改时间：15:17:42" itemprop="dateCreated datePublished" datetime="2020-05-11T15:16:28+08:00">2020-05-11</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2019</span>
+        <p>相关参考：</p>
+<ul>
+<li><a href="https://wiki.st.com/stm32mpu/wiki/IIO_overview" target="_blank" rel="noopener">https://wiki.st.com/stm32mpu/wiki/IIO_overview</a></li>
+<li></li>
+</ul>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-12-08T12:46:18+08:00"
-              content="2019-12-08">
-          12-08
-        </time>
+    
+    
+    
+        <div class="reward-container">
+  <div>这是一篇有趣的文章吗？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="piHacker 微信支付">
+        <p>微信支付</p>
       </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2019/12/08/%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%9A%84%E8%87%AA%E6%88%91%E4%BF%AE%E5%85%BB/" itemprop="url">
-            <span itemprop="name">嵌入式软件工程师的自我修养</span>
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/basic/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
           </a>
-      </div>
-
-    </header>
-  </article>
-
-
+        </div>
     </div>
   </div>
-  
-  
-  
 
+
+      <footer class="post-footer">
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/05/09/Linux-Input%E5%85%A5%E9%97%A8-%E4%B8%80%E4%BA%9B%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90/" rel="prev" title="Linux-Input入门-一次快乐的代码分析">
+      <i class="fa fa-chevron-left"></i> Linux-Input入门-一次快乐的代码分析
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/05/13/%E5%85%B3%E4%BA%8E%E4%B9%A0%E6%83%AF%E7%9A%84%E7%A0%94%E7%A9%B6%E4%B8%8E%E5%AD%A6%E4%B9%A0/" rel="next" title="关于习惯的研究与学习">
+      关于习惯的研究与学习 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
 
