@@ -20,15 +20,18 @@
     var CONFIG = {"hostname":"wuweidong0107.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="keywords" content="Embedded, Linux, OpenWrt, Buildroot, Opensource, Android">
-<meta property="og:type" content="website">
-<meta property="og:title" content="piHacker(嵌入式系统砖家)">
-<meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;tags&#x2F;jellyfin&#x2F;index.html">
+  <meta name="description" content="最近工作里要在 Linux-4.x 内核上使用 ADC 模块，即在 IIO(Industrial I&#x2F;O) 子系统的框架下添加 ADC provider driver 和 consumer driver，因此看了一些相关资料，包括文章、书籍、源码等。写得最好的入门文章应该是 ST 公司 WiKi 上的 IIO overview，为了避免大家走弯路以及照顾一些英文不太好的读者，我用自己话将其翻译为中">
+<meta name="keywords" content="Embedded, Linux, OpenWrt, Buildroot, Opensource, Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux-IIO入门_概述(译)">
+<meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;05&#x2F;14&#x2F;Linux-IIO%E5%85%A5%E9%97%A8-%E6%A6%82%E8%BF%B0-%E8%AF%91&#x2F;index.html">
 <meta property="og:site_name" content="piHacker(嵌入式系统砖家)">
+<meta property="og:description" content="最近工作里要在 Linux-4.x 内核上使用 ADC 模块，即在 IIO(Industrial I&#x2F;O) 子系统的框架下添加 ADC provider driver 和 consumer driver，因此看了一些相关资料，包括文章、书籍、源码等。写得最好的入门文章应该是 ST 公司 WiKi 上的 IIO overview，为了避免大家走弯路以及照顾一些英文不太好的读者，我用自己话将其翻译为中">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-05-14T00:56:56.134Z">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://wuweidong0107.github.io/tags/jellyfin/">
+<link rel="canonical" href="https://wuweidong0107.github.io/2020/05/14/Linux-IIO%E5%85%A5%E9%97%A8-%E6%A6%82%E8%BF%B0-%E8%AF%91/">
 
 
 <script id="page-configurations">
@@ -36,12 +39,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>标签: jellyfin | piHacker(嵌入式系统砖家)</title>
+  <title>Linux-IIO入门_概述(译) | piHacker(嵌入式系统砖家)</title>
   
 
 
@@ -175,51 +178,127 @@
         <div class="content-wrap">
           
 
-          <div class="content tag">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">jellyfin
-          <small>标签</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/05/14/Linux-IIO%E5%85%A5%E9%97%A8-%E6%A6%82%E8%BF%B0-%E8%AF%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="piHacker">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="piHacker(嵌入式系统砖家)">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux-IIO入门_概述(译)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-05-14 08:21:57 / 修改时间：08:56:56" itemprop="dateCreated datePublished" datetime="2020-05-14T08:21:57+08:00">2020-05-14</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2020</span>
+        <p>最近工作里要在 Linux-4.x 内核上使用 ADC 模块，即在 IIO(Industrial I/O) 子系统的框架下添加 ADC provider driver 和 consumer driver，因此看了一些相关资料，包括文章、书籍、源码等。写得最好的入门文章应该是 ST 公司 WiKi 上的 <a href="https://wiki.st.com/stm32mpu/wiki/IIO_overview" target="_blank" rel="noopener">IIO overview</a>，为了避免大家走弯路以及照顾一些英文不太好的读者，我用自己话将其翻译为中文，在这里分享给大家，希望对给大家提供一点帮助。</p>
+<a id="more"></a>
+
+<p><strong>下面是正文</strong></p>
+<h1 id="IIO-子系统的设计目的"><a href="#IIO-子系统的设计目的" class="headerlink" title="IIO 子系统的设计目的"></a>IIO 子系统的设计目的</h1><h1 id="IIO-子系统概述"><a href="#IIO-子系统概述" class="headerlink" title="IIO 子系统概述"></a>IIO 子系统概述</h1><h1 id="IIO-子系统的配置"><a href="#IIO-子系统的配置" class="headerlink" title="IIO 子系统的配置"></a>IIO 子系统的配置</h1><h1 id="如何使用-IIO-子系统？"><a href="#如何使用-IIO-子系统？" class="headerlink" title="如何使用 IIO 子系统？"></a>如何使用 IIO 子系统？</h1><h1 id="如何调试-IIO-子系统？"><a href="#如何调试-IIO-子系统？" class="headerlink" title="如何调试 IIO 子系统？"></a>如何调试 IIO 子系统？</h1><h1 id="如何更深入的了解-IIO-子系统？"><a href="#如何更深入的了解-IIO-子系统？" class="headerlink" title="如何更深入的了解 IIO 子系统？"></a>如何更深入的了解 IIO 子系统？</h1><p>你和我各有一个苹果，如果我们交换苹果的话，我们还是只有一个苹果。但当你和我各有一个想法，我们交换想法的话，我们就都有两个想法了。如果你也对嵌入式系统和开源软件感兴趣，并且想和更多人互相交流学习的话，请关注我的 公众号： <strong>嵌入式系统砖家</strong>，一起来学习吧，<strong>关注和转发</strong> 都是是对作者最大的支持，谢谢大家，祝工作顺利~</p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-04-17T16:17:54+08:00"
-              content="2020-04-17">
-          04-17
-        </time>
+    
+    
+    
+        <div class="reward-container">
+  <div>这是一篇有趣的文章吗？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="piHacker 微信支付">
+        <p>微信支付</p>
       </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/04/17/%E5%9C%A8Pi%E4%B8%8A%E6%8A%98%E8%85%BEjellyfin/" itemprop="url">
-            <span itemprop="name">在Pi上折腾Jellyfin</span>
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/basic/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
           </a>
-      </div>
-
-    </header>
-  </article>
-
+        </div>
     </div>
   </div>
-  
-  
-  
 
+
+      <footer class="post-footer">
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/05/13/%E5%85%B3%E4%BA%8E%E4%B9%A0%E6%83%AF%E7%9A%84%E7%A0%94%E7%A9%B6%E4%B8%8E%E5%AD%A6%E4%B9%A0/" rel="prev" title="关于习惯的研究与学习">
+      <i class="fa fa-chevron-left"></i> 关于习惯的研究与学习
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
 
@@ -272,6 +351,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#IIO-子系统的设计目的"><span class="nav-number">1.</span> <span class="nav-text">IIO 子系统的设计目的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IIO-子系统概述"><span class="nav-number">2.</span> <span class="nav-text">IIO 子系统概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IIO-子系统的配置"><span class="nav-number">3.</span> <span class="nav-text">IIO 子系统的配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何使用-IIO-子系统？"><span class="nav-number">4.</span> <span class="nav-text">如何使用 IIO 子系统？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何调试-IIO-子系统？"><span class="nav-number">5.</span> <span class="nav-text">如何调试 IIO 子系统？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何更深入的了解-IIO-子系统？"><span class="nav-number">6.</span> <span class="nav-text">如何更深入的了解 IIO 子系统？</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
