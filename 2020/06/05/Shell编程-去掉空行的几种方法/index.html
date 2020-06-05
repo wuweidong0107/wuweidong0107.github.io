@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"wuweidong0107.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="昨天听到一个很多意思的说法：脚本猛于老虎。经常写脚本的人都会认可这种说法。 这里面有2意思：  脚本很强大，可以做很多事情，虽然不是最好的方式; 脚本很危险，很容易出错;  或许还能加一句：伴君如伴老虎…   我本人非常喜欢 shell 脚本，因为它做事太简单粗暴了，适合用来实现 v0.01 版本原型，我甚至认为它是一把辅助设计的瑞士军刀。 接下来是主题，做嵌入式软件开发偶尔要收集和分析 log，">
+  <meta name="description" content="昨天听到一个很多意思的说法：脚本猛于老虎。经常写脚本的人都会认可这种说法。 这里面有2意思：  脚本很强大，可以做很多事情，虽然不是最好的方式; 脚本很危险，很容易出错;  或许还能加一句：伴君如伴老虎…   我本人非常喜欢 shell 脚本，因为它做事太简单粗暴了，适合用来实现 v0.01 版本原型，我甚至认为它很好地辅助了软件设计。 接下来是主题，做嵌入式软件开发偶尔要收集和分析 log，有时">
 <meta name="keywords" content="Shell">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Shell编程_去掉空行的几种方法">
 <meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;06&#x2F;05&#x2F;Shell%E7%BC%96%E7%A8%8B-%E5%8E%BB%E6%8E%89%E7%A9%BA%E8%A1%8C%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95&#x2F;index.html">
 <meta property="og:site_name" content="piHacker(嵌入式系统砖家)">
-<meta property="og:description" content="昨天听到一个很多意思的说法：脚本猛于老虎。经常写脚本的人都会认可这种说法。 这里面有2意思：  脚本很强大，可以做很多事情，虽然不是最好的方式; 脚本很危险，很容易出错;  或许还能加一句：伴君如伴老虎…   我本人非常喜欢 shell 脚本，因为它做事太简单粗暴了，适合用来实现 v0.01 版本原型，我甚至认为它是一把辅助设计的瑞士军刀。 接下来是主题，做嵌入式软件开发偶尔要收集和分析 log，">
+<meta property="og:description" content="昨天听到一个很多意思的说法：脚本猛于老虎。经常写脚本的人都会认可这种说法。 这里面有2意思：  脚本很强大，可以做很多事情，虽然不是最好的方式; 脚本很危险，很容易出错;  或许还能加一句：伴君如伴老虎…   我本人非常喜欢 shell 脚本，因为它做事太简单粗暴了，适合用来实现 v0.01 版本原型，我甚至认为它很好地辅助了软件设计。 接下来是主题，做嵌入式软件开发偶尔要收集和分析 log，有时">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-06-05T01:48:18.960Z">
+<meta property="og:updated_time" content="2020-06-05T01:53:40.798Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="https://wuweidong0107.github.io/2020/06/05/Shell%E7%BC%96%E7%A8%8B-%E5%8E%BB%E6%8E%89%E7%A9%BA%E8%A1%8C%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/">
@@ -208,7 +208,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-06-05 09:48:18" itemprop="dateCreated datePublished" datetime="2020-06-05T09:48:18+08:00">2020-06-05</time>
+              <time title="创建时间：2020-06-05 09:53:40" itemprop="dateCreated datePublished" datetime="2020-06-05T09:53:40+08:00">2020-06-05</time>
             </span>
 
           
@@ -236,8 +236,8 @@
 <li>脚本很危险，很容易出错;</li>
 </ol>
 <p>或许还能加一句：伴君如伴老虎…  </p>
-<p>我本人非常喜欢 shell 脚本，因为它做事太简单粗暴了，适合用来实现 v0.01 版本原型，我甚至认为它是一把辅助设计的瑞士军刀。</p>
-<p>接下来是主题，做嵌入式软件开发偶尔要收集和分析 log，有时为了格式化输出需要删除掉多余的空白行，我挑选了几个容易理解的方法分享给大家。</p>
+<p>我本人非常喜欢 shell 脚本，因为它做事太简单粗暴了，适合用来实现 v0.01 版本原型，我甚至认为它很好地辅助了软件设计。</p>
+<p>接下来是主题，做嵌入式软件开发偶尔要收集和分析 log，有时为了格式化输出需要删除掉多余的空白行，我挑选了几个<strong>容易理解的</strong>方法分享给大家。</p>
 <a id="more"></a>
 
 <h1 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h1><figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="symbol">$</span> grep -v <span class="string">'^$'</span> <span class="keyword">file</span></span></pre></td></tr></table></figure>
@@ -263,7 +263,7 @@
 <p>-s 用于将其输出中相同相邻字符的序列压缩为单个字符：</p>
 <figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ man tr</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">DESCRIPTION</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    -s, <span class="comment">--squeeze-repeats</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">              <span class="built_in">replace</span>  <span class="keyword">each</span>  sequence  <span class="keyword">of</span> <span class="keyword">a</span> repeated <span class="keyword">character</span> that is listed <span class="keyword">in</span> <span class="keyword">the</span> <span class="keyword">last</span> specified SET, <span class="keyword">with</span> <span class="keyword">a</span> single occurrence <span class="keyword">of</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">              that <span class="keyword">character</span></span></pre></td></tr></table></figure>
 
-<h1 id="Vi"><a href="#Vi" class="headerlink" title="Vi"></a>Vi</h1><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vi file</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="symbol">:g/^</span><span class="variable">$/</span>d</span></pre></td></tr></table></figure>
+<h1 id="vi"><a href="#vi" class="headerlink" title="vi"></a>vi</h1><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vi file</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="symbol">:g/^</span><span class="variable">$/</span>d</span></pre></td></tr></table></figure>
 <p>vi 是一种模式编辑器。不同的按钮和键击可以更改不同的“模式”。<br>在命令模式下，g 指定全局搜索，^$ 用于匹配空白行，d 表示删除匹配项。</p>
 <p>你和我各有一个苹果，如果我们交换苹果的话，我们还是只有一个苹果。但当你和我各有一个想法，我们交换想法的话，我们就都有两个想法了。如果你也对<strong>嵌入式系统和开源软件</strong>感兴趣，并且想和更多人互相交流学习的话，请关注我的公众号：<strong>嵌入式系统砖家</strong>，一起来学习吧，关注或转发都是是对作者最大的支持，谢谢大家，祝工作顺利~</p>
 
@@ -386,7 +386,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#grep"><span class="nav-number">1.</span> <span class="nav-text">grep</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sed"><span class="nav-number">2.</span> <span class="nav-text">sed</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#awk"><span class="nav-number">3.</span> <span class="nav-text">awk</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#tr"><span class="nav-number">4.</span> <span class="nav-text">tr</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Vi"><span class="nav-number">5.</span> <span class="nav-text">Vi</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#grep"><span class="nav-number">1.</span> <span class="nav-text">grep</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sed"><span class="nav-number">2.</span> <span class="nav-text">sed</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#awk"><span class="nav-number">3.</span> <span class="nav-text">awk</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#tr"><span class="nav-number">4.</span> <span class="nav-text">tr</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vi"><span class="nav-number">5.</span> <span class="nav-text">vi</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
