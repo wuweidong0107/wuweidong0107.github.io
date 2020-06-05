@@ -205,7 +205,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-06-05 09:44:44" itemprop="dateCreated datePublished" datetime="2020-06-05T09:44:44+08:00">2020-06-05</time>
+              <time title="创建时间：2020-06-05 09:46:00" itemprop="dateCreated datePublished" datetime="2020-06-05T09:46:00+08:00">2020-06-05</time>
             </span>
 
           
@@ -228,30 +228,14 @@
 <p>或许还能加一句：伴君如伴老虎…  </p>
 <p>我本人非常喜欢 shell 脚本，因为它做事太简单粗暴了，适合用来实现 v0.01 版本原型，我甚至认为它是一把辅助设计的瑞士军刀。</p>
 <p>接下来是主题，做嵌入式软件开发偶尔要收集和分析 log，有时为了格式化输出需要删除掉多余的空白行，我挑选了几个容易理解的方法分享给大家。</p>
-<h1 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h1><figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="symbol">$</span> grep -v <span class="string">'^$'</span> <span class="keyword">file</span></span></pre></td></tr></table></figure>
-
-<p>-v 用于输出不匹配的内容：</p>
-<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ man grep</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"> <span class="keyword">Matching</span> Control</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"> -v, --invert-match</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">              Invert the sense <span class="keyword">of</span> <span class="keyword">matching</span>, <span class="keyword">to</span> <span class="keyword">select</span> non-<span class="keyword">matching</span> lines.</span></pre></td></tr></table></figure>
-
-<p>通配符 ‘^$’里的 ^ 用于表示字符串开始，$ 用于表示字符串结束。</p>
-<h1 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h1><figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="symbol">$</span> sed <span class="string">'/^$/d'</span> <span class="keyword">file</span></span></pre></td></tr></table></figure>
-<p>sed 的全名是 “stream editor”，即流编辑器，是一个使用简单紧凑的编程语言来解析和转换文本超强实用程序。</p>
-<p>^$ 用于匹配空白行，d 则是 sed 的其中一个命令，用于删除匹配项：<br>｀｀｀<br>$ man sed<br>COMMAND SYNOPSIS<br>    …<br>    d      Delete pattern space.  Start next cycle.<br>    …<br>｀｀｀</p>
-<h1 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h1><figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="symbol">$</span> awk <span class="string">'!/^$/'</span> <span class="keyword">file</span></span></pre></td></tr></table></figure>
-
-<p><strong>补充知识：</strong><br>AWK (其名称得自于它的创始人阿尔佛雷德·艾侯、彼得·温伯格和布莱恩·柯林汉姓氏的首个字母) 是一种用于处理文本的编程语言。它是一个优良的文本处理工具，工作时它会扫描文件中的每一行，查找与命令行中所给定内容相匹配的模式。如果发现匹配内容，则进行下一个编程步骤。如果找不到匹配内容，则继续处理下一行。</p>
-<p><strong>AWK程序是由一系列模式–动作对组成的:</strong>  </p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="section">pattern</span> &#123; <span class="attribute">action</span> &#125;</span></pre></td></tr></table></figure>
-
-<p>回到我们的需求，^$ 用于匹配空白行，！则用来取反，从而找出非空白行，awk 的默认 action 就是 print，所以我们连 print 都不写了。</p>
-<h1 id="tr"><a href="#tr" class="headerlink" title="tr"></a>tr</h1><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">cat</span> in.txt | <span class="keyword">tr</span> -s <span class="string">'\n'</span></span></pre></td></tr></table></figure>
-<p>tr 是 translate 的缩写，用于替换或删除输入数据集中特定字符。</p>
-<p>-s 用于将其输出中相同相邻字符的序列压缩为单个字符：</p>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ man tr</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">DESCRIPTION</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    -s, <span class="comment">--squeeze-repeats</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">              <span class="built_in">replace</span>  <span class="keyword">each</span>  sequence  <span class="keyword">of</span> <span class="keyword">a</span> repeated <span class="keyword">character</span> that is listed <span class="keyword">in</span> <span class="keyword">the</span> <span class="keyword">last</span> specified SET, <span class="keyword">with</span> <span class="keyword">a</span> single occurrence <span class="keyword">of</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">              that <span class="keyword">character</span></span></pre></td></tr></table></figure>
-
-<h1 id="Vi"><a href="#Vi" class="headerlink" title="Vi"></a>Vi</h1><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vi file</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="symbol">:g/^</span><span class="variable">$/</span>d</span></pre></td></tr></table></figure>
-<p>vi 是一种模式编辑器。不同的按钮和键击可以更改不同的“模式”。<br>在命令模式下，g 指定全局搜索，^$ 用于匹配空白行，d 表示删除匹配项。</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/06/05/Shell%E7%BC%96%E7%A8%8B-%E5%8E%BB%E6%8E%89%E7%A9%BA%E8%A1%8C%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
