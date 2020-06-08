@@ -227,16 +227,93 @@
 </ul>
 <p>我想起看这两本书原因是：Joel on Software 在一篇给计算机系学生的忠告文章里说，毕业之前你一定要修一门经济学课程，Joel( stackoverflow 的创始人 ) 的话在我心里有很重的分量，我愿意接受他的建议。</p>
 <p>另外，这两本书在豆瓣上的评价极高：</p>
-<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">一看到《经济学原理》这样的书名，我会立即把它归为异次元一类，碰都不会去碰，别说读它了，自从大学毕业后，对于任何此类教科书，我会毫不客气地说，滚！</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">这种情绪的对立既包含了对中国教育制度的控诉，又体现了对死读书无法改变命运的残酷现实的无奈。</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">工作约<span class="number">7</span>到<span class="number">8</span>年后，自我体会到和社会的逐渐脱节，这里不止是因为工作环境的隔离性和社交圈的狭窄，还有自身知识量的乏馈，光是义务教育和本科教育所建立的知识结构显然已经无法支撑起我的求知欲所对应的飞速发展的社会万物，可是学习从何开始呢？</span></pre></td></tr></table></figure>
-<p>话说到这里，志同道合的人应该知道怎么做了，我就不再讲废话了，下面回归到技术上。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/06/08/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E4%BD%BF%E7%94%A8mmap-%E6%95%B0%E7%BB%84%E7%9A%84%E6%96%B9%E5%BC%8F%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+<blockquote>
+<p>一看到《经济学原理》这样的书名，我会立即把它归为异次元一类，碰都不会去碰，别说读它了，自从大学毕业后，对于任何此类教科书，我会毫不客气地说，滚！<br><br>这种情绪的对立既包含了对中国教育制度的控诉，又体现了对死读书无法改变命运的残酷现实的无奈。<br><br>工作约7到8年后，自我体会到和社会的逐渐脱节，这里不止是因为工作环境的隔离性和社交圈的狭窄，还有自身知识量的乏馈，光是义务教育和本科教育所建立的知识结构显然已经无法支撑起我的求知欲所对应的飞速发展的社会万物，可是学习从何开始呢？</p>
+</blockquote>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">话说到这里，志同道合的人应该知道怎么做了，我就不再讲废话了，下面回归到技术上。</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">&lt;!--more--&gt;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">以下是正文：</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"># 背景知识</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">mmap()系统调用在调用进程的虚拟地址空间中创建一个新内存映射( memory mappings )，映射分为两种:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 文件映射( <span class="built_in">File</span> mapping )：文件映射将一个文件的一部分直接映射到调用进程的虚拟内存中。一旦一个文件被映射之后就可以通过在相应的内存区域中操作字节来访问文件内容了。映射的分页会在需要的时候从文件中（自动）加载。这种映射也被称为基于文件的映射( file-based mapping )或内存映射文件( memory-mapped file )。</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="number">2.</span> 匿名映射( Anonymous mapping )：匿名映射没有对应的文件，这种映射的分页会被初始化为<span class="number">0</span>。</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">我们可以使某个磁盘文件的内容看起来就像是内存中的一个数组。如果文件的内容是由读多条 C 语言结构体描述的记录构成的话，你就可以通过访问结构体数组来更新文件的内容了。</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">## 创建映射: mmap()</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">mmap()系统调用在调用进程的虚拟地址空间中创建一个新映射，如果是文件映射的话，是通过文件描述符和文件关联在一起：</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">```C</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/mman.h&gt;</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">mmap</span><span class="params">(<span class="keyword">void</span> *addr, <span class="keyword">size_t</span> length, <span class="keyword">int</span> prot, <span class="keyword">int</span> flags,　<span class="keyword">int</span> fd, <span class="keyword">off_t</span> offset)</span></span>;</span></pre></td></tr></table></figure>
+<p>成功时 mmap() 会返回新映射的起始地址。发生错误时 mmap( )会返回 MAP_FAILED。</p>
+<p><strong>参数：</strong></p>
+<ul>
+<li><p>addr，用去指定内存区域的起始地址，为了可移植性，一般设为 NULL, 表示由系统自动决定内存区域的起始地址。不管采用何种方式，内核会选择一个不与任何既有映射冲突的地址。</p>
+</li>
+<li><p>len, 映射区域的长度。</p>
+</li>
+<li><p>prot，映射区域的访问权限，可选项包括 READ/WRITE/EXEC/NONE。</p>
+</li>
+<li><p>flags, 映射区域的可见性:</p>
+<ul>
+<li>私有映射（MAP_PRIVATE）：在映射内容上发生的变更对其他进程不可见，对于文件映射来讲，变更将不会在底层文件上发生。</li>
+<li>共享映射（MAP_SHARED）：在映射内容上发生的变更对所有共享同一个映射的其他进程都可见，对于文件映射来讲，变更将会发生在底层的文件上。</li>
+</ul>
+</li>
+<li><p>fd, 被映射的文件的文件描述符。</p>
+</li>
+<li><p>offset, 从该偏移位置开始映射。</p>
+</li>
+</ul>
+<p><strong>更多知识点：</strong><br><img src="/images/linux_program/mmap/file-mmap-overview.png" alt=""></p>
+<ul>
+<li><p>在打开描述符fd引用的文件时必须要具备与prot和flags参数值匹配的权限。</p>
+</li>
+<li><p>offset参数指定了从文件区域中的哪个字节开始映射，它必须是系统分页大小的倍数。</p>
+</li>
+<li><p>一旦mmap()被调用之后就能够关闭文件描述符了，而不会对映射产生任何影响。</p>
+</li>
+<li><p>在Linux上，一个文件映射的分页会在首次被访问时被映射进内存。</p>
+</li>
+<li><p>除了普通的磁盘文件，使用 mmap() 还能够映射各种真实和虚拟设备的内容，如硬盘、光盘以及/dev/mem。</p>
+</li>
+</ul>
+<h2 id="同步映射区域：msync"><a href="#同步映射区域：msync" class="headerlink" title="同步映射区域：msync()"></a>同步映射区域：msync()</h2><p>msync() 系统调用让应用程序能够显式地 <strong>在某种程度上</strong> 控制何时完成共享映射与映射文件之间的同步。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> man msync</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">SYNOPSIS</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">　　　　#include &lt;sys/mman.h&gt;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">       int msync(void *addr, size_t length, int flags);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">DESCRIPTION</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">       msync()  flushes  changes made to the in-core copy of a file that was mapped into memory using mmap(2) back to the filesystem.</span></pre></td></tr></table></figure>
+<p><strong>参数：</strong></p>
+<ul>
+<li><p>addr和length参数指定了需同步的内存区域的起始地址和大小。</p>
+</li>
+<li><p>flags 的可取值:</p>
+<ul>
+<li>MS_SYNC，执行一个同步的文件写入。会阻塞直到内存区域中所有被修改过的分页被写入到磁盘为止。</li>
+<li>MS_ASYNC，执行一个异步的文件写入，会立即返回。内存区域中被修改过的分页会在后面某个时刻被写入磁盘并立即对在相应文件区域中执行 read() 的其他进程可见。</li>
+<li>MS_INVALIDATE，使映射数据的缓存副本失效。其结果是其他进程对文件做出的所有更新将会在内存区域中可见。</li>
+</ul>
+</li>
+</ul>
+<p><strong>更多知识点：</strong></p>
+<ul>
+<li><p>如果映射是私有的，那么不修改被映射的文件。</p>
+</li>
+<li><p>与其他内存映射函数一样，地址必须与页边界对齐。</p>
+</li>
+<li><p>MS_ASYNC 不保证何时写入，因为在后台运行的 IO elevator 算法试图通过合并和排序写入来最大程度地提高效率，以最大程度地提高 IO 的吞吐量。</p>
+</li>
+</ul>
+<h1 id="演示-demo"><a href="#演示-demo" class="headerlink" title="演示 demo"></a>演示 demo</h1><h2 id="分解代码"><a href="#分解代码" class="headerlink" title="分解代码"></a>分解代码</h2><p>定义数据类型</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">int</span> integer;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">char</span> <span class="built_in">string</span>[<span class="number">24</span>];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">&#125; RECORD;</span></pre></td></tr></table></figure>
+
+<p>构造数据文件</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">fp = fopen(<span class="string">"records.dat"</span>,<span class="string">"w+"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;NRECORDS; i++) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    record.integer = i;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">sprintf</span>(record.<span class="built_in">string</span>,<span class="string">"RECORD-%d"</span>,i);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    fwrite(&amp;record,<span class="keyword">sizeof</span>(record),<span class="number">1</span>,fp);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p>映射文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">f = open("records.dat",O_RDWR);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">mapped = (RECORD *)mmap(0, NRECORDS*sizeof(record), </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">                        PROT_READ|PROT_WRITE, MAP_SHARED, f, 0);</span></pre></td></tr></table></figure>
+
+<p>通过结构体数组修改数据(　RECORD-43-&gt;RECORD-243 )</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">mapped[<span class="number">43</span>].integer = <span class="number">243</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">sprintf</span>(mapped[<span class="number">43</span>].<span class="built_in">string</span>,<span class="string">"RECORD-%d"</span>,mapped[<span class="number">43</span>].integer);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">msync((<span class="keyword">void</span> *)mapped, NRECORDS*<span class="keyword">sizeof</span>(record), MS_ASYNC);</span></pre></td></tr></table></figure>
+
+<p>清理现场</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">munmap((<span class="keyword">void</span> *)mapped, NRECORDS*<span class="keyword">sizeof</span>(record));</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">close</span>(f);</span></pre></td></tr></table></figure>
+
+<h2 id="运行效果"><a href="#运行效果" class="headerlink" title="运行效果"></a>运行效果</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> gcc mmap.c -o mmap</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ./mmap</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ls</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">mmap  mmap.c  records.dat</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> strings records.dat</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">RECORD-0</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">RECORD-1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">RECORD-2</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">...</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">RECORD-42</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">RECORD-243</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">RECORD-44</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">...</span></pre></td></tr></table></figure>
+<p>可以看到：RECORD-43 被成功修改为 RECORD-243。</p>
+<p>演示的 demo 就这么简单，却需要如此多的背景知识，甚至还有大量的细节没在文中披露，以后再深入讲解吧。</p>
+<h1 id="相关参考"><a href="#相关参考" class="headerlink" title="相关参考"></a>相关参考</h1><ul>
+<li>《Linux/Unix 系统编程手册-第49章 内存映射》</li>
+<li>《Linux程序设计-第3章 文件操作》</li>
+<li>《Unix 环境高级编程-第14章节 14.8-存储映射I/O》</li>
+<li><a href="https://lwn.net/Articles/508212/" target="_blank" rel="noopener">LWN: R.I.P. pdflush</a></li>
+<li><a href="https://stackoverflow.com/questions/19302997/c-linux-msyncms-async-flush-order" target="_blank" rel="noopener">Stack Overflow: msync(MS_ASYNC) flush order</a></li>
+</ul>
+<p>你和我各有一个苹果，如果我们交换苹果的话，我们还是只有一个苹果。但当你和我各有一个想法，我们交换想法的话，我们就都有两个想法了。如果你也对 <strong>嵌入式系统和开源软件</strong> 感兴趣，并且想和更多人互相交流学习的话，请关注我的公众号：<strong>嵌入式系统砖家</strong>，一起来学习吧，关注或转发都是是对作者最大的支持，谢谢大家，祝工作顺利~</p>
+
       
     </div>
 
