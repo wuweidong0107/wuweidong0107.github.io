@@ -288,7 +288,7 @@
 </li>
 </ul>
 <h2 id="同步映射区域：msync"><a href="#同步映射区域：msync" class="headerlink" title="同步映射区域：msync()"></a>同步映射区域：msync()</h2><p>msync() 系统调用让应用程序能够显式地 <strong>在某种程度上</strong> 控制何时完成共享映射与映射文件之间的同步。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> man msync</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">SYNOPSIS</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">　　　　#include &lt;sys/mman.h&gt;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">       int msync(void *addr, size_t length, int flags);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">DESCRIPTION</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">       msync()  flushes  changes made to the in-core copy of a file that was mapped into memory using mmap(2) back to the filesystem.</span></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> man msync</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">SYNOPSIS</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">　　　　#include &lt;sys/mman.h&gt;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">       int msync(void *addr, size_t length, int flags);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">DESCRIPTION</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">       msync()  flushes  changes made to the in-core copy of a file that was mapped into memory using mmap(2) back to the filesystem.</span></pre></td></tr></table></figure>
 <p><strong>参数：</strong></p>
 <ul>
 <li><p>addr和length参数指定了需同步的内存区域的起始地址和大小。</p>
@@ -329,11 +329,11 @@
 <p>可以看到：RECORD-43 被成功修改为 RECORD-243。</p>
 <p>演示的 demo 就这么简单，却需要如此多的背景知识，甚至还有大量的细节没在文中披露，以后再深入讲解吧。</p>
 <h1 id="相关参考"><a href="#相关参考" class="headerlink" title="相关参考"></a>相关参考</h1><ul>
-<li>&lt;Linux/Unix 系统编程手册-第49章 内存映射&gt;</li>
-<li>&lt;Linux程序设计-第3章 文件操作&gt;</li>
-<li>&lt;Unix 环境高级编程&gt;</li>
-<li><a href="https://lwn.net/Articles/508212/" target="_blank" rel="noopener">LWN R.I.P. pdflush</a></li>
-<li><a href="https://stackoverflow.com/questions/19302997/c-linux-msyncms-async-flush-order" target="_blank" rel="noopener">stackoverflow msync(MS_ASYNC) flush order</a></li>
+<li>《Linux/Unix 系统编程手册-第49章 内存映射》</li>
+<li>《Linux程序设计-第3章 文件操作》</li>
+<li>《Unix 环境高级编程-第14章节 14.8-存储映射I/O》</li>
+<li><a href="https://lwn.net/Articles/508212/" target="_blank" rel="noopener">LWN: R.I.P. pdflush</a></li>
+<li><a href="https://stackoverflow.com/questions/19302997/c-linux-msyncms-async-flush-order" target="_blank" rel="noopener">Stack Overflow: msync(MS_ASYNC) flush order</a></li>
 </ul>
 <p>你和我各有一个苹果，如果我们交换苹果的话，我们还是只有一个苹果。但当你和我各有一个想法，我们交换想法的话，我们就都有两个想法了。如果你也对 <strong>嵌入式系统和开源软件</strong> 感兴趣，并且想和更多人互相交流学习的话，请关注我的公众号：<strong>嵌入式系统砖家</strong>，一起来学习吧，关注或转发都是是对作者最大的支持，谢谢大家，祝工作顺利~</p>
 
