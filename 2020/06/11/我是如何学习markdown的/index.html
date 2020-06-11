@@ -20,20 +20,21 @@
     var CONFIG = {"hostname":"wuweidong0107.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="这部分知识很重要，因为这里面的很多概念会出现在CPU手册和Codec手册里，所以了解这些基础知识是我们看懂手册的基本前提。我希望自己能不断地更新和完善这一块知识点，这篇文章会不定期更新。 相关参考：    &amp;lt;韦东山Android 视频教程&amp;gt; 第001节_声音的采集与存储 &amp;lt;深入理解Android内核设计思想&amp;gt; 第 13.1 章节  早期的留声机是如何工作的？参考：https">
-<meta name="keywords" content="driver,alsa">
+  <meta name="description" content="高效地学习推荐「费曼技巧」。 什么是费曼技巧？如果有人用长篇大论跟你解释这个东西，那他实际上并理解「费曼技巧」。 费曼技巧是一种「以教为学」的学习方式，能够帮助你提高知识的吸收效率，真正理解并学会运用知识。验证你是否真正掌握一个知识，看你能否用直白浅显的语言把复杂深奥的问题和知识讲清楚。 为什么它有效？要做到能将复杂的问题用简单的语言说清楚，必须对知识有深刻的理解和应用。这需要你做到：  拆分和压">
+<meta name="keywords" content="Markdown">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux-ALSA入门-音频基础知识">
-<meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;04&#x2F;25&#x2F;Linux-ALSA%E5%85%A5%E9%97%A8-%E9%9F%B3%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86&#x2F;index.html">
+<meta property="og:title" content="我是如何学习markdown的">
+<meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;06&#x2F;11&#x2F;%E6%88%91%E6%98%AF%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0markdown%E7%9A%84&#x2F;index.html">
 <meta property="og:site_name" content="piHacker(嵌入式系统砖家)">
-<meta property="og:description" content="这部分知识很重要，因为这里面的很多概念会出现在CPU手册和Codec手册里，所以了解这些基础知识是我们看懂手册的基本前提。我希望自己能不断地更新和完善这一块知识点，这篇文章会不定期更新。 相关参考：    &amp;lt;韦东山Android 视频教程&amp;gt; 第001节_声音的采集与存储 &amp;lt;深入理解Android内核设计思想&amp;gt; 第 13.1 章节  早期的留声机是如何工作的？参考：https">
+<meta property="og:description" content="高效地学习推荐「费曼技巧」。 什么是费曼技巧？如果有人用长篇大论跟你解释这个东西，那他实际上并理解「费曼技巧」。 费曼技巧是一种「以教为学」的学习方式，能够帮助你提高知识的吸收效率，真正理解并学会运用知识。验证你是否真正掌握一个知识，看你能否用直白浅显的语言把复杂深奥的问题和知识讲清楚。 为什么它有效？要做到能将复杂的问题用简单的语言说清楚，必须对知识有深刻的理解和应用。这需要你做到：  拆分和压">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;linux_alsa&#x2F;analog_record.jpg">
-<meta property="og:updated_time" content="2020-05-14T01:32:27.720Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;tools&#x2F;markdown&#x2F;basic_syntax.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;tools&#x2F;markdown&#x2F;extended_syntax.png">
+<meta property="og:updated_time" content="2020-06-11T00:18:01.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;linux_alsa&#x2F;analog_record.jpg">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;tools&#x2F;markdown&#x2F;basic_syntax.png">
 
-<link rel="canonical" href="https://wuweidong0107.github.io/2020/04/25/Linux-ALSA%E5%85%A5%E9%97%A8-%E9%9F%B3%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
+<link rel="canonical" href="https://wuweidong0107.github.io/2020/06/11/%E6%88%91%E6%98%AF%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0markdown%E7%9A%84/">
 
 
 <script id="page-configurations">
@@ -46,7 +47,7 @@
   };
 </script>
 
-  <title>Linux-ALSA入门-音频基础知识 | piHacker(嵌入式系统砖家)</title>
+  <title>我是如何学习markdown的 | piHacker(嵌入式系统砖家)</title>
   
 
 
@@ -187,7 +188,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/04/25/Linux-ALSA%E5%85%A5%E9%97%A8-%E9%9F%B3%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
+    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/06/11/%E6%88%91%E6%98%AF%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0markdown%E7%9A%84/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -200,7 +201,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Linux-ALSA入门-音频基础知识
+          我是如何学习markdown的
         </h1>
 
         <div class="post-meta">
@@ -209,23 +210,17 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-04-25 20:20:30" itemprop="dateCreated datePublished" datetime="2020-04-25T20:20:30+08:00">2020-04-25</time>
+              <time title="创建时间：2020-06-11 08:05:05 / 修改时间：08:18:01" itemprop="dateCreated datePublished" datetime="2020-06-11T08:05:05+08:00">2020-06-11</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-05-14 09:32:27" itemprop="dateModified" datetime="2020-05-14T09:32:27+08:00">2020-05-14</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8/" itemprop="url" rel="index"><span itemprop="name">Linux设备驱动</span></a>
+                  <a href="/categories/%E6%8A%98%E8%85%BE%E4%BA%BA%E7%94%9F/" itemprop="url" rel="index"><span itemprop="name">折腾人生</span></a>
                 </span>
             </span>
 
@@ -247,31 +242,54 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>这部分知识很重要，因为这里面的很多概念会出现在CPU手册和Codec手册里，所以了解这些基础知识是我们看懂手册的基本前提。我希望自己能不断地更新和完善这一块知识点，这篇文章会不定期更新。</p>
-<p><strong>相关参考：</strong>  </p>
+        <h1 id="高效地学习"><a href="#高效地学习" class="headerlink" title="高效地学习"></a>高效地学习</h1><p>推荐「费曼技巧」。</p>
+<h2 id="什么是费曼技巧？"><a href="#什么是费曼技巧？" class="headerlink" title="什么是费曼技巧？"></a>什么是费曼技巧？</h2><p>如果有人用长篇大论跟你解释这个东西，那他实际上并理解「费曼技巧」。</p>
+<p>费曼技巧是一种「以教为学」的学习方式，能够帮助你提高知识的吸收效率，真正理解并学会运用知识。验证你是否真正掌握一个知识，看你能否用直白浅显的语言把复杂深奥的问题和知识讲清楚。</p>
+<h2 id="为什么它有效？"><a href="#为什么它有效？" class="headerlink" title="为什么它有效？"></a>为什么它有效？</h2><p>要做到能将复杂的问题用简单的语言说清楚，必须对知识有深刻的理解和应用。这需要你做到：</p>
+<ol>
+<li><p>拆分和压缩知识。一本书很厚，里面的信息容量很大，我们无法记住所有的内容。但聪明的人会把书本呈现的信息进行压缩，提炼出规律和知识，来达到和原有的知识体系产生联系。压缩知识的过程，也是理解和内化的过程。</p>
+</li>
+<li><p>理解和简化知识。在理解和简化知识的过程中会不知不觉用到类比、举例、概括、对比等深度学习的方法。</p>
+</li>
+<li><p>理解和复述知识。讲不清楚，就是没理解。这也就是为什么有些软件开发的书籍让人读起来循序渐进深入浅出，而另一外一些书则让人头昏脑胀的原因：原作者本身对知识的理解程度太浅，以至于无法准确复述。</p>
+</li>
+</ol>
+<h1 id="阅读官方文档"><a href="#阅读官方文档" class="headerlink" title="阅读官方文档"></a>阅读官方文档</h1><p>在软件开发领域，官方文档通常就是最好的学习资料。各种中文博客顶多只能算是辅助资料，更多时候应该充当一个与学习者共同讨论的角色。</p>
+<h2 id="1-分钟快速入门"><a href="#1-分钟快速入门" class="headerlink" title="1 分钟快速入门"></a>1 分钟快速入门</h2><p>Markdown 的使用方法极其简单，让我用2张官网上上截取下来的图告诉你应该怎么使用:</p>
+<p><strong>基本语法</strong><br><img src="/images/tools/markdown/basic_syntax.png" alt=""></p>
+<p><strong>扩展语法</strong><br><img src="/images/tools/markdown/extended_syntax.png" alt=""></p>
+<p>哦，到这里，Markdown 就算学完了，上面这些语法已经满足 90％ 的使用场景了，对我个人而言，已经满足 99% 的使用场景了。</p>
+<p>不必再学习下去了，去研究其他东西吧。如果你坚持想要了解更详细的内容，我这里也有 2 个好链接分享给你：</p>
 <ul>
-<li>&lt;韦东山Android 视频教程&gt; 第001节_声音的采集与存储</li>
-<li>&lt;深入理解Android内核设计思想&gt; 第 13.1 章节</li>
+<li><a href="https://www.markdownguide.org/basic-syntax" target="_blank" rel="noopener">Basic Syntax</a></li>
+<li><a href="https://www.markdownguide.org/extended-syntax/" target="_blank" rel="noopener">Extended Syntax</a></li>
 </ul>
-<h1 id="早期的留声机是如何工作的？"><a href="#早期的留声机是如何工作的？" class="headerlink" title="早期的留声机是如何工作的？"></a>早期的留声机是如何工作的？</h1><p>参考：<br><a href="https://www.altpress.com/news/entry/see_a_vinyl_record_at_1000x_magnification" target="_blank" rel="noopener">https://www.altpress.com/news/entry/see_a_vinyl_record_at_1000x_magnification</a></p>
-<p><a href="http://www.programmersought.com/article/893420233/;jsessionid=789D1E9A94F935DE8460495507ABADFF" target="_blank" rel="noopener">http://www.programmersought.com/article/893420233/;jsessionid=789D1E9A94F935DE8460495507ABADFF</a></p>
-<p><img src="/images/linux_alsa/analog_record.jpg" alt=""></p>
-<p>留声机是一款通过模拟信号记录、重现声音的机器，简单来说就是一种用来放送唱片录音的电动设备。</p>
-<p><strong>如何记录声音?</strong><br>人发出声音—&gt;振动膜振动—&gt;探针振动，且在旋转的盘面刻下条纹</p>
-<p><strong>如何播放声音?</strong><br>旋转唱片—&gt;条纹带动探针振动—&gt;带动振动膜振动—&gt;发声</p>
-<p><strong>模拟信号记录音频的缺点</strong> </p>
-<ul>
-<li>原始的唱片成为母盘，很珍贵，复制的唱片无法得到一模一样的条纹; </li>
-<li>不便于存储和传播;  </li>
+<h1 id="刻意练习"><a href="#刻意练习" class="headerlink" title="刻意练习"></a>刻意练习</h1><p>很多事情并不是有多难，而是没有去做。软件开发的很多知识并不是很复杂，很多时候只是要求开发人员熟练掌握如何应用一个技能，并没有要求进行伟大的发明与创造或者是探索某些未知领域。无法掌握新知识的原因只有一个：没有去学习并使用它，这里推荐一下「刻意练习」这个技巧。</p>
+<h2 id="什么是刻意练习？"><a href="#什么是刻意练习？" class="headerlink" title="什么是刻意练习？"></a>什么是刻意练习？</h2><p>本质是长时工作记忆。具有卓越才能的人，在进行钢琴、象棋等专业活动时，能够调用更大容量的工作记忆。通俗来说，就是他们拥有更大的内存。</p>
+<p>这种长时工作记忆可以通过一定的练习来进行激活，通过一定难度的重复练习，在每次练习中收到反馈，不断纠正自己的错误，不断提升大脑的适应能力。</p>
+<h2 id="刻意练习的重点"><a href="#刻意练习的重点" class="headerlink" title="刻意练习的重点"></a>刻意练习的重点</h2><ol>
+<li><p>刻意练习需要有好的导师.导师知道学习的最佳次序，理解并示范正确的方式来展示各种各样的技能，并可以提供有效的反馈。</p>
+</li>
+<li><p>学习分３个区域：舒适区 -&gt; 学习区 -&gt; 恐慌区。刻意练习主要发生在学习区，因为舒适区不能提高水平，而恐慌区难度过高。</p>
+</li>
+<li><p>刻意练习需要有效的反馈。反复做一件事情的目的在于找出不足，并进行改善和提高。不断进行自我检测，获得有效反馈，并及时进行改进和调整，类似于软件迭代。</p>
+</li>
+</ol>
+<h2 id="刻意练习-Markdown"><a href="#刻意练习-Markdown" class="headerlink" title="刻意练习 Markdown"></a>刻意练习 Markdown</h2><p>如果我跟你说要坚持、要专注，那我就是一个大白痴，知道这2点的人没时间来阅读我的文章。所以我会提出一些更具体可行的建议。</p>
+<ol>
+<li><p>将 Markdown 作为一个日常工具。比如将个人的学习 / 工作笔记可以以 Git + Markdown 的方式进行保存和管理，或者当你需要为你的代码写一份 README 时，为了读者的阅读体验，你应该用 Markdown。事实上，所有优秀的代码，都应该有一份详细的 README。</p>
+</li>
+<li><p>坚持每天用 Markdown 进行写作。写作类似于 Unix 系统里的标准输出 (stdin)，很多人无法写作的原因是因为他们还没有找到自己的标准输入 (stdiout)。如果你每天都在大量地读取一些珍贵的信息，这些宝贵的信息被你视为财富，那么你会自然而然且小心翼翼地找个保险柜将这些财富存储下来。所以写作不是目的，而是结果：你有太多需要存储下来的东西迫使你进行保存工作。向 Unix 系统学习，去找到合适你的标准输入吧。</p>
+</li>
+<li><p>本文就是一次刻意练习。</p>
+</li>
+</ol>
+<h1 id="相关参考"><a href="#相关参考" class="headerlink" title="相关参考"></a>相关参考</h1><ul>
+<li>《如何高效学习》，豆瓣评分7.4，9403人评价</li>
+<li>《刻意练习》，豆瓣评分7.9，13340人评价</li>
 </ul>
-<p>解决办法：改用数字化的方式记录声音;</p>
-<a id="more"></a>
+<p>你和我各有一个苹果，如果我们交换苹果的话，我们还是只有一个苹果。但当你和我各有一个想法，我们交换想法的话，我们就都有两个想法了。如果你也对 <strong>嵌入式系统和开源软件</strong> 感兴趣，并且想和更多人互相交流学习的话，请关注我的公众号：<strong>嵌入式系统砖家</strong>，一起来学习吧，<strong>关注或转发</strong> 都是对作者莫大的支持，谢谢大家，祝工作顺利~</p>
 
-<h1 id="数字化的音频录制和播放"><a href="#数字化的音频录制和播放" class="headerlink" title="数字化的音频录制和播放"></a>数字化的音频录制和播放</h1><p><strong>如何记录声音?</strong><br>人发出声音—&gt;受声音影响的电阻—&gt;测量电阻的电压—&gt;记录电压值</p>
-<p><strong>如何播放声音?</strong>   </p>
-<h1 id="音频采样"><a href="#音频采样" class="headerlink" title="音频采样"></a>音频采样</h1><h1 id="音频存储"><a href="#音频存储" class="headerlink" title="音频存储"></a>音频存储</h1><h2 id="WAV"><a href="#WAV" class="headerlink" title="WAV"></a>WAV</h2><p>参考：<br><a href="https://en.wikipedia.org/wiki/WAV" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/WAV</a><br><a href="http://soundfile.sapp.org/doc/WaveFormat/" target="_blank" rel="noopener">http://soundfile.sapp.org/doc/WaveFormat/</a></p>
-<h2 id="MP3"><a href="#MP3" class="headerlink" title="MP3"></a>MP3</h2><p>参考：<br><a href="https://www.engineersgarage.com/article_page/，" target="_blank" rel="noopener">https://www.engineersgarage.com/article_page/，</a><br><a href="https://en.wikipedia.org/wiki/MP3" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/MP3</a></p>
-<h3 id="MP3干了什么？"><a href="#MP3干了什么？" class="headerlink" title="MP3干了什么？"></a>MP3干了什么？</h3><h3 id="为什么需要MP3？"><a href="#为什么需要MP3？" class="headerlink" title="为什么需要MP3？"></a>为什么需要MP3？</h3><h3 id="MP3如何做到压缩文件的同时尽量不损失音质呢？"><a href="#MP3如何做到压缩文件的同时尽量不损失音质呢？" class="headerlink" title="MP3如何做到压缩文件的同时尽量不损失音质呢？"></a>MP3如何做到压缩文件的同时尽量不损失音质呢？</h3><h1 id="其他音频知识"><a href="#其他音频知识" class="headerlink" title="其他音频知识"></a>其他音频知识</h1><h2 id="一些术语"><a href="#一些术语" class="headerlink" title="一些术语"></a>一些术语</h2>
     </div>
 
     
@@ -315,8 +333,7 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/driver/" rel="tag"><i class="fa fa-tag"></i> driver</a>
-              <a href="/tags/alsa/" rel="tag"><i class="fa fa-tag"></i> alsa</a>
+              <a href="/tags/Markdown/" rel="tag"><i class="fa fa-tag"></i> Markdown</a>
           </div>
 
         
@@ -330,13 +347,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/04/23/SHELL%E5%85%A5%E9%97%A8-%E6%8C%96%E6%8E%98RetroPie/" rel="prev" title="SHELL入门_挖掘RetroPie">
-      <i class="fa fa-chevron-left"></i> SHELL入门_挖掘RetroPie
+    <a href="/2020/06/08/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E4%BD%BF%E7%94%A8mmap-%E6%95%B0%E7%BB%84%E7%9A%84%E6%96%B9%E5%BC%8F%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6/" rel="prev" title="Linux系统编程_用mmap+数组的方式修改数据文件">
+      <i class="fa fa-chevron-left"></i> Linux系统编程_用mmap+数组的方式修改数据文件
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/04/27/DesignPattern%E5%85%A5%E9%97%A8_%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" rel="next" title="Design Pattern 系列_策略模式">
-      Design Pattern 系列_策略模式 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -395,7 +409,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#早期的留声机是如何工作的？"><span class="nav-number">1.</span> <span class="nav-text">早期的留声机是如何工作的？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数字化的音频录制和播放"><span class="nav-number">2.</span> <span class="nav-text">数字化的音频录制和播放</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#音频采样"><span class="nav-number">3.</span> <span class="nav-text">音频采样</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#音频存储"><span class="nav-number">4.</span> <span class="nav-text">音频存储</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#WAV"><span class="nav-number">4.1.</span> <span class="nav-text">WAV</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MP3"><span class="nav-number">4.2.</span> <span class="nav-text">MP3</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MP3干了什么？"><span class="nav-number">4.2.1.</span> <span class="nav-text">MP3干了什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么需要MP3？"><span class="nav-number">4.2.2.</span> <span class="nav-text">为什么需要MP3？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MP3如何做到压缩文件的同时尽量不损失音质呢？"><span class="nav-number">4.2.3.</span> <span class="nav-text">MP3如何做到压缩文件的同时尽量不损失音质呢？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他音频知识"><span class="nav-number">5.</span> <span class="nav-text">其他音频知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一些术语"><span class="nav-number">5.1.</span> <span class="nav-text">一些术语</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#高效地学习"><span class="nav-number">1.</span> <span class="nav-text">高效地学习</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是费曼技巧？"><span class="nav-number">1.1.</span> <span class="nav-text">什么是费曼技巧？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么它有效？"><span class="nav-number">1.2.</span> <span class="nav-text">为什么它有效？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#阅读官方文档"><span class="nav-number">2.</span> <span class="nav-text">阅读官方文档</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-分钟快速入门"><span class="nav-number">2.1.</span> <span class="nav-text">1 分钟快速入门</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#刻意练习"><span class="nav-number">3.</span> <span class="nav-text">刻意练习</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是刻意练习？"><span class="nav-number">3.1.</span> <span class="nav-text">什么是刻意练习？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#刻意练习的重点"><span class="nav-number">3.2.</span> <span class="nav-text">刻意练习的重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#刻意练习-Markdown"><span class="nav-number">3.3.</span> <span class="nav-text">刻意练习 Markdown</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#相关参考"><span class="nav-number">4.</span> <span class="nav-text">相关参考</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
