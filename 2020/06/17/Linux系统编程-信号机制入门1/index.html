@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wuweidong0107.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="早，继续记录我的学习心得。 人们很容易高估某个决定性时刻的重要性，也很容易低估每天进行微小改进的价值。以前我也以为大规模的成功需要大规模的行动，现在我不这么认为了。长期来看，由于复利效果，一点小小的改进就能产生惊人的变化。 还有一点值得注意的情况，大多数人有了家庭和子女后，并且现在国内盛行加班文化，很难载集中精力能抽出大块的时间进行学习了，部分还能坚持学习的人几乎都是以牺牲睡眠时间为代价的，我个人">
+<meta name="keywords" content="Embedded, Linux, OpenWrt, Buildroot, Opensource, Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux系统编程-信号机制入门1">
+<meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;06&#x2F;17&#x2F;Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E4%BF%A1%E5%8F%B7%E6%9C%BA%E5%88%B6%E5%85%A5%E9%97%A81&#x2F;index.html">
+<meta property="og:site_name" content="piHacker(嵌入式系统砖家)">
+<meta property="og:description" content="早，继续记录我的学习心得。 人们很容易高估某个决定性时刻的重要性，也很容易低估每天进行微小改进的价值。以前我也以为大规模的成功需要大规模的行动，现在我不这么认为了。长期来看，由于复利效果，一点小小的改进就能产生惊人的变化。 还有一点值得注意的情况，大多数人有了家庭和子女后，并且现在国内盛行加班文化，很难载集中精力能抽出大块的时间进行学习了，部分还能坚持学习的人几乎都是以牺牲睡眠时间为代价的，我个人">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-06-17T01:32:58.851Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://wuweidong0107.github.io/2020/06/17/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E4%BF%A1%E5%8F%B7%E6%9C%BA%E5%88%B6%E5%85%A5%E9%97%A81/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Linux系统编程-信号机制入门1 | piHacker(嵌入式系统砖家)</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">piHacker(嵌入式系统砖家)</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Embedded bsp developers enjoy hacking develop boards(NanoPi,RPi...)</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/wuweidong0107" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/06/17/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E4%BF%A1%E5%8F%B7%E6%9C%BA%E5%88%B6%E5%85%A5%E9%97%A81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="piHacker">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="piHacker(嵌入式系统砖家)">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux系统编程-信号机制入门1
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-06-17 08:16:28 / 修改时间：09:32:58" itemprop="dateCreated datePublished" datetime="2020-06-17T08:16:28+08:00">2020-06-17</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>早，继续记录我的学习心得。</p>
+<p><strong>人们很容易高估某个决定性时刻的重要性，也很容易低估每天进行微小改进的价值</strong>。以前我也以为大规模的成功需要大规模的行动，现在我不这么认为了。长期来看，由于复利效果，一点小小的改进就能产生惊人的变化。</p>
+<p>还有一点值得注意的情况，大多数人有了家庭和子女后，并且现在国内盛行加班文化，很难载集中精力能抽出大块的时间进行学习了，部分还能坚持学习的人几乎都是以牺牲睡眠时间为代价的，我个人不太认为这种做法，我始终认为有更合理健康的方法能形成一个工作、生活、学习、娱乐的有效循环，或许认识到 <strong>微进步</strong> 的重要性就是一个很好的开始吧。</p>
+<p>本文就是我的微进步，欢迎阅读。</p>
+<a id="more"></a>
+
+<h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><p>信号有时被称为提供处理异步事件机制的软件中断，与硬件中断的相似之处在于打断了程序执行的正常流程，很多比较重要的应用程序都需处理信号。事件可以来自于系统外部，例如用户按下 Ctrl+C，或者来自程序或者内核的某些操作。作为一种进程间通信 (IPC) 的基本形式，进行可以给另一个进程发送信号。</p>
+<p>信号很早就是 Unix 的一部分。随着时间的推移，信号有了很大的改进。比如在可靠性方面，之前的信号可能会出现丢失的情况。在功能方面，现在信号可以携带用户定义的附加信息。最初，不同的 Unix 系统对信号的修改，后来，POSIX 标准的到来挽救并且标准化了信号机制。</p>
+<ul>
+<li><p>用术语 raise 表示一个信号的产生，catch 表示接收到一个信号。</p>
+</li>
+<li><p>事件的发生是异步的，程序对信号的处理也是异步的。</p>
+</li>
+<li><p>信号可以被生成、捕获、响应或忽略。有两种信号不能被忽略： SIGKILL 和 SIGSTOP。不能被忽略的原因是：它们向内核和超级用户提供了使进程终止或停止的可靠方法。</p>
+</li>
+</ul>
+<h2 id="1-简单概念"><a href="#1-简单概念" class="headerlink" title="1. 简单概念"></a>1. 简单概念</h2><p><strong>信号类型：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> man 7 signal</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">DESCRIPTION</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">   Standard signals</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">          First the signals described in the original POSIX.1-1990 standard.</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">       Signal     Value     Action   Comment</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">       ──────────────────────────────────────────────────────────────────────</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">       SIGHUP        1       Term    Hangup detected on controlling terminal</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">                                     or death of controlling process</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">       SIGINT        2       Term    Interrupt from keyboard</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">       SIGQUIT       3       Core    Quit from keyboard</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">       SIGILL        4       Core    Illegal Instruction</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">       SIGABRT       6       Core    Abort signal from abort(3)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">       SIGFPE        8       Core    Floating point exception</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">       SIGKILL       9       Term    Kill signal</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">       SIGSEGV      11       Core    Invalid memory reference</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">       SIGPIPE      13       Term    Broken pipe: write to pipe with no</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">                                     readers</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">       SIGALRM      14       Term    Timer signal from alarm(2)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">       SIGTERM      15       Term    Termination signal</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">       SIGUSR1   30,10,16    Term    User-defined signal 1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">       SIGUSR2   31,12,17    Term    User-defined signal 2</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">       SIGCHLD   20,17,18    Ign     Child stopped or terminated</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">       SIGCONT   19,18,25    Cont    Continue if stopped</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">       SIGSTOP   17,19,23    Stop    Stop process</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">       SIGTSTP   18,20,24    Stop    Stop typed at terminal</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">       SIGTTIN   21,21,26    Stop    Terminal input for background process</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">       SIGTTOU   22,22,27    Stop    Terminal output for background process</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">30</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">31</span></pre></td><td class="code"><pre><span class="line">       The signals SIGKILL and SIGSTOP cannot be caught, blocked, or ignored.</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">32</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">33</span></pre></td><td class="code"><pre><span class="line">       Next the signals not in the POSIX.1-1990 standard but described in SUSv2 and POSIX.1-2001.</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">34</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">35</span></pre></td><td class="code"><pre><span class="line">       Signal       Value     Action   Comment</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">36</span></pre></td><td class="code"><pre><span class="line">       ────────────────────────────────────────────────────────────────────</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">37</span></pre></td><td class="code"><pre><span class="line">       SIGBUS      10,7,10     Core    Bus error (bad memory access)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">38</span></pre></td><td class="code"><pre><span class="line">       SIGPOLL                 Term    Pollable event (Sys V).</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">39</span></pre></td><td class="code"><pre><span class="line">                                       Synonym for SIGIO</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">40</span></pre></td><td class="code"><pre><span class="line">       SIGPROF     27,27,29    Term    Profiling timer expired</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">41</span></pre></td><td class="code"><pre><span class="line">       SIGSYS      12,31,12    Core    Bad argument to routine (SVr4)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">42</span></pre></td><td class="code"><pre><span class="line">       SIGTRAP        5        Core    Trace/breakpoint trap</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">43</span></pre></td><td class="code"><pre><span class="line">       SIGURG      16,23,21    Ign     Urgent condition on socket (4.2BSD)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">44</span></pre></td><td class="code"><pre><span class="line">       SIGVTALRM   26,26,28    Term    Virtual alarm clock (4.2BSD)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">45</span></pre></td><td class="code"><pre><span class="line">       SIGXCPU     24,24,30    Core    CPU time limit exceeded (4.2BSD)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">46</span></pre></td><td class="code"><pre><span class="line">       SIGXFSZ     25,25,31    Core    File size limit exceeded (4.2BSD)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">47</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">48</span></pre></td><td class="code"><pre><span class="line">        ...</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">49</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">50</span></pre></td><td class="code"><pre><span class="line">       Next various other signals.</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">51</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">52</span></pre></td><td class="code"><pre><span class="line">       Signal       Value     Action   Comment</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">53</span></pre></td><td class="code"><pre><span class="line">       ────────────────────────────────────────────────────────────────────</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">54</span></pre></td><td class="code"><pre><span class="line">       SIGIOT         6        Core    IOT trap. A synonym for SIGABRT</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">55</span></pre></td><td class="code"><pre><span class="line">       SIGEMT       7,-,7      Term</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">56</span></pre></td><td class="code"><pre><span class="line">       SIGSTKFLT    -,16,-     Term    Stack fault on coprocessor (unused)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">57</span></pre></td><td class="code"><pre><span class="line">       SIGIO       23,29,22    Term    I/O now possible (4.2BSD)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">58</span></pre></td><td class="code"><pre><span class="line">       SIGCLD       -,-,18     Ign     A synonym for SIGCHLD</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">59</span></pre></td><td class="code"><pre><span class="line">       SIGPWR      29,30,19    Term    Power failure (System V)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">60</span></pre></td><td class="code"><pre><span class="line">       SIGINFO      29,-,-             A synonym for SIGPWR</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">61</span></pre></td><td class="code"><pre><span class="line">       SIGLOST      -,-,-      Term    File lock lost (unused)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">62</span></pre></td><td class="code"><pre><span class="line">       SIGWINCH    28,28,20    Ign     Window resize signal (4.3BSD, Sun)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">63</span></pre></td><td class="code"><pre><span class="line">       SIGUNUSED    -,31,-     Core    Synonymous with SIGSYS</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">64</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">65</span></pre></td><td class="code"><pre><span class="line">       (Signal 29 is SIGINFO / SIGPWR on an alpha but SIGLOST on a sparc.)</span></pre></td></tr></table></figure>
+
+<p><strong>发送信号：</strong></p>
+<ul>
+<li><p>如果想发送一个信号给进程，而该进程并不是当前的前台进程，就需要使用kill 命令。</p>
+</li>
+<li><p>kill 命令有一个有用的变体叫 killall，它可以给运行着某一命令的所有进程发送信号。</p>
+</li>
+</ul>
+<p><strong>处理信号：</strong><br>Unix 系统提供了两种方法来改变信号处置：signal() 和 sigaction()。signal()系统调用是设置信号处置的原始 API，所提供的接口比sigaction() 简单。另一方面，sigaction() 提供了 signal() 所不具备的功能。进一步而言，signal() 的行为在不同 Unix 实现间存在差异，这意味着对可移植性有所追求的程序绝不能使用此调用来建立信号处理函数 (signal handler)。故此，sigaction()是建立信号处理器的首选API。</p>
+<p>由于可能会在许多老程序中看到 signal() 的应用，我们先了解如何用 signal() 函数来处理信号。</p>
+<p>signal() 的定义:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> man 2 signal</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">include &lt;signal.h&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">typedef void (*sighandler_t)(int);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">sighandler_t signal(int signum, sighandler_t handler);</span></pre></td></tr></table></figure>
+<ul>
+<li><p>参数1 signum 指定希望修改 handler 的信号编号，参数2 handler，则指定信号抵达时所调用的 signal handler 函数的地址。</p>
+</li>
+<li><p>成功，返回以前的信号处理函数；出错，返回 SIG_ERR;</p>
+</li>
+</ul>
+<h2 id="2-入门实验"><a href="#2-入门实验" class="headerlink" title="2. 入门实验"></a>2. 入门实验</h2><p>简单试用 signal()。</p>
+<p><strong>分解代码：</strong>  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">ouch</span><span class="params">(<span class="keyword">int</span> sig)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">printf</span>(<span class="string">"OUCH! - I got signal %d\n"</span>, sig);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    (<span class="keyword">void</span>) signal(SIGINT, SIG_DFL);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    (<span class="keyword">void</span>) signal(SIGINT, ouch);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">        <span class="built_in">printf</span>(<span class="string">"Hello World!\n"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">        sleep(<span class="number">1</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p><strong>运行效果：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ./ctrlc1 </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">Hello World!</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">Hello World!</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">^COUCH! - I got signal 2</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">Hello World!</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">Hello World!</span></pre></td></tr></table></figure>
+
+<p><strong>相关要点：</strong></p>
+<ul>
+<li><p>在信号处理函数中，调用如 printf 这样的函数是不安全的。一般的做法是：在信号处理函数中设置一个标志，然后在主程序中检查该标志，如需要就打印一条消息。</p>
+</li>
+<li><p>如果想保留信号处理函数，让它继续响应用户的 Ctrl+C 组合键，我们就需要再次调用 signal 函数来重新建立它。这会使信号在一段时间内无法得到处理，这段时间从调用中断函数开始，到信号处理函数的重建为止。如果在这段时间内程序接收到第二个信号，它就会违背我们的意愿终止程序的运行。</p>
+</li>
+<li><p>不推荐使用 signal 接口。之所以介绍它，是因为可能会在许多老程序中看到它的应用。更清晰、执行更可靠的函数: sigaction()，在所有的新程序中都应该使用这个函数，暂不做深入介绍。</p>
+</li>
+</ul>
+<h1 id="二、发送信号"><a href="#二、发送信号" class="headerlink" title="二、发送信号"></a>二、发送信号</h1><h2 id="1-如何发送信号"><a href="#1-如何发送信号" class="headerlink" title="1. 如何发送信号"></a>1. 如何发送信号</h2><p>进程可以通过调用 kill 函数向包括它本身在内的其他进程发送一个信号。</p>
+<p><strong>kill()：</strong>  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> man 2 <span class="built_in">kill</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">include &lt;sys/types.h&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">include &lt;signal.h&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">int kill(pid_t pid, int sig);</span></pre></td></tr></table></figure>
+
+<p>把参数 sig 给指定的信号发送给由参数 pid 指定的进程号所指定的进程。</p>
+<p>kill 调用会在失败时返回 -1 并设置 errno 变量，失败的原因：</p>
+<ul>
+<li><p>给定的信号无效（errno设置为EINVAL）;</p>
+</li>
+<li><p>发送进程权限不够（errno设置为EPERM）;</p>
+</li>
+<li><p>目标进程不存在（errno设置为ESRCH）;</p>
+</li>
+</ul>
+<p><strong>关于权限：</strong><br>要想发送一个信号，发送进程必须拥有相应的权限，包括2种情况：</p>
+<ul>
+<li><p>两个进程必须拥有相同的用户 ID，即你只能发送信号给属于自己的进程;</p>
+</li>
+<li><p>超级用户可以发送信号给任何进程;</p>
+</li>
+</ul>
+<h2 id="2-闹钟功能"><a href="#2-闹钟功能" class="headerlink" title="2. 闹钟功能"></a>2. 闹钟功能</h2><p>进程可以通过调用 alarm() 函数在经过预定时间后发送一个 SIGALRM 信号。</p>
+<p><strong>alarm()：</strong>  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> man 2 alarm</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">include &lt;unistd.h&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">unsigned int alarm(unsigned int seconds);</span></pre></td></tr></table></figure>
+<ul>
+<li><p>在 seconds 秒之后发送一个 SIGALRM 信号。</p>
+</li>
+<li><p>返回值是以前设置的闹钟时间的余留秒数，如果调用失败则返回 -1。</p>
+</li>
+</ul>
+<p><strong>相关要点：</strong>  </p>
+<ul>
+<li><p>由于处理的延时和时间调度的不确定性，实际闹钟时间将比预先安排的要稍微拖后一点儿。</p>
+</li>
+<li><p>把参数 seconds 设置为 0 将取消所有已设置的闹钟请求。</p>
+</li>
+<li><p>如果在接收到 SIGALRM 信号之前再次调用 alarm() 函数，则闹钟重新开始计时</p>
+</li>
+<li><p>每个进程只能有一个闹钟时间。</p>
+</li>
+</ul>
+<h2 id="3-入门实验"><a href="#3-入门实验" class="headerlink" title="3. 入门实验"></a>3. 入门实验</h2><p>用 kill() 模拟闹钟。</p>
+<p><strong>分解代码：</strong><br>设置 signal handler: </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">pid_t</span> pid;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">printf</span>(<span class="string">"alarm application starting\n"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    pid = fork();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">switch</span>(pid) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">case</span> <span class="number">-1</span>:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">      <span class="comment">/* Failure */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">      perror(<span class="string">"fork failed"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">      <span class="built_in">exit</span>(<span class="number">1</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">case</span> <span class="number">0</span>:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">      <span class="comment">/* child */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">        sleep(<span class="number">5</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">        kill(getppid(), SIGALRM);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">    <span class="comment">/* parent */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">printf</span>(<span class="string">"waiting for alarm to go off\n"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">    (<span class="keyword">void</span>) signal(SIGALRM, ding);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">    pause();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">if</span> (alarm_fired)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">        <span class="built_in">printf</span>(<span class="string">"Ding!\n"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">printf</span>(<span class="string">"done\n"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">30</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p>定义 signal handler：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">int</span> alarm_fired = <span class="number">0</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">ding</span><span class="params">(<span class="keyword">int</span> sig)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    alarm_fired = <span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p>通过 fork 调用启动新的进程：子进程休眠 5 秒后向其父进程发送一个 SIGALRM 信号。父进程在安排好捕获 SIGALRM 信号后暂停运行，直到接收到一个信号为止。</p>
+<p><strong>运行效果：</strong>  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ./alarm </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">alarm application starting</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">waiting for alarm to go off</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">&lt;等待5 秒钟&gt;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">Ding!</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">done</span></pre></td></tr></table></figure>
+
+<p><strong>相关要点：</strong></p>
+<ul>
+<li><p>pause() 把程序的执行挂起直到有一个信号出现为止。使用信号并挂起程序的执行是 Unix 程序设计中的一个重要部分。</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> man 2 pause</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">include &lt;unistd.h&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">int pause(void);</span></pre></td></tr></table></figure>
+</li>
+<li><p>当它被一个信号中断时，将返回 -1（如果下一个接收到的信号没有导致程序终止的话）并把 errno 设置为 EINTR。</p>
+</li>
+<li><p>更常见的方法是使用 sigsuspend() 函数，暂不做介绍。</p>
+</li>
+<li><p>在信号处理函数中没有调用 printf，而是通过设置标志，然后在main函数中检查该标志来完成消息的输出。</p>
+</li>
+<li><p>如果信号出现在系统调用的执行过程中会怎么样？</p>
+<ul>
+<li>一般只需要考虑“慢”系统调用，例如从终端读数据，如果在这个系统调用等待数据时出现一个信号，它就会返回错误 EINTR。  <figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ man <span class="number">3</span> errno</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">EINTR</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">Interrupted <span class="function"><span class="keyword">function</span> <span class="title">call</span> <span class="params">(POSIX.1)</span>; <span class="title">see</span> <span class="title">signal</span><span class="params">(7)</span>.</span></span></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>如果你开始在自己的程序中使用信号，就需要注意一些系统调用会因为接收到了一个信号而失败。</p>
+</li>
+<li><p>我们需要更健壮的信号接口：</p>
+<ul>
+<li><p>在编写程序中处理信号部分的代码时必须非常小心，因为在使用信号的程序中会出现各种各样的“竞态条件”。例如，如果想调用pause等待一个信号，可信号却出现在调用 pause() 之前，就会使程序无限期地等待一个不会发生的事件。</p>
+</li>
+<li><p>POSIX 标准推荐了一个更新和更健壮的信号编程接口：sigaction。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>更多值得学习的知识点：</strong>  </p>
+<ul>
+<li>信号的不可靠性;</li>
+<li>发送信号给进程组;</li>
+<li>信号的继承;</li>
+<li>信号与重入;</li>
+<li>sigcation 接口;</li>
+<li>信号集;</li>
+<li>信号阻塞;</li>
+<li>发送带附加信息的信号和信号排队;</li>
+<li>Linux 内核里信号处理和信号发送的实现;</li>
+<li>…</li>
+</ul>
+<h1 id="三、相关参考"><a href="#三、相关参考" class="headerlink" title="三、相关参考"></a>三、相关参考</h1><ul>
+<li>《Unix 环境高级编程-第10章 信号》</li>
+<li>《Linux/Unix 系统编程手册-第20章　信号：基本概念》</li>
+<li>《Linux系统编程-第10章 信号》</li>
+<li>《Linux程序设计-第11章 进程和信号》</li>
+<li>《深入Linux内核架构 5.4.1信号》</li>
+</ul>
+<p>你和我各有一个苹果，如果我们交换苹果的话，我们还是只有一个苹果。但当你和我各有一个想法，我们交换想法的话，我们就都有两个想法了。如果你也对 <strong>嵌入式系统和开源软件</strong> 感兴趣，并且想和更多人互相交流学习的话，请关注我的公众号：<strong>嵌入式系统砖家</strong>，一起来学习吧，无论是 <strong>关注或转发</strong> , 还是赏赐，都是对作者莫大的支持，谢谢 <strong>各位的大拇指</strong> 吧,，祝工作顺利，家庭和睦~</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>这是一篇有趣的文章吗？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="piHacker 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/basic/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/06/13/Electronics/" rel="prev" title="几本适合嵌入式软件工程阅读的电子入门书">
+      <i class="fa fa-chevron-left"></i> 几本适合嵌入式软件工程阅读的电子入门书
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、概述"><span class="nav-number">1.</span> <span class="nav-text">一、概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-简单概念"><span class="nav-number">1.1.</span> <span class="nav-text">1. 简单概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-入门实验"><span class="nav-number">1.2.</span> <span class="nav-text">2. 入门实验</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、发送信号"><span class="nav-number">2.</span> <span class="nav-text">二、发送信号</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-如何发送信号"><span class="nav-number">2.1.</span> <span class="nav-text">1. 如何发送信号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-闹钟功能"><span class="nav-number">2.2.</span> <span class="nav-text">2. 闹钟功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-入门实验"><span class="nav-number">2.3.</span> <span class="nav-text">3. 入门实验</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、相关参考"><span class="nav-number">3.</span> <span class="nav-text">三、相关参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">piHacker</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">piHacker</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
