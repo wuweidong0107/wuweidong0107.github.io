@@ -181,6 +181,104 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/06/26/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E4%BF%A1%E5%8F%B7%E6%9C%BA%E5%88%B6%E5%85%A5%E9%97%A83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="piHacker">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="piHacker(嵌入式系统砖家)">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/26/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E4%BF%A1%E5%8F%B7%E6%9C%BA%E5%88%B6%E5%85%A5%E9%97%A83/" class="post-title-link" itemprop="url">Linux系统编程-信号机制入门3</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-26 08:44:21" itemprop="dateCreated datePublished" datetime="2020-06-26T08:44:21+08:00">2020-06-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-06-30 09:16:13" itemprop="dateModified" datetime="2020-06-30T09:16:13+08:00">2020-06-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Program/" itemprop="url" rel="index"><span itemprop="name">Linux-Program</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>早，继续记录我的学习心得。</p>
+<p><strong>机械的练习：</strong><br>只是埋头干！我一直在挥着球拍，努力去击球。我一直在看这道数学题，正试着解答。我一直在重复写代码，试图成为技术大牛。</p>
+<p><strong>有准确目的的练习:</strong><br>意味着要比机械的练习更有目的性，考虑更周全，从而让自己变得更专注。</p>
+<p><strong>以玩模拟赛车 acc 为例，怎么样才算是有准确目的的练习：</strong>  </p>
+<ul>
+<li>比较明确的目标: 每天跑圈提升 0.5 秒。</li>
+<li>更明确的目标: 过某个弯提升多少速度。</li>
+<li>更更明确的目标：过某个弯时应在哪里刹车、应如何控制刹车/油门/方向盘，怎么走线等。</li>
+</ul>
+<p><strong>学以致用，明确一下本文的目的：</strong></p>
+<ul>
+<li><p>举例说明 Linux 不会对信号进行排队处理。</p>
+</li>
+<li><p>文末分享《自控力》里提到的一个提升自控力的小技巧：进行有效锻炼 (重点)。</p>
+</li>
+</ul>
+<p><strong>正文目录：</strong>  </p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">一、待处理的信号 (Pending Signals)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	<span class="number">1.</span> 一个简单的例子 (sig_pending.c)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">		<span class="number">1</span>) 分解代码</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">		<span class="number">2</span>) 运行效果</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">二、不对待处理的信号进行排队处理</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">	<span class="number">1.</span> 仍是那个简单的例子 (sig_pending.c)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">		<span class="number">1</span>) 运行效果</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">	<span class="number">2.</span> 查看 Linux 内核里 Signal Pending 相关的实现 (非重点)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">		<span class="number">1</span>) 相关数据结构</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">		<span class="number">2</span>) 信号的产生</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">		<span class="number">3</span>) 信号的传递</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">三、相关参考</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">四、如何高效地学习：了解自控力 (Self-<span class="section">control</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">	<span class="number">1.</span> 此书的基本信息</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">	<span class="number">2.</span> 一个关于提高自控力的小技巧：锻炼身体</span></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/06/26/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E4%BF%A1%E5%8F%B7%E6%9C%BA%E5%88%B6%E5%85%A5%E9%97%A83/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/06/23/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E4%BF%A1%E5%8F%B7%E6%9C%BA%E5%88%B6%E5%85%A5%E9%97%A82/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -204,10 +302,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-06-23 08:32:21 / 修改时间：14:12:53" itemprop="dateCreated datePublished" datetime="2020-06-23T08:32:21+08:00">2020-06-23</time>
+              <time title="创建时间：2020-06-23 08:32:21" itemprop="dateCreated datePublished" datetime="2020-06-23T08:32:21+08:00">2020-06-23</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-06-26 14:53:50" itemprop="dateModified" datetime="2020-06-26T14:53:50+08:00">2020-06-26</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -888,99 +992,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/04/27/DesignPattern%E5%85%A5%E9%97%A8_%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="piHacker">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="piHacker(嵌入式系统砖家)">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/04/27/DesignPattern%E5%85%A5%E9%97%A8_%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">Design Pattern 系列_策略模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-04-27 09:26:53" itemprop="dateCreated datePublished" datetime="2020-04-27T09:26:53+08:00">2020-04-27</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-06-03 07:47:41" itemprop="dateModified" datetime="2020-06-03T07:47:41+08:00">2020-06-03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/" itemprop="url" rel="index"><span itemprop="name">软件设计</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><strong>对于技术领域的知识点，我个人喜欢简单地划分为2类：</strong></p>
-<ol>
-<li>基础类</li>
-<li>工具类</li>
-</ol>
-<p><strong>我判断一个知识点属于哪一类的主要依据有2点：</strong></p>
-<ol>
-<li>这个知识点是否经久不衰;</li>
-<li>这个知识点是否没有替代品;</li>
-</ol>
-<p>如果上述2点都满足，则我会认为这是基础类知识，属于可以长期投资的价值股;<br>典型的例如操作系统、数据结构、Linux环境编程、软件模式(设计模式、架构模式…)等我会归类为基础类知识;  </p>
-<p>而例如 Qt、Git、Docker、甚至各种编程语言(C、C++、Java、Python)等知识点我都会暂时归类为工具类。不要误会，这些都只是我个人的喜好，并没有要贬低你心爱的技术的意思，只要是你在工作里需要重度使用的技术，你都应该把它归类为基础类，以便提醒自己需要深耕该技术。  </p>
-<p>说了这么多，无非是想告诉你，我认为设计模式很重要，仅此而已。即便你从事的是底层软件相关的工作，你只用 C 语言进行开发，情况也是一样的。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/04/27/DesignPattern%E5%85%A5%E9%97%A8_%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1050,7 +1061,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
