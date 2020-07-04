@@ -35,7 +35,7 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;linux&#x2F;pipe&#x2F;pipe_fork1.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;linux&#x2F;pipe&#x2F;pipe_fork2.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;basic&#x2F;wechat_channel.jpg">
-<meta property="og:updated_time" content="2020-07-04T00:23:09.215Z">
+<meta property="og:updated_time" content="2020-07-04T02:48:39.968Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;linux&#x2F;ipc&#x2F;ipc_facilities.png">
 
@@ -223,7 +223,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-07-04 08:23:09" itemprop="dateModified" datetime="2020-07-04T08:23:09+08:00">2020-07-04</time>
+                <time title="修改时间：2020-07-04 10:48:39" itemprop="dateModified" datetime="2020-07-04T10:48:39+08:00">2020-07-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -261,10 +261,13 @@
 <p><strong>对抗枯燥感的小技巧：</strong><br>在开始做自己不不想做的事情时: 先一边听音乐一边干，15分钟后再摘下耳机。必须控制时间，因为听得越多，音乐给你带来的满足感就会越少。</p>
 <p><strong>以下是正文，先明确一下正文的目的：</strong></p>
 <ul>
-<li>举例说明 Linux 下父子进程如何使用管道进行通讯。</li>
+<li>举例说明 Linux 下父子进程如何使用管道进行通讯。<a id="more"></a>
+
+</li>
 </ul>
 <p><strong>目录：</strong> </p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">一、概述</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    <span class="number">1.</span> IPC 工具分类</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    <span class="number">2.</span> 什么是管道</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    <span class="number">3.</span> 管道的 <span class="number">2</span> 个局限性</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    <span class="number">4.</span> 管道是最常用的 IPC</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    <span class="number">5.</span> 使用 pipe() 创建管道</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">二、一个简单的例子 (simple_pipe.c)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    <span class="number">1.</span> 举例说明</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    <span class="number">2.</span> 相关要点</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">三、参考书籍</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">四、欢迎关注我的微信公众号</span></pre></td></tr></table></figure>
+
 
 <h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><h2 id="1-IPC-工具分类"><a href="#1-IPC-工具分类" class="headerlink" title="1. IPC 工具分类"></a>1. IPC 工具分类</h2><ul>
 <li><p>通信类 (communication)：这类工具关注进程之间的数据交换。</p>

@@ -212,7 +212,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-07-04 08:23:09" itemprop="dateModified" datetime="2020-07-04T08:23:09+08:00">2020-07-04</time>
+                <time title="修改时间：2020-07-04 10:48:39" itemprop="dateModified" datetime="2020-07-04T10:48:39+08:00">2020-07-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -243,98 +243,15 @@
 <p><strong>对抗枯燥感的小技巧：</strong><br>在开始做自己不不想做的事情时: 先一边听音乐一边干，15分钟后再摘下耳机。必须控制时间，因为听得越多，音乐给你带来的满足感就会越少。</p>
 <p><strong>以下是正文，先明确一下正文的目的：</strong></p>
 <ul>
-<li>举例说明 Linux 下父子进程如何使用管道进行通讯。</li>
-</ul>
-<p><strong>目录：</strong> </p>
-<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">一、概述</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    <span class="number">1.</span> IPC 工具分类</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    <span class="number">2.</span> 什么是管道</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    <span class="number">3.</span> 管道的 <span class="number">2</span> 个局限性</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    <span class="number">4.</span> 管道是最常用的 IPC</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    <span class="number">5.</span> 使用 pipe() 创建管道</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">二、一个简单的例子 (simple_pipe.c)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    <span class="number">1.</span> 举例说明</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    <span class="number">2.</span> 相关要点</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">三、参考书籍</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">四、欢迎关注我的微信公众号</span></pre></td></tr></table></figure>
-
-<h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><h2 id="1-IPC-工具分类"><a href="#1-IPC-工具分类" class="headerlink" title="1. IPC 工具分类"></a>1. IPC 工具分类</h2><ul>
-<li><p>通信类 (communication)：这类工具关注进程之间的数据交换。</p>
-</li>
-<li><p>同步类 (synchronization)：这类工具关注进程和线程操作之间的同步。</p>
-</li>
-<li><p>信号类 (signal)：尽管信号的主要作用并不在此，但在特定场景下仍然可以将它作为一种同步技术。更罕见的是信号还可以作为一种通信技术：信号编号本身是一种形式的信息，并且可以在实时信号上绑定数据。</p>
-</li>
-</ul>
-<p><img src="/images/linux/ipc/ipc_facilities.png" alt=""></p>
-<h2 id="2-什么是管道？"><a href="#2-什么是管道？" class="headerlink" title="2. 什么是管道？"></a>2. 什么是管道？</h2><p>当从一个进程连接数据流到另一个进程时，我们使用术语管道 (pipe)，也叫无名管道 (unnamed pipe)。通常是把一个进程的输出通过管道连接到另一个进程的输入。<br><img src="/images/linux/pipe/pipe.png" alt=""></p>
-<p>管道是 UNIX 系统最古老的 IPC ，所有 UNIX 系统都提供这种通信机制。</p>
-<h2 id="3-管道的-2-个局限性"><a href="#3-管道的-2-个局限性" class="headerlink" title="3. 管道的 2 个局限性"></a>3. 管道的 2 个局限性</h2><ul>
-<li><p>历史上，它是半双工的 (即数据只能在一个方向上流动)。现在，某些系统提供全双工管道，但是为了可移植性，我们不应预先假定系统支持全双工管道。</p>
-</li>
-<li><p>管道只能在具有公共祖先的两个进程之间使用。通常，一个管道由一个进程创建，在进程调用 fork 之后，这个管道就能在父进程和子进程之间使用了。</p>
-</li>
-</ul>
-<h2 id="4-尽管有这-2-个局限性，半双工管道仍是最常用的-IPC"><a href="#4-尽管有这-2-个局限性，半双工管道仍是最常用的-IPC" class="headerlink" title="4. 尽管有这 2 个局限性，半双工管道仍是最常用的 IPC"></a>4. 尽管有这 2 个局限性，半双工管道仍是最常用的 IPC</h2><p>每当在管道中键入一个命令序列，让 shell 执行时，shell 都会为每一条命令单独创建一个进程，然后用管道将前一条命令进程的标准输出与后一条命令的标准输入相连接。shell 负责安排两个命令的标准输入和标准输出：</p>
-<ul>
-<li>cmd1 的标准输入来自终端键盘;</li>
-<li>cmd1 的标准输出传递给 cmd2，作为它的标准输入;</li>
-<li>cmd2 的标准输出连接到终端屏幕;</li>
-</ul>
-<p>shell 所做的工作实际上是对标准输入和标准输出流进行了重新连接，使数据流从键盘输入通过两个命令最终输出到屏幕上。<br><img src="/images/linux/pipe/shell_pipe.png" alt=""></p>
-<p>以 “$ ls | wc -l” 为例：<br><img src="/images/linux/pipe/shell_pipe_example1.png" alt=""></p>
-<h2 id="5-使用-pipe-创建管道"><a href="#5-使用-pipe-创建管道" class="headerlink" title="5. 使用 pipe() 创建管道"></a>5. 使用 pipe() 创建管道</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ man <span class="number">2</span> pipe</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">NAME</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">       pipe, pipe2 - create pipe</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">SYNOPSIS</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">pipe</span><span class="params">(<span class="keyword">int</span> filedes[<span class="number">2</span>])</span></span>;</span></pre></td></tr></table></figure>
-<p>成功的 pipe() 调用会在数组 filedes 中返回两个打开的文件描述符：一个表示管道的读取端 (filedes[0])，另一个表示管道的写入端 (filedes[1])。</p>
-<p>与所有文件描述符一样，可以使用 read() 和 write() 在管道上执行 I/O 操作。一旦向管道的写入端写入数据之后立即就能从管道的读取端读取数据。</p>
-<h1 id="二、一个简单的例子-simple-pipe-c"><a href="#二、一个简单的例子-simple-pipe-c" class="headerlink" title="二、一个简单的例子 (simple_pipe.c)"></a>二、一个简单的例子 (simple_pipe.c)</h1><h2 id="1-举例说明"><a href="#1-举例说明" class="headerlink" title="1. 举例说明"></a>1. 举例说明</h2><p>下面的程序演示了如何将管道用于父进程和子进程之间的通信：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">int</span> pfd[<span class="number">2</span>];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">char</span> buf[BUF_SIZE];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">ssize_t</span> numRead;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">if</span> (argc != <span class="number">2</span> || <span class="built_in">strcmp</span>(argv[<span class="number">1</span>], <span class="string">"--help"</span>) == <span class="number">0</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">        usageErr(<span class="string">"%s string\n"</span>, argv[<span class="number">0</span>]);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">if</span> (pipe(pfd) == <span class="number">-1</span>)    <span class="comment">/* Create the pipe */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">        errExit(<span class="string">"pipe"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">switch</span> (fork()) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">case</span> <span class="number">-1</span>:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">        errExit(<span class="string">"fork"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">case</span> <span class="number">0</span>:             <span class="comment">/* Child  - reads from pipe */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">if</span> (<span class="built_in">close</span>(pfd[<span class="number">1</span>]) == <span class="number">-1</span>)            <span class="comment">/* Write end is unused */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">            errExit(<span class="string">"close - child"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">for</span> (;;) &#123;              <span class="comment">/* Read data from pipe, echo on stdout */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">            numRead = <span class="built_in">read</span>(pfd[<span class="number">0</span>], buf, BUF_SIZE);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">if</span> (numRead == <span class="number">-1</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">                errExit(<span class="string">"read"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">if</span> (numRead == <span class="number">0</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">                <span class="keyword">break</span>;                      <span class="comment">/* End-of-file */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">if</span> (<span class="built_in">write</span>(STDOUT_FILENO, buf, numRead) != numRead)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">                fatal(<span class="string">"child - partial/failed write"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">30</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">31</span></pre></td><td class="code"><pre><span class="line">        <span class="comment">// cleanup</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">32</span></pre></td><td class="code"><pre><span class="line">        ...</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">33</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">default</span>:            <span class="comment">/* Parent - writes to pipe */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">34</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">if</span> (<span class="built_in">close</span>(pfd[<span class="number">0</span>]) == <span class="number">-1</span>)            <span class="comment">/* Read end is unused */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">35</span></pre></td><td class="code"><pre><span class="line">            errExit(<span class="string">"close - parent"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">36</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">37</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">if</span> (<span class="built_in">write</span>(pfd[<span class="number">1</span>], argv[<span class="number">1</span>], <span class="built_in">strlen</span>(argv[<span class="number">1</span>])) != <span class="built_in">strlen</span>(argv[<span class="number">1</span>]))</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">38</span></pre></td><td class="code"><pre><span class="line">            fatal(<span class="string">"parent - partial/failed write"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">39</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">40</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">if</span> (<span class="built_in">close</span>(pfd[<span class="number">1</span>]) == <span class="number">-1</span>)            <span class="comment">/* Child will see EOF */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">41</span></pre></td><td class="code"><pre><span class="line">            errExit(<span class="string">"close"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">42</span></pre></td><td class="code"><pre><span class="line">        wait(<span class="literal">NULL</span>);                         <span class="comment">/* Wait for child to finish */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">43</span></pre></td><td class="code"><pre><span class="line">        <span class="built_in">exit</span>(EXIT_SUCCESS);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">44</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">45</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
-
-<p><strong>运行效果：</strong></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ./simple_pipe <span class="string">'msg from parent'</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">msg from parent</span></pre></td></tr></table></figure>
-
-<p>单个进程中的管道几乎没有任何用处。一般来讲都是使用管道让两个进程进行通信。为了让两个进程通过管道进行连接，在调用完 pipe() 之后可以调用 fork()，子进程会继承父进程的文件描述符的副本：</p>
-<p><img src="/images/linux/pipe/pipe_fork1.png" alt=""></p>
-<p>虽然父进程和子进程都可以从管道中读取和写入数据，但一般不这么使用管道。通常，在 fork() 之后，其中一个进程应该立即关闭管道的写入端的描述符，另一个则应该关闭读取端的描述符。在上面的例子中，父进程向子进程传输数据，所以它关闭了管道的读取端的描述符 filedes[0]，而子进程则关闭管道的写入端的描述符 filedes[1]：</p>
-<p><img src="/images/linux/pipe/pipe_fork2.png" alt=""></p>
-<h2 id="2-相关要点"><a href="#2-相关要点" class="headerlink" title="2. 相关要点"></a>2. 相关要点</h2><ol>
-<li><p>父子进程从同一个管道中读取和写入数据这种做法不好的原因是：</p>
-<ul>
-<li><p>如果两个进程同时试图从管道中读取数据，那么就无法确定哪个进程会首先读取成功——两个进程竞争数据了，即会产生竞争。</p>
-</li>
-<li><p>使用管道进行双向通信更加简单的方法是：创建两个管道，在两个进程之间发送数据的两个方向上各使用一个。</p>
-</li>
-</ul>
-</li>
-<li><p>管道可以用于任意两个（或更多）相关进程之间的通信，只要在创建子进程的系列 fork() 调用之前通过一个共同的祖先进程创建管道即可。</p>
-</li>
-<li><p>关闭未使用管道文件描述符对于正确使用管道非常重要的：</p>
-<ul>
-<li><p>当 read 一个写入端 (write end) 已被关闭的管道时，在所有数据都被读取后，read 会返回 0，这时读取进程就知道文件已结束了。</p>
-</li>
-<li><p>如果读取进程没有关闭管道的写入端，那么在其他进程关闭了写入描述符之后，读取进程也不会看到文件结束，即使它读完了管道中的所有数据。</p>
-</li>
-<li><p>当 write 一个读取端已被关闭的管道，内核会向写入进程发送一个SIGPIPE 信号。在默认情况下，这个信号会杀死进程。但进程可以捕获或忽略该信号，这时管道上的 write() 操作因 EPIPE 错误而失败。收到SIGPIPE 信号 和获得 EPIPE 错误对于可以起到标示管道状态的作用。</p>
-</li>
-</ul>
-</li>
-<li><p>在写管道时，常量 PIPE_BUF 规定了内核的管道缓冲区大小。</p>
-<ul>
-<li><p>如果对管道调用 write()，而且要求写的字节数小于等于 PIPE_BUF，则此操作不会与其他进程对同一管道的 write 操作交叉进行。</p>
-</li>
-<li><p>如果有多个进程同时写一个管道，且要求写入的字节数超过 PIPE_BUF，则所写的数据可能会与其他进程所写的数据交错在一起。</p>
-</li>
-</ul>
-</li>
-</ol>
-<h1 id="三、参考书籍"><a href="#三、参考书籍" class="headerlink" title="三、参考书籍"></a>三、参考书籍</h1><ul>
-<li>《UNIX 环境高级编程 - 15.2 管道》</li>
-<li>《Linux / UNIX 系统编程手册 - 44.管道和FIFO》</li>
-<li>《Linux 程序设计 - 13.进程间通信：管道》</li>
-<li>《UNIX-Linux编程实践教程 - 10.I/O 重定向和管道》</li>
-</ul>
-<p><strong>更多值得学习的知识点：</strong>  </p>
-<ul>
-<li>将管道作为一种进程同步的方法;</li>
-<li>使用管道连接过滤器;</li>
-<li>通过管道与 shell 命令进行通信：popen();</li>
-<li>管道和 stdio 缓冲;</li>
-<li>命名管道：FIFO;</li>
-<li>…</li>
-</ul>
-<p>鉴于大多数人的注意力无法在一篇文章里上集中太久，更多的内容请大家先自行去阅读吧，不是自己理解到的东西是消化不了的。有机会的话我会把更多的读书心得放在后面的文章。</p>
-<h1 id="四、欢迎关注我的微信公众号"><a href="#四、欢迎关注我的微信公众号" class="headerlink" title="四、欢迎关注我的微信公众号"></a>四、欢迎关注我的微信公众号</h1><p><img src="/images/basic/wechat_channel.jpg" alt=""></p>
-<p>你和我各有一个苹果，如果我们交换苹果的话，我们还是只有一个苹果。但当你和我各有一个想法，我们交换想法的话，我们就都有两个想法了。如果你也对 <strong>嵌入式系统和开源软件</strong> 感兴趣，并且想和更多人互相交流学习的话，请关注我的公众号：<strong>嵌入式Hacker</strong>，一起来学习吧，无论是 <strong>关注或转发</strong> , 还是赏赐，都是对作者莫大的支持，感谢 <strong>各位的大拇指「在看」</strong> ，祝工作顺利，家庭和睦~</p>
-
+<li>举例说明 Linux 下父子进程如何使用管道进行通讯。
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/07/03/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E7%AE%A1%E9%81%93%E5%85%A5%E9%97%A81/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
