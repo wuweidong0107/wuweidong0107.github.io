@@ -30,7 +30,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;linux&#x2F;signal&#x2F;signal_data_structure.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;basic&#x2F;wechat_channel.jpg">
-<meta property="og:updated_time" content="2020-06-30T01:27:45.614Z">
+<meta property="og:updated_time" content="2020-07-02T23:42:50.210Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;linux&#x2F;signal&#x2F;signal_data_structure.png">
 
@@ -218,7 +218,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-06-30 09:27:45" itemprop="dateModified" datetime="2020-06-30T09:27:45+08:00">2020-06-30</time>
+                <time title="修改时间：2020-07-03 07:42:50" itemprop="dateModified" datetime="2020-07-03T07:42:50+08:00">2020-07-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -259,13 +259,13 @@
 </ul>
 <p><strong>学以致用，明确一下本文的目的：</strong></p>
 <ul>
-<li><p>举例说明 Linux 不会对信号进行排队处理。</p>
+<li><p>举例说明 Linux 不会对标准信号进行排队处理。</p>
 </li>
 <li><p>文末分享《自控力》里提到的一个提升自控力的小技巧：进行有效锻炼 (重点)。</p>
 </li>
 </ul>
 <p><strong>正文目录：</strong>  </p>
-<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">一、待处理的信号 (Pending Signals)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	<span class="number">1.</span> 一个简单的例子 (sig_pending.c)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">		<span class="number">1</span>) 分解代码</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">		<span class="number">2</span>) 运行效果</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">二、不对待处理的信号进行排队处理</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">	<span class="number">1.</span> 仍是那个简单的例子 (sig_pending.c)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">		<span class="number">1</span>) 运行效果</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">	<span class="number">2.</span> 查看 Linux 内核里 Signal Pending 相关的实现 (非重点)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">		<span class="number">1</span>) 相关数据结构</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">		<span class="number">2</span>) 信号的产生</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">		<span class="number">3</span>) 信号的传递</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">三、相关参考</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">四、如何高效地学习：了解自控力 (Self-<span class="section">control</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">	<span class="number">1.</span> 此书的基本信息</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">	<span class="number">2.</span> 一个关于提高自控力的小技巧：锻炼身体</span></pre></td></tr></table></figure>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">一、待处理的信号 (Pending Signals)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	<span class="number">1.</span> 一个简单的例子 (sig_pending.c)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">		<span class="number">1</span>) 分解代码</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">		<span class="number">2</span>) 运行效果</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">二、不对待处理的标准信号进行排队处理</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">	<span class="number">1.</span> 仍是那个简单的例子 (sig_pending.c)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">		<span class="number">1</span>) 运行效果</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">	<span class="number">2.</span> 查看 Linux 内核里 Signal Pending 相关的实现 (非重点)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">		<span class="number">1</span>) 相关数据结构</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">		<span class="number">2</span>) 信号的产生</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">		<span class="number">3</span>) 信号的传递</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">三、相关参考</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">四、如何高效地学习：了解自控力 (Self-<span class="section">control</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">	<span class="number">1.</span> 此书的基本信息</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">	<span class="number">2.</span> 一个关于提高自控力的小技巧：锻炼身体</span></pre></td></tr></table></figure>
 
 <a id="more"></a>
 
@@ -352,7 +352,7 @@
 <p><strong>如果你坚信自己不适合运动，就把运动的定义扩大一些：</strong><br>只要是不是坐着的且不在吃垃圾食品的活动就可以认为是在运动，例如扫地、散步、逛街。</p>
 <p>鉴于大多数人的注意力无法在一篇文章里上集中太久，更多的内容请大家自行去阅读吧，不是自己理解到的东西是消化不了的。有机会的话我会把更多的读书心得放在后面的文章。</p>
 <p><img src="/images/basic/wechat_channel.jpg" alt=""></p>
-<p>你和我各有一个苹果，如果我们交换苹果的话，我们还是只有一个苹果。但当你和我各有一个想法，我们交换想法的话，我们就都有两个想法了。如果你也对 <strong>嵌入式系统和开源软件</strong> 感兴趣，并且想和更多人互相交流学习的话，请关注我的公众号：<strong>嵌入式系统砖家</strong>，一起来学习吧，无论是 <strong>关注或转发</strong> , 还是赏赐，都是对作者莫大的支持，谢谢 <strong>各位的大拇指「在看」</strong> 吧,，祝工作顺利，家庭和睦~</p>
+<p>你和我各有一个苹果，如果我们交换苹果的话，我们还是只有一个苹果。但当你和我各有一个想法，我们交换想法的话，我们就都有两个想法了。如果你也对 <strong>嵌入式系统和开源软件</strong> 感兴趣，并且想和更多人互相交流学习的话，请关注我的公众号：<strong>嵌入式系统砖家</strong>，一起来学习吧，无论是 <strong>关注或转发</strong> , 还是赏赐，都是对作者莫大的支持，感谢 <strong>各位的大拇指「在看」</strong> ,，祝工作顺利，家庭和睦~</p>
 
     </div>
 
