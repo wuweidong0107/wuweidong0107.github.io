@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wuweidong0107.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一、让人失控的自我批评我们一直被灌输一种错误的观点:失败时，没有重视自己的失败，没有在自己没达到高标准时作自我批评，没有用自己不进步就会产生可怕的后果来威胁自己——我们就会变得懒惰。需要一个严厉的声音，来控制自己的胃口、本能和弱点。如果无视内心的审视和批评，我们会完全失去自控。  很多人都有一种错误的看法:觉得自我批评是自控的基础，自我同情会导致自我放纵。 而事实恰恰相反:增强责任感的不是罪恶感，">
+<meta name="keywords" content="Embedded, Linux, OpenWrt, Buildroot, Opensource, Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux系统编程-一些文件相关的概念">
+<meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;07&#x2F;13&#x2F;Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E4%B8%80%E4%BA%9B%E6%96%87%E4%BB%B6%E7%9B%B8%E5%85%B3%E7%9A%84%E6%A6%82%E5%BF%B5&#x2F;index.html">
+<meta property="og:site_name" content="嵌入式Hacker (es-hacker)">
+<meta property="og:description" content="一、让人失控的自我批评我们一直被灌输一种错误的观点:失败时，没有重视自己的失败，没有在自己没达到高标准时作自我批评，没有用自己不进步就会产生可怕的后果来威胁自己——我们就会变得懒惰。需要一个严厉的声音，来控制自己的胃口、本能和弱点。如果无视内心的审视和批评，我们会完全失去自控。  很多人都有一种错误的看法:觉得自我批评是自控的基础，自我同情会导致自我放纵。 而事实恰恰相反:增强责任感的不是罪恶感，">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;basic&#x2F;wechat_qun.jpg">
+<meta property="og:updated_time" content="2020-07-14T01:03:36.521Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;basic&#x2F;wechat_qun.jpg">
+
+<link rel="canonical" href="https://wuweidong0107.github.io/2020/07/13/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E4%B8%80%E4%BA%9B%E6%96%87%E4%BB%B6%E7%9B%B8%E5%85%B3%E7%9A%84%E6%A6%82%E5%BF%B5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Linux系统编程-一些文件相关的概念 | 嵌入式Hacker (es-hacker)</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">嵌入式Hacker (es-hacker)</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Embedded bsp developer enjoys thinking and hacking opensource and develop boards(NanoPi, LicheePi, RPi...)</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/07/13/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E4%B8%80%E4%BA%9B%E6%96%87%E4%BB%B6%E7%9B%B8%E5%85%B3%E7%9A%84%E6%A6%82%E5%BF%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="es-hacker">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式Hacker (es-hacker)">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux系统编程-一些文件相关的概念
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-13 08:24:24" itemprop="dateCreated datePublished" datetime="2020-07-13T08:24:24+08:00">2020-07-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-14 09:03:36" itemprop="dateModified" datetime="2020-07-14T09:03:36+08:00">2020-07-14</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="一、让人失控的自我批评"><a href="#一、让人失控的自我批评" class="headerlink" title="一、让人失控的自我批评"></a>一、让人失控的自我批评</h1><p><strong>我们一直被灌输一种错误的观点:</strong><br>失败时，没有重视自己的失败，没有在自己没达到高标准时作自我批评，没有用自己不进步就会产生可怕的后果来威胁自己——我们就会变得懒惰。需要一个严厉的声音，来控制自己的胃口、本能和弱点。如果无视内心的审视和批评，我们会完全失去自控。 </p>
+<p><strong>很多人都有一种错误的看法:</strong><br>觉得自我批评是自控的基础，自我同情会导致自我放纵。</p>
+<p><strong>而事实恰恰相反:</strong><br>增强责任感的不是罪恶感，而是自我谅解。持自我同情态度的人比持自我批评的态度的人更愿意承担责任。他们也更愿意接受别人的反馈和建议，更可能从这种经历中学到东西。</p>
+<p>当感到愧疚时，第一件要做的是就是原谅自己，谅解自己。</p>
+<h1 id="二、以下是正文"><a href="#二、以下是正文" class="headerlink" title="二、以下是正文"></a>二、以下是正文</h1><p><strong>明确写作目的：</strong>  </p>
+<ul>
+<li>了解一下 Linux 文件相关的概念。</li>
+</ul>
+<p><strong>目录：</strong>  </p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> Linux 的两大抽象</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="number">2.</span> 文件类型</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="number">3.</span> 文件描述符</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="number">4.</span> 通用文件模型</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="number">5.</span> 文件描述符和打开文件之间的关系</span></pre></td></tr></table></figure>
+
+
+<h2 id="1-Linux-的两大抽象"><a href="#1-Linux-的两大抽象" class="headerlink" title="1. Linux 的两大抽象"></a>1. Linux 的两大抽象</h2><p>参考:<br>lsp</p>
+<ul>
+<li><p>文件是Linux系统中最基础最重要的抽象。Linux遵循一切皆文件的理念。很多交互操作是通过读写文件来完成，即使所涉及的对象看起来并非普通文件。</p>
+</li>
+<li><p>如果说文件是UNIX系统最重要的抽象概念，进程则仅次于文件。</p>
+</li>
+</ul>
+<h2 id="2-文件类型"><a href="#2-文件类型" class="headerlink" title="2. 文件类型"></a>2. 文件类型</h2><p>参考:<br>apue 4.3<br>lsp 1.4.1</p>
+<ul>
+<li><p>普通文件。（即线性数组）组织的数据。在Linux中，文件没有高级组织结构或格式。文件中包含的字节可以是任意值，可以以任意方式进行组织。在系统层，除了字节流，Linux对文件结构没有特定要求。</p>
+</li>
+<li><p>目录。文件通常是通过文件名（而不是索引节点号）从用户空间打开。目录用于提供访问文件需要的名称。目录是可读名称到索引编号之间的映射。名称和索引节点之间的配对称为链接（link）。映射在物理磁盘上的形式，如简单的表或散列，是通过特定文件系统的内核代码来实现和管理的。从概念上看，可以把目录看作普通文件，其区别在于它包含文件名称到索引节点的映射。内核直接通过该映射把文件名解析为索引节点。</p>
+</li>
+<li><p>硬链接。多个名字确实可以解析到同一个索引节点。当不同名称的多个链接映射到同一个索引节点时，我们称该链接为硬链接（hard links）。</p>
+</li>
+<li><p>符号链接。硬链接不能跨越多个文件系统，因为索引节点编号在自己的文件系统之外没有任何意义。为了跨越文件系统建立链接，UNIX系统实现了符号链接（symbolic links，简称symlinks）。</p>
+</li>
+<li><p>特殊文件，Linux只支持四种特殊文件：块设备文件、字符设备文件、命名管道以及UNIX域套接字。特殊文件是使得某些抽象可以适用于文件系统，贯彻一切皆文件的理念。</p>
+</li>
+</ul>
+<h2 id="3-文件描述符"><a href="#3-文件描述符" class="headerlink" title="3. 文件描述符"></a>3. 文件描述符</h2><ul>
+<li><p>文件必须先打开才能访问。文件打开方式有只读、只写和读写模式。文件打开后是通过唯一描述符来引用，该描述符是从打开文件关联的元数据到文件本身的映射。在Linux内核中，文件用一个整数表示（C语言的int类型），称为文件描述符（file descriptor，简称fd）。文件描述符在用户空间共享，用户程序通过文件描述符可以直接访问文件。Linux系统编程的大部分工作都会涉及打开、操纵、关闭以及其他文件描述符操作。</p>
+</li>
+<li><p>描述符0与进程的标准输入关联，文件描述符1与标准输出关联，文件描述符2与标准错误关联。这是各种 shell以及很多应用程序使用的惯例，与内核无关。在符合POSIX.1的应用程序中，幻数0、1、2虽然已被标准化，但应当把它们替换成符号常量STDIN_FILENO、STDOUT_FILENO和STDERR_FILENO以提高可读性。</p>
+</li>
+<li><p>同一个文件可以由多个进程或同一个进程多次打开。系统会为每个打开的文件实例提供唯一文件描述符。因此，进程可以共享文件描述符，支持多个进程使用同一个文件描述符。</p>
+</li>
+</ul>
+<h2 id="4-通用文件模型"><a href="#4-通用文件模型" class="headerlink" title="4. 通用文件模型"></a>4. 通用文件模型</h2><p>参考<br>tlpi<br>ulk，12.虚拟文件系统/通用文件模型</p>
+<ul>
+<li><p>显著特点之一是其输入/输出的通用性概念。这意味着使用4个同样的系统调用open()、read()、write()和close()可以对所有类型的文件执行I/O操作，仅使用这些系统调用编写的程序，将对任何类型的文件有效。<br>程序清单4-1</p>
+</li>
+<li><p>要实现通用I/O，就必须确保每一文件系统和设备驱动程序都实现了相同的I/O系统调用集。由于文件系统或设备所特有的操作细节在内核中处理，在编程时通常可以忽略设备专有的因素。一旦应用程序需要访问文件系统或设备的专有功能时，可以选择瑞士军刀般的ioctl()系统调用，该调用为通用I/O模型之外的专有特性提供了访问接口。</p>
+</li>
+<li><p>相关内核实现。</p>
+</li>
+</ul>
+<h2 id="5-文件描述符和打开文件之间的关系"><a href="#5-文件描述符和打开文件之间的关系" class="headerlink" title="5. 文件描述符和打开文件之间的关系"></a>5. 文件描述符和打开文件之间的关系</h2><p>参考<br>tlpi 5.4<br>apue 3.10</p>
+<h3 id="5-1-已打开文件的内核数据结构"><a href="#5-1-已打开文件的内核数据结构" class="headerlink" title="5.1 已打开文件的内核数据结构"></a>5.1 已打开文件的内核数据结构</h3><ul>
+<li>内核维护的3个数据结构。<ul>
+<li>进程级的文件描述符表。</li>
+<li>系统级的打开文件表。</li>
+<li>文件系统的i-node表。</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-2-两个独立进程各自打开同一个文件"><a href="#5-2-两个独立进程各自打开同一个文件" class="headerlink" title="5.2 两个独立进程各自打开同一个文件"></a>5.2 两个独立进程各自打开同一个文件</h3><h3 id="5-3-dup-1-后的内核数据结构"><a href="#5-3-dup-1-后的内核数据结构" class="headerlink" title="5.3 dup(1)后的内核数据结构"></a>5.3 dup(1)后的内核数据结构</h3><h3 id="5-4-fork之后父进程和子进程之间对打开文件的共享"><a href="#5-4-fork之后父进程和子进程之间对打开文件的共享" class="headerlink" title="5.4 fork之后父进程和子进程之间对打开文件的共享"></a>5.4 fork之后父进程和子进程之间对打开文件的共享</h3><h3 id="5-5-相关内核实现"><a href="#5-5-相关内核实现" class="headerlink" title="5.5 相关内核实现"></a>5.5 相关内核实现</h3><p>￼</p>
+<h1 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h1><p>鉴于大多数人的注意力无法在一篇文章里上集中太久，更多的内容请大家先自行去阅读吧，不是自己理解到的东西是消化不了的。有机会的话我会把更多的读书心得放在后面的文章。</p>
+<h1 id="四、相关参考"><a href="#四、相关参考" class="headerlink" title="四、相关参考"></a>四、相关参考</h1><h2 id="1-参考书籍"><a href="#1-参考书籍" class="headerlink" title="1. 参考书籍"></a>1. 参考书籍</h2><ul>
+<li><p>Linux 系统编程</p>
+<ul>
+<li>1.4.1 - 文件和文件系统</li>
+</ul>
+</li>
+<li><p>APUE</p>
+<ul>
+<li>3.10 文件共享</li>
+<li>3.12 dup</li>
+<li>4.3 文件类型</li>
+<li>8.3 fork 文件共享</li>
+</ul>
+</li>
+<li><p>TLPI</p>
+<ul>
+<li>4 - 文件I/O：通用的I/O模型</li>
+<li>5.4 文件描述符和打开文件之间的关系</li>
+</ul>
+</li>
+<li><p>LKD 13.11</p>
+</li>
+<li><p>ULK</p>
+</li>
+<li><p>UNIX操作系统设计，第4章 文件的内部表示</p>
+</li>
+</ul>
+<h2 id="2-相关文章"><a href="#2-相关文章" class="headerlink" title="2. 相关文章"></a>2. 相关文章</h2><h2 id="3-更多值得学习的知识点"><a href="#3-更多值得学习的知识点" class="headerlink" title="3. 更多值得学习的知识点"></a>3. 更多值得学习的知识点</h2><h1 id="五、欢迎加入我的微信群"><a href="#五、欢迎加入我的微信群" class="headerlink" title="五、欢迎加入我的微信群"></a>五、欢迎加入我的微信群</h1><p><img src="/images/basic/wechat_qun.jpg" alt=""></p>
+<p>你和我各有一个苹果，如果我们交换苹果的话，我们还是只有一个苹果。但当你和我各有一个想法，我们交换想法的话，我们就都有两个想法了。如果你也对 <strong>嵌入式系统和开源软件</strong> 感兴趣，并且想和更多人互相交流学习的话，请关注我的公众号：<strong>嵌入式Hacker</strong>，一起来学习吧，无论是 <strong>关注或转发</strong> , 还是赏赐，都是对作者莫大的支持，感谢 <strong>各位的大拇指</strong> ，祝工作顺利，家庭和睦~</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>这是一篇有趣的文章吗？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="es-hacker 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/basic/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/07/08/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E7%AE%A1%E9%81%93%E5%85%A5%E9%97%A82/" rel="prev" title="Linux系统编程-管道入门2">
+      <i class="fa fa-chevron-left"></i> Linux系统编程-管道入门2
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、让人失控的自我批评"><span class="nav-number">1.</span> <span class="nav-text">一、让人失控的自我批评</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、以下是正文"><span class="nav-number">2.</span> <span class="nav-text">二、以下是正文</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Linux-的两大抽象"><span class="nav-number">2.1.</span> <span class="nav-text">1. Linux 的两大抽象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-文件类型"><span class="nav-number">2.2.</span> <span class="nav-text">2. 文件类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-文件描述符"><span class="nav-number">2.3.</span> <span class="nav-text">3. 文件描述符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-通用文件模型"><span class="nav-number">2.4.</span> <span class="nav-text">4. 通用文件模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-文件描述符和打开文件之间的关系"><span class="nav-number">2.5.</span> <span class="nav-text">5. 文件描述符和打开文件之间的关系</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-已打开文件的内核数据结构"><span class="nav-number">2.5.1.</span> <span class="nav-text">5.1 已打开文件的内核数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-两个独立进程各自打开同一个文件"><span class="nav-number">2.5.2.</span> <span class="nav-text">5.2 两个独立进程各自打开同一个文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-dup-1-后的内核数据结构"><span class="nav-number">2.5.3.</span> <span class="nav-text">5.3 dup(1)后的内核数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-fork之后父进程和子进程之间对打开文件的共享"><span class="nav-number">2.5.4.</span> <span class="nav-text">5.4 fork之后父进程和子进程之间对打开文件的共享</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5-相关内核实现"><span class="nav-number">2.5.5.</span> <span class="nav-text">5.5 相关内核实现</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、总结"><span class="nav-number">3.</span> <span class="nav-text">三、总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、相关参考"><span class="nav-number">4.</span> <span class="nav-text">四、相关参考</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-参考书籍"><span class="nav-number">4.1.</span> <span class="nav-text">1. 参考书籍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-相关文章"><span class="nav-number">4.2.</span> <span class="nav-text">2. 相关文章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-更多值得学习的知识点"><span class="nav-number">4.3.</span> <span class="nav-text">3. 更多值得学习的知识点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、欢迎加入我的微信群"><span class="nav-number">5.</span> <span class="nav-text">五、欢迎加入我的微信群</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">es-hacker</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">es-hacker</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
