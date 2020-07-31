@@ -179,6 +179,206 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/07/28/Tools-%E8%8E%B7%E5%8F%96c%E6%96%87%E4%BB%B6%E7%9A%84%E5%87%BD%E6%95%B0%E5%88%97%E8%A1%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="es-hacker">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式Hacker (es-hacker)">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/07/28/Tools-%E8%8E%B7%E5%8F%96c%E6%96%87%E4%BB%B6%E7%9A%84%E5%87%BD%E6%95%B0%E5%88%97%E8%A1%A8/" class="post-title-link" itemprop="url">Tools / 获取c文件函数名的几种方法</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-28 10:29:37" itemprop="dateCreated datePublished" datetime="2020-07-28T10:29:37+08:00">2020-07-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-31 09:16:09" itemprop="dateModified" datetime="2020-07-31T09:16:09+08:00">2020-07-31</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><img src="/images/life/photo/sun.jpg" alt=""></p>
+<p>哈喽，我是老吴，继续记录我的学习心得。</p>
+<h1 id="如何学习新事物？"><a href="#如何学习新事物？" class="headerlink" title="如何学习新事物？"></a>如何学习新事物？</h1><p>人有 2 种思维模式：专注模式和发散模式，你可以把这 2 种模式想象成从手电筒里打出来的光。</p>
+<p>专注模式下的光束更紧密，穿透力更强，径直打在一小块区域上。</p>
+<p>而发散模式的光柱则是分散的，照亮的范围更广，但各处的光强都会降低。</p>
+<p>如果你想要理解新事物，那最好关掉精确的专注思考模式，把开关切换到 “广角光源”，直到你锁定了一个新的、更有成效的方法。</p>
+<p><strong>该方法也适用于阅读源代码</strong>。<br>现在的软件越来越大，一个开源软件动不动就有几百个文件、几万行代码，想要快速应用或者解决 bug，你还有时间对每一个函数进行源码分析吗？</p>
+<p><strong>我的做法是这样的:</strong>  </p>
+<p>1) 先查看源码的目录层次，确定顶层目录负责的功能;</p>
+<p>2) 对感兴趣或者需要定制的功能，再查看该目录下的源码文件，确定每一个文件的功能;</p>
+<p>3) 开始阅读该文件内的源码，但是我也不会直接从源码的入门函数开始阅读，我会先获取该文件里的所有定义(包括函数、变量)，找出自己最关心的函数或者变量进行跟踪阅读。</p>
+<p>这是我在阅读源码这件事上对发散模式和专注模式的一次简单应用，你学到了吗？<strong>下面我分享几个自己临时想到的获取 C 文件函数名的方法 (list function)</strong>，只是提供思路，不一定足够严谨和高效，谨慎参考。</p>
+<p><strong>觉得有收获的小伙伴们，请帮忙转发一下下哈</strong>~</p>
+<h1 id="Tools-获取-c-文件函数名的几种方法"><a href="#Tools-获取-c-文件函数名的几种方法" class="headerlink" title="Tools / 获取 c 文件函数名的几种方法"></a>Tools / 获取 c 文件函数名的几种方法</h1><p><strong>目录：</strong></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="bullet">1. </span>方法1: grep 配合正则表达式</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="bullet">2. </span>方法2: nm 类的调试工具</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="bullet">3. </span>方法3: 开源软件 ctags</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="bullet">4. </span>使用 list function 的方法简单分析 Linux Input 子系统</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="bullet">5. </span>相关参考</span></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="1-方法1-grep-配合正则表达式"><a href="#1-方法1-grep-配合正则表达式" class="headerlink" title="1. 方法1: grep 配合正则表达式"></a>1. 方法1: grep 配合正则表达式</h2><p><strong>1) private 函数：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ grep -E '^(\w+ )?\w+ (\w+ )?\w+( )?\(.*)' SDL_events.c -o | sort | grep static | sort</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">SDL_AddEvent</span><span class="params">(SDL_Event *event)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> SDLCALL <span class="title">SDL_GobbleEvents</span><span class="params">(<span class="keyword">void</span> *unused)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">SDL_CutEvent</span><span class="params">(<span class="keyword">int</span> spot)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">SDL_StartEventThread</span><span class="params">(Uint32 flags)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">SDL_StopEventThread</span><span class="params">(<span class="keyword">void</span>)</span></span></span></pre></td></tr></table></figure>
+
+<p><strong>2) public 函数：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ grep -E '^(\w+ )?\w+ (\w+ )?\w+( )?\(.*)' SDL_events.c -o | sort | grep -v static | sort</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">SDL_PollEvent</span> <span class="params">(SDL_Event *event)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">...</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">SDL_WaitEvent</span> <span class="params">(SDL_Event *event)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="function">SDL_EventFilter <span class="title">SDL_GetEventFilter</span><span class="params">(<span class="keyword">void</span>)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="function">Uint32 <span class="title">SDL_EventThreadID</span><span class="params">(<span class="keyword">void</span>)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="function">Uint8 <span class="title">SDL_EventState</span> <span class="params">(Uint8 type, <span class="keyword">int</span> state)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SDL_Lock_EventThread</span><span class="params">(<span class="keyword">void</span>)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">...</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SDL_Unlock_EventThread</span><span class="params">(<span class="keyword">void</span>)</span></span></span></pre></td></tr></table></figure>
+
+<p><strong>3) 优点：</strong></p>
+<ul>
+<li><p>通用性强，基本所有的 Linux 系统都会有 grep 命令;</p>
+</li>
+<li><p>可以看到函数的完整定义;</p>
+</li>
+</ul>
+<p><strong>4) 缺点：</strong></p>
+<ul>
+<li>某些情景下无法完全匹配所有的函数定义，例如将函数定义分 2 行来写的情况。</li>
+</ul>
+<hr>
+<h2 id="2-方法2-nm-类的调试工具"><a href="#2-方法2-nm-类的调试工具" class="headerlink" title="2. 方法2: nm 类的调试工具"></a>2. 方法2: nm 类的调试工具</h2><p><strong>1) 什么是 nm？</strong></p>
+<p>nm 用于检查二进制文件 (包括库，编译后的目标模块，共享目标文件，和独立可执行文件)，并显示这些文件的内容，或存储在其中的元信息，特别是符号表。</p>
+<p><strong>输出格式：</strong></p>
+<ul>
+<li><p>默认按符号字母序排序;</p>
+</li>
+<li><p>大写字母表示全局性，小写字母表示局部性；</p>
+</li>
+<li><p>U 表示此符号未定义，C 表示此符号是公共的，T/t 表示此符号在代码段中，D/d 的表示此符号在初始化数据段中，B/b 表示此符号在BSS数据段中;</p>
+</li>
+</ul>
+<p><strong>另外，objdump -t 和 readelf -s 也可以查看目标文件的符号表。</strong></p>
+<p><strong>2) 例子：</strong><br>下面的例子展示了变量和函数在全局、局部、外部、静态、自动和初始化的不同情况下的不同符号类型。</p>
+<p>全局/静态 变量：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> global_var;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> global_var_init = <span class="number">26</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">int</span> static_var;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">int</span> static_var_init = <span class="number">25</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="keyword">int</span> extern_var;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">int</span> <span class="title">extern_function</span><span class="params">(<span class="keyword">int</span>)</span></span>;</span></pre></td></tr></table></figure>
+
+<p>静态函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">static_function</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">int</span> local_automatic_var;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">	local_automatic_var = x + y;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">return</span> local_automatic_var;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p>全局函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">global_function</span><span class="params">(<span class="keyword">int</span> p)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">static</span> <span class="keyword">int</span> local_static_var;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">static</span> <span class="keyword">int</span> local_static_var_init=<span class="number">5</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">	</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">	local_static_var = static_function(local_static_var_init, p);	</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">return</span> local_static_var;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">	static_var = <span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">	global_var = global_function(<span class="number">2</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">	extern_var = extern_function(<span class="number">3</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __cplusplus</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">non_mangled_function</span><span class="params">(<span class="keyword">void</span>)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">	<span class="comment">// I do nothing</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p><strong>3) private 函数：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ gcc -c c_obj.c</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">$ nm c_obj.o | grep " t " | cut -d' ' -f3</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">static_function</span></pre></td></tr></table></figure>
+
+<p><strong>4) public 函数：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ gcc -c c_obj.c</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">$ nm c_obj.o | grep " T " | cut -d' ' -f3</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">global_function</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">main</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">non_mangled_function</span></pre></td></tr></table></figure>
+
+<p><strong>5) 优点：</strong></p>
+<ul>
+<li><p>可以看到整个文件的所有调试信息，不仅仅是函数列表;</p>
+</li>
+<li><p>同时适用于C 和 C++;</p>
+</li>
+<li><p>呈现的是编译后的结果，更加准确可靠，例如不用关心源码中宏定义是否打开。</p>
+</li>
+</ul>
+<p><strong>6) 缺点：</strong></p>
+<ul>
+<li><p>只能对编译后的目标文件进行查看;</p>
+</li>
+<li><p>目标文件如果被 strip 后，则无法使用该方法。</p>
+</li>
+<li><p>无法看到完整的函数定义;</p>
+</li>
+</ul>
+<hr>
+<h2 id="3-方法3-开源软件-Ctags"><a href="#3-方法3-开源软件-Ctags" class="headerlink" title="3. 方法3: 开源软件 Ctags"></a>3. 方法3: 开源软件 Ctags</h2><p><strong>1) 什么是 ctags？</strong><br>Ctags 是一个用于从程序源代码树产生索引文件（或tag文件），从而便于文本编辑器来实现快速定位的实用工具。<strong>在产生的 tag 文件中，每一个 tag 的入口指向了一个编程语言的对象。这个对象可以是变量定义、函数、类或其他的物件</strong>。</p>
+<p><strong>Ctags 支持下列的编程语言：</strong><br>汇编，AWK, ASP, BETA, Bourne/Korn/Zsh Shell, C, C++, COBOL, Eiffel, Fortran, Java, Lisp, Lua, Make, Pascal, Perl, PHP, Python, REXX, Ruby, S-Lang, Scheme, Tcl, Vim, and YACC。</p>
+<p><strong>2) private 函数：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ ctags -x SDL_events.c | grep function | tr -s ' ' | cut -d' ' -f5- | grep static | sort</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">SDL_AddEvent</span><span class="params">(SDL_Event *event)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> SDLCALL <span class="title">SDL_GobbleEvents</span><span class="params">(<span class="keyword">void</span> *unused)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">SDL_CutEvent</span><span class="params">(<span class="keyword">int</span> spot)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">SDL_StartEventThread</span><span class="params">(Uint32 flags)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">SDL_StopEventThread</span><span class="params">(<span class="keyword">void</span>)</span></span></span></pre></td></tr></table></figure>
+
+<p><strong>3) public 函数：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ ctags -x SDL_events.c | grep function | tr -s ' ' | cut -d' ' -f5- | grep -v static | sort</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">SDL_PeepEvents</span><span class="params">(SDL_Event *events, <span class="keyword">int</span> numevents, SDL_eventaction action,</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="params"><span class="keyword">int</span> SDL_PollEvent (SDL_Event *event)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="params">...</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="params"><span class="keyword">int</span> SDL_WaitEvent (SDL_Event *event)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="params">SDL_EventFilter SDL_GetEventFilter(<span class="keyword">void</span>)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="params">...</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="params"><span class="keyword">void</span> SDL_Lock_EventThread(<span class="keyword">void</span>)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="params">...</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="params"><span class="keyword">void</span> SDL_Unlock_EventThread(<span class="keyword">void</span>)</span></span></span></pre></td></tr></table></figure>
+
+<p><strong>4) 优点：</strong>  </p>
+<ul>
+<li><p>支持多语言;</p>
+</li>
+<li><p>可以看到函数的完整定义;</p>
+</li>
+<li><p>Ctags 不是编译器也不是预处理器，它的解析能力是有限的;</p>
+</li>
+</ul>
+<p><strong>5) 缺点：</strong>  </p>
+<ul>
+<li>分2行定义的函数无法完整显示：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">SDL_PeepEvents</span><span class="params">(SDL_Event *events, <span class="keyword">int</span> numevents, SDL_eventaction action,</span></span></span></pre></td></tr></table></figure>
+
+<p><strong>6) 我有必要了解 ctags 的内部实现吗？</strong></p>
+<ul>
+<li>并不十分清楚 Ctags 使用何种技术来解析内容，估计包括正则表达式、词法分析、语法分析。日后如果工作对上述知识点有需求的话，应该也是一个很不错的学习资料，暂时不深入学习，</li>
+</ul>
+<hr>
+<h1 id="4-使用-list-function-的方法简单分析-Linux-Input-子系统"><a href="#4-使用-list-function-的方法简单分析-Linux-Input-子系统" class="headerlink" title="4. 使用 list function 的方法简单分析 Linux Input 子系统"></a>4. 使用 list function 的方法简单分析 Linux Input 子系统</h1><p><strong>1) 先是发散思维，了解 Linux input 的整体框架：</strong><br><img src="images/linux/driver/input/linux-input-overview.png" alt="linux-input-overview"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">ls <span class="number">-1</span>X</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 目录</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">gameport</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">joystick</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">keyboard</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">misc</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">mouse</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">rmi4</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">serio</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">tablet</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">touchscreen</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 文件</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">apm-power.c</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">evbug.c</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">ff-core.c</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">ff-memless.c</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">input-compat.c</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">input-leds.c</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">input-mt.c</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">input-polldev.c</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">joydev.c</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">matrix-keymap.c</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">mousedev.c</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">sparse-keymap.c</span></pre></td></tr></table></figure>
+
+<p><strong>2) 然后开始专注在自己关心的内容上，例如我想多了解一下 input core 的内容，那么我就去查看 input .c 结构:</strong></p>
+<p>public function:  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ ctags -x input.c | grep function | tr -s ' ' | sort -t' ' -k 3 -n | cut -d' ' -f5- | grep -v static</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// input_dev 相关</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="function">struct input_dev *<span class="title">devm_input_allocate_device</span><span class="params">(struct device *dev)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">input_register_device</span><span class="params">(struct input_dev *dev)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="function">struct input_dev *<span class="title">input_allocate_device</span><span class="params">(<span class="keyword">void</span>)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">input_free_device</span><span class="params">(struct input_dev *dev)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">input_free_minor</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> minor)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">input_open_device</span><span class="params">(struct input_handle *handle)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">input_release_device</span><span class="params">(struct input_handle *handle)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">input_unregister_device</span><span class="params">(struct input_dev *dev)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">...</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// input_handler 相关</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">input_match_device_id</span><span class="params">(<span class="keyword">const</span> struct input_dev *dev,</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="params"><span class="keyword">int</span> input_register_handle(struct input_handle *handle)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="params"><span class="keyword">int</span> input_register_handler(struct input_handler *handler)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="params"><span class="keyword">void</span> input_unregister_handle(struct input_handle *handle)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="params"><span class="keyword">void</span> input_unregister_handler(struct input_handler *handler)</span></span></span></pre></td></tr></table></figure>
+
+<p>private var:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ ctags -x input.c | grep variable | tr -s ' ' | sort -t' ' -k 3 -n | cut -d' ' -f5- | grep static</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="title">LIST_HEAD</span><span class="params">(input_dev_list)</span></span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="title">LIST_HEAD</span><span class="params">(input_handler_list)</span></span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">...</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">seq_operations</span> <span class="title">input_devices_seq_ops</span> = &#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">file_operations</span> <span class="title">input_devices_fileops</span> = &#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">seq_operations</span> <span class="title">input_handlers_seq_ops</span> = &#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">file_operations</span> <span class="title">input_handlers_fileops</span> = &#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">attribute</span> *<span class="title">input_dev_attrs</span>[] = &#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">attribute_group</span> <span class="title">input_dev_attr_group</span> = &#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">attribute</span> *<span class="title">input_dev_id_attrs</span>[] = &#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">attribute_group</span> <span class="title">input_dev_id_attr_group</span> = &#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">attribute</span> *<span class="title">input_dev_caps_attrs</span>[] = &#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">attribute_group</span> <span class="title">input_dev_caps_attr_group</span> = &#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">attribute_group</span> *<span class="title">input_dev_attr_groups</span>[] = &#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">dev_pm_ops</span> <span class="title">input_dev_pm_ops</span> = &#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">device_type</span> <span class="title">input_dev_type</span> = &#123;</span></span></pre></td></tr></table></figure>
+
+<p><strong>3) 剩下的就可以重点去阅读相关代码了，例如 <code>input_allocate_device()</code></strong></p>
+<hr>
+<h1 id="5-相关参考"><a href="#5-相关参考" class="headerlink" title="5. 相关参考"></a>5. 相关参考</h1><ul>
+<li><p><a href="https://zh.wikipedia.org/wiki/Nm_(Unix)" target="_blank" rel="noopener">nm wiki</a></p>
+</li>
+<li><p><a href="https://zh.wikipedia.org/wiki/Ctags" target="_blank" rel="noopener">Ctags wiki</a></p>
+</li>
+</ul>
+<hr>
+<h1 id="思考技术，也要思考人生"><a href="#思考技术，也要思考人生" class="headerlink" title="思考技术，也要思考人生"></a>思考技术，也要思考人生</h1><p><strong>学习技术，更要学习如何生活</strong>。</p>
+<p>你和我各有一个苹果，如果我们交换苹果的话，我们还是只有一个苹果。但当你和我各有一个想法，我们交换想法的话，我们就都有两个想法了。</p>
+<p><img src="/images/basic/wechat_channel.jpg" alt="公众号"></p>
+<p>对 <strong>嵌入式系统 (Linux、RTOS、OpenWrt、Android) 和 开源软件</strong> 感兴趣，想和更多人互相交流学习，关注公众号：<strong>嵌入式Hacker</strong>，一起来学习吧。</p>
+<p><strong>关注 / 转发 / 打赏</strong>，都是对作者莫大的支持。觉得文章对你有价值的话，不妨点个 <strong>在看和点赞</strong> 哦。</p>
+<p><strong>ps:</strong><br>欢迎加入我的微信群：先加我微信，我拉你进群，暗号(<strong>我最棒</strong>)。</p>
+<p>祝工作顺利，家庭幸福，财源滚滚~</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/07/26/%E6%AF%8F%E5%A4%A9%E4%B8%80%E7%82%B9C-%E4%BD%8D%E5%92%8C%E5%AD%97%E8%8A%82/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -210,7 +410,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-07-28 10:09:56" itemprop="dateModified" datetime="2020-07-28T10:09:56+08:00">2020-07-28</time>
+                <time title="修改时间：2020-07-29 09:30:27" itemprop="dateModified" datetime="2020-07-29T09:30:27+08:00">2020-07-29</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -233,7 +433,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="哈喽，我是老吴，继续记录我的学习心得"><a href="#哈喽，我是老吴，继续记录我的学习心得" class="headerlink" title="哈喽，我是老吴，继续记录我的学习心得"></a>哈喽，我是老吴，继续记录我的学习心得</h1><p>作为一个高度自律的人，我喜欢跑步，为此受过伤病的困扰，万恶的足底筋膜炎！</p>
+          <p>哈喽，我是老吴，继续记录我的学习心得</p>
+<p>作为一个高度自律的人，我喜欢跑步，为此受过伤病的困扰，万恶的足底筋膜炎！</p>
 <p><img src="images/life/pe/run.jpeg" alt="跑步数据"></p>
 <p>作为程序员和写作爱好者，是非常需要锻炼身体。</p>
 <p><strong>如果你也喜欢跑步，可以考虑阅读这本书：</strong>  </p>
@@ -1015,91 +1216,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/06/17/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E4%BF%A1%E5%8F%B7%E6%9C%BA%E5%88%B6%E5%85%A5%E9%97%A81/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="es-hacker">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式Hacker (es-hacker)">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/17/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E4%BF%A1%E5%8F%B7%E6%9C%BA%E5%88%B6%E5%85%A5%E9%97%A81/" class="post-title-link" itemprop="url">Linux系统编程-信号机制入门1</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-06-17 08:16:28" itemprop="dateCreated datePublished" datetime="2020-06-17T08:16:28+08:00">2020-06-17</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-07-13 08:22:47" itemprop="dateModified" datetime="2020-07-13T08:22:47+08:00">2020-07-13</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Program/" itemprop="url" rel="index"><span itemprop="name">Linux-Program</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>早，继续记录我的学习心得。</p>
-<h1 id="每日的微进步"><a href="#每日的微进步" class="headerlink" title="每日的微进步"></a>每日的微进步</h1><p><strong>人们很容易高估某个决定性时刻的重要性，也很容易低估每天进行微小改进的价值</strong>。</p>
-<p>以前我也以为大规模的成功需要大规模的行动，现在我不这么认为了。长期来看，由于复利效果，一点小小的改进就能产生惊人的变化。</p>
-<p>还有一点值得注意的情况，大多数人有了家庭和子女后，并且现在国内盛行加班文化，很难载集中精力能抽出大块的时间进行学习了，部分还能坚持学习的人几乎都是以牺牲睡眠时间为代价的，我个人不太认为这种做法，我始终认为有更合理健康的方法能形成一个工作、生活、学习、娱乐的有效循环，或许 <strong>认识到微进步的重要性就是一个很好的开始</strong> 吧。</p>
-<p>本文就是我的微进步，欢迎阅读。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/06/17/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E4%BF%A1%E5%8F%B7%E6%9C%BA%E5%88%B6%E5%85%A5%E9%97%A81/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1169,7 +1285,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-count">26</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
