@@ -212,7 +212,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-06 07:41:46" itemprop="dateModified" datetime="2020-08-06T07:41:46+08:00">2020-08-06</time>
+                <time title="修改时间：2020-08-06 07:53:45" itemprop="dateModified" datetime="2020-08-06T07:53:45+08:00">2020-08-06</time>
               </span>
 
           
@@ -227,7 +227,6 @@
 
       
           <p><img src="/images/life/photo/chongqin.jpeg" alt=""><br>哈喽，我是老吴，继续记录我的学习心得。</p>
-<hr>
 <h1 id="一、构建思维组块"><a href="#一、构建思维组块" class="headerlink" title="一、构建思维组块"></a>一、构建思维组块</h1><p><strong>构建组块（chunking）:</strong>  </p>
 <ul>
 <li>就是利用一些概念，组合起信息碎片，这是一种心智上的飞跃。</li>
@@ -253,7 +252,7 @@
 </li>
 </ul>
 <hr>
-<h1 id="二、二、Linux系统编程-分析开源软件-Triggerhappy-2-把握核心流程"><a href="#二、二、Linux系统编程-分析开源软件-Triggerhappy-2-把握核心流程" class="headerlink" title="二、二、Linux系统编程 / 分析开源软件 Triggerhappy / (2) 把握核心流程"></a>二、二、Linux系统编程 / 分析开源软件 Triggerhappy / (2) 把握核心流程</h1><p><strong>正文目录：</strong></p>
+<h1 id="二、Linux系统编程-分析开源软件-Triggerhappy-2-把握核心流程"><a href="#二、Linux系统编程-分析开源软件-Triggerhappy-2-把握核心流程" class="headerlink" title="二、Linux系统编程 / 分析开源软件 Triggerhappy / (2) 把握核心流程"></a>二、Linux系统编程 / 分析开源软件 Triggerhappy / (2) 把握核心流程</h1><p><strong>正文目录：</strong></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 分解 thd.c / start_readers()</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="number">1.1</span> thd.c / start_readers() 的作用</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="number">1.2</span> thd.c / start_readers() 的内容</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    <span class="number">1</span>) 根据命令行参数，判断是否需要打开 socket</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    <span class="number">2</span>) 将命令行中指定的输入设备添加到设备链表中</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    <span class="number">3</span>) 根据命令行参数，决定是否成为守护进程 (daemon)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    <span class="number">4</span>) 根据命令行参数，决定是否创建 pidfile</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    <span class="number">5</span>) 真正开始监控设备并处理事件</span></pre></td></tr></table></figure>
 
 <p><strong>写作目的：</strong></p>
