@@ -23,14 +23,14 @@
   <meta name="description" content="哈喽，我是老吴，继续记录我的学习心得 一、自制力太强导致低效专注自制力很强的人的成功之道在于，在别人都放弃的情况下仍坚持不懈。 但是这反而会让他们难以关闭专注模式，导致无法进入解决难题所必要的发散模式。 但是，对于这种人 ( 我自己典型案例 )，需要特别重视学习另外一个技巧：多点倾诉和多点倾听。将把同伴、朋友或亲人的意见放在心上。 有时我在尝试解决一个 BUG 的时候，我很容易就进入专注模式，我会">
 <meta name="keywords" content="Embedded, Linux, OpenWrt, Buildroot, Opensource, Android">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux系统编程&#x2F;分析开源软件Triggerhappy(1)">
+<meta property="og:title" content="Linux系统编程&#x2F;分析开源软件Triggerhappy (1)">
 <meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;08&#x2F;04&#x2F;Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E5%88%86%E6%9E%90%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6happytrigger1&#x2F;index.html">
 <meta property="og:site_name" content="嵌入式Hacker (es-hacker)">
 <meta property="og:description" content="哈喽，我是老吴，继续记录我的学习心得 一、自制力太强导致低效专注自制力很强的人的成功之道在于，在别人都放弃的情况下仍坚持不懈。 但是这反而会让他们难以关闭专注模式，导致无法进入解决难题所必要的发散模式。 但是，对于这种人 ( 我自己典型案例 )，需要特别重视学习另外一个技巧：多点倾诉和多点倾听。将把同伴、朋友或亲人的意见放在心上。 有时我在尝试解决一个 BUG 的时候，我很容易就进入专注模式，我会">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;life&#x2F;photo&#x2F;chongqin.jpeg">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;basic&#x2F;wechat_channel.jpg">
-<meta property="og:updated_time" content="2020-08-05T00:03:18.641Z">
+<meta property="og:updated_time" content="2020-08-05T00:12:54.680Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;life&#x2F;photo&#x2F;chongqin.jpeg">
 
@@ -47,7 +47,7 @@
   };
 </script>
 
-  <title>Linux系统编程/分析开源软件Triggerhappy(1) | 嵌入式Hacker (es-hacker)</title>
+  <title>Linux系统编程/分析开源软件Triggerhappy (1) | 嵌入式Hacker (es-hacker)</title>
   
 
 
@@ -201,7 +201,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Linux系统编程/分析开源软件Triggerhappy(1)
+          Linux系统编程/分析开源软件Triggerhappy (1)
         </h1>
 
         <div class="post-meta">
@@ -218,7 +218,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-05 08:03:18" itemprop="dateModified" datetime="2020-08-05T08:03:18+08:00">2020-08-05</time>
+                <time title="修改时间：2020-08-05 08:12:54" itemprop="dateModified" datetime="2020-08-05T08:12:54+08:00">2020-08-05</time>
               </span>
 
           
@@ -256,7 +256,7 @@
 <p><strong>所以，下次遇到 BUG 时，不要自己埋头苦干啦。持续的埋头苦干，可能只是无用功。</strong></p>
 <p>想解决问题，吃点东西，跟同事们聊会天吧。</p>
 <hr>
-<h1 id="二、Linux系统编程-分析开源软件-Triggerhappy-1-把握整体"><a href="#二、Linux系统编程-分析开源软件-Triggerhappy-1-把握整体" class="headerlink" title="二、Linux系统编程 / 分析开源软件 Triggerhappy /(1)把握整体"></a>二、Linux系统编程 / 分析开源软件 Triggerhappy /(1)把握整体</h1><p><strong>正文目录：</strong></p>
+<h1 id="二、Linux系统编程-分析开源软件-Triggerhappy-1-把握整体"><a href="#二、Linux系统编程-分析开源软件-Triggerhappy-1-把握整体" class="headerlink" title="二、Linux系统编程 / 分析开源软件 Triggerhappy / (1) 把握整体"></a>二、Linux系统编程 / 分析开源软件 Triggerhappy / (1) 把握整体</h1><p><strong>正文目录：</strong></p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> HappyTrigger 是什么？</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    <span class="number">1</span>) 概述</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    <span class="number">2</span>) 简单地试用</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    <span class="number">3</span>) 配置文件</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    <span class="number">4</span>) 使用 socket 通信以动态增加和删除输入设备</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="number">2.</span> 查看 HappyTrigger 源码文件</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    <span class="number">1</span>) 查看Makefile 文件以确定编译流程</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    <span class="number">2</span>) 确定 C source 文件</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"><span class="number">3.</span> 分析入口文件 thd.c</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    <span class="number">1</span>) thd.c 的作用</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    <span class="number">2</span>) thd.c 的使用者</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    <span class="number">3</span>) 分解 thd.c</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">    <span class="number">4</span>) 分解 thd.c/main()</span></pre></td></tr></table></figure>
 
 <p><strong>写作目的：</strong></p>
@@ -417,7 +417,10 @@
     <a href="/2020/07/28/Tools-%E8%8E%B7%E5%8F%96c%E6%96%87%E4%BB%B6%E7%9A%84%E5%87%BD%E6%95%B0%E5%88%97%E8%A1%A8/" rel="prev" title="Tools / 获取c文件函数名的几种方法">
       <i class="fa fa-chevron-left"></i> Tools / 获取c文件函数名的几种方法
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/08/05/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E5%88%86%E6%9E%90%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6Triggerhappy2/" rel="next" title="Linux系统编程-分析开源软件Triggerhappy (2)">
+      Linux系统编程-分析开源软件Triggerhappy (2) <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -476,7 +479,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、自制力太强导致低效专注"><span class="nav-number">1.</span> <span class="nav-text">一、自制力太强导致低效专注</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、Linux系统编程-分析开源软件-Triggerhappy-1-把握整体"><span class="nav-number">2.</span> <span class="nav-text">二、Linux系统编程 / 分析开源软件 Triggerhappy /(1)把握整体</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-HappyTrigger-是什么？"><span class="nav-number">2.1.</span> <span class="nav-text">1. HappyTrigger 是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-查看-HappyTrigger-源码文件"><span class="nav-number">2.2.</span> <span class="nav-text">2. 查看 HappyTrigger 源码文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-分析入口文件-thd-c"><span class="nav-number">2.3.</span> <span class="nav-text">3. 分析入口文件 thd.c</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、思考技术，也要思考人生"><span class="nav-number">3.</span> <span class="nav-text">三、思考技术，也要思考人生</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、自制力太强导致低效专注"><span class="nav-number">1.</span> <span class="nav-text">一、自制力太强导致低效专注</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、Linux系统编程-分析开源软件-Triggerhappy-1-把握整体"><span class="nav-number">2.</span> <span class="nav-text">二、Linux系统编程 / 分析开源软件 Triggerhappy / (1) 把握整体</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-HappyTrigger-是什么？"><span class="nav-number">2.1.</span> <span class="nav-text">1. HappyTrigger 是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-查看-HappyTrigger-源码文件"><span class="nav-number">2.2.</span> <span class="nav-text">2. 查看 HappyTrigger 源码文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-分析入口文件-thd-c"><span class="nav-number">2.3.</span> <span class="nav-text">3. 分析入口文件 thd.c</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、思考技术，也要思考人生"><span class="nav-number">3.</span> <span class="nav-text">三、思考技术，也要思考人生</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -490,7 +493,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

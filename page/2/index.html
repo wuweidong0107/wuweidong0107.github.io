@@ -181,6 +181,104 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/06/26/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E4%BF%A1%E5%8F%B7%E6%9C%BA%E5%88%B6%E5%85%A5%E9%97%A83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="es-hacker">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式Hacker (es-hacker)">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/26/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E4%BF%A1%E5%8F%B7%E6%9C%BA%E5%88%B6%E5%85%A5%E9%97%A83/" class="post-title-link" itemprop="url">Linux系统编程-信号机制入门3</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-26 08:44:21" itemprop="dateCreated datePublished" datetime="2020-06-26T08:44:21+08:00">2020-06-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-03 07:42:50" itemprop="dateModified" datetime="2020-07-03T07:42:50+08:00">2020-07-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Program/" itemprop="url" rel="index"><span itemprop="name">Linux-Program</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>早，继续记录我的学习心得。</p>
+<p><strong>机械的练习：</strong><br>只是埋头干！我一直在挥着球拍，努力去击球。我一直在看这道数学题，正试着解答。我一直在重复写代码，试图成为技术大牛。</p>
+<p><strong>有准确目的的练习:</strong><br>意味着要比机械的练习更有目的性，考虑更周全，从而让自己变得更专注。</p>
+<p><strong>以玩模拟赛车 acc 为例，怎么样才算是有准确目的的练习：</strong>  </p>
+<ul>
+<li>比较明确的目标: 每天跑圈提升 0.5 秒。</li>
+<li>更明确的目标: 过某个弯提升多少速度。</li>
+<li>更更明确的目标：过某个弯时应在哪里刹车、应如何控制刹车/油门/方向盘，怎么走线等。</li>
+</ul>
+<p><strong>学以致用，明确一下本文的目的：</strong></p>
+<ul>
+<li><p>举例说明 Linux 不会对标准信号进行排队处理。</p>
+</li>
+<li><p>文末分享《自控力》里提到的一个提升自控力的小技巧：进行有效锻炼 (重点)。</p>
+</li>
+</ul>
+<p><strong>正文目录：</strong>  </p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">一、待处理的信号 (Pending Signals)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	<span class="number">1.</span> 一个简单的例子 (sig_pending.c)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">		<span class="number">1</span>) 分解代码</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">		<span class="number">2</span>) 运行效果</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">二、不对待处理的标准信号进行排队处理</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">	<span class="number">1.</span> 仍是那个简单的例子 (sig_pending.c)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">		<span class="number">1</span>) 运行效果</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">	<span class="number">2.</span> 查看 Linux 内核里 Signal Pending 相关的实现 (非重点)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">		<span class="number">1</span>) 相关数据结构</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">		<span class="number">2</span>) 信号的产生</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">		<span class="number">3</span>) 信号的传递</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">三、相关参考</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">四、如何高效地学习：了解自控力 (Self-<span class="section">control</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">	<span class="number">1.</span> 此书的基本信息</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">	<span class="number">2.</span> 一个关于提高自控力的小技巧：锻炼身体</span></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/06/26/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E4%BF%A1%E5%8F%B7%E6%9C%BA%E5%88%B6%E5%85%A5%E9%97%A83/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/06/23/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E4%BF%A1%E5%8F%B7%E6%9C%BA%E5%88%B6%E5%85%A5%E9%97%A82/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -926,90 +1024,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/05/09/Linux-Input%E5%85%A5%E9%97%A8-%E4%B8%80%E4%BA%9B%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="es-hacker">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式Hacker (es-hacker)">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/05/09/Linux-Input%E5%85%A5%E9%97%A8-%E4%B8%80%E4%BA%9B%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90/" class="post-title-link" itemprop="url">Linux-Input入门-一次快乐的代码分析</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-05-09 14:18:46" itemprop="dateCreated datePublished" datetime="2020-05-09T14:18:46+08:00">2020-05-09</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-07-28 10:13:01" itemprop="dateModified" datetime="2020-07-28T10:13:01+08:00">2020-07-28</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8/" itemprop="url" rel="index"><span itemprop="name">Linux设备驱动</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>看他人如何分析代码最关键的目的是了解别人是怎么思考和探索的，其次才是获取内容相关的知识点。即吃别人的鱼不如学别人怎么钓鱼。</p>
-<p>本文是我学生时代留下的关于输入子系统的学习笔记，对我个人而言很有纪念意义，对初学者来说也许有一丢丢参考价值。</p>
-<p>最近工作上需要驱动一些输入设备，不由得感慨：Input 子系统设计得真好，这么多年了 Input core 的设计和 API 可以认为是仅发生了察觉不到的变化，这就是驱动界的典范子系统啊。反过来想想，Input 子系统之所以这么经典，恰恰是因为Input device driver 的数量太多了，如果设计得不够好，那将是 Maintainer 们的噩梦(整日疲于修改成吨的Input device driver)。</p>
-<p>Linux 内核/驱动开发并不是特殊的存在，它仍然属于软件开发，或许它有许多自己独有的软件设计模式，但是上层软件开发的很多原则和方法仍然是适用的，不展开来讲了，那样就扯太远了。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/05/09/Linux-Input%E5%85%A5%E9%97%A8-%E4%B8%80%E4%BA%9B%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1079,7 +1093,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
