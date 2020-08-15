@@ -251,6 +251,104 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/08/06/%E6%AF%8F%E5%A4%A9%E4%B8%80%E7%82%B9C-%E4%BD%A0%E7%9C%9F%E7%9A%84%E6%87%82%E6%95%B0%E7%BB%84%E5%92%8C%E6%8C%87%E9%92%88%E5%90%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="es-hacker">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式Hacker (es-hacker)">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/08/06/%E6%AF%8F%E5%A4%A9%E4%B8%80%E7%82%B9C-%E4%BD%A0%E7%9C%9F%E7%9A%84%E6%87%82%E6%95%B0%E7%BB%84%E5%92%8C%E6%8C%87%E9%92%88%E5%90%97/" class="post-title-link" itemprop="url">每天一点C-你知道数组和指针有什么区别吗?(附面试题)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-08-06 07:59:25" itemprop="dateCreated datePublished" datetime="2020-08-06T07:59:25+08:00">2020-08-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-15 09:02:04" itemprop="dateModified" datetime="2020-08-15T09:02:04+08:00">2020-08-15</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><img src="/images/life/photo/shiqiao2.jpg" alt=""></p>
+<p>哈喽，我是老吴，继续记录我的学习心得。</p>
+<h1 id="一、能力错觉"><a href="#一、能力错觉" class="headerlink" title="一、能力错觉"></a>一、能力错觉</h1><p>当书本（或谷歌）摆在眼前时，大脑会产生错觉，以为学习材料也同样存入了大脑，阅读毕竟比回想简单多了。</p>
+<p><strong>以为反复的阅读资料就是自己已经掌握知识，这就是能力错觉</strong>。</p>
+<p><strong>解决能力错觉的方法</strong>:  </p>
+<ul>
+<li>积极回想——让大脑提取关键概念，而非通过重复阅读被动地获取知识，这样才能高效地学习。</li>
+</ul>
+<p><strong>现在网络上盛行各种it类的视频教程，我不否认不少视频教程是高质量的，但是所有视频类资料都有一个问题</strong>:  </p>
+<ul>
+<li>可以让人不用阅读书籍，减少思考，只要被动地听老师们讲课就能舒舒服服地获取到知识，这很容易会让某些初级的软件开发人员形成能力错觉，仿佛视频里写过的代码，解决过的 bug 都是自己已经学到的知识似的。</li>
+</ul>
+<p><strong>有效的解决办法是</strong>：  </p>
+<ul>
+<li><p>公开学习笔记和练习代码。公开学习笔记的目的是借助外部压力，高效回想，进而提高自己的学习标准。</p>
+</li>
+<li><p>另外，公开写作则会给你的写作增加很多维度的外部压力，你会想如何让别人更好地理解我要表达的意思；如何传递更多价值，让别人读完有所收获；如何让更多人看到；如何让别人读得下去；如何排版让大家看得更舒服；</p>
+</li>
+</ul>
+<hr>
+<h1 id="二、数组和指针有什么区别？"><a href="#二、数组和指针有什么区别？" class="headerlink" title="二、数组和指针有什么区别？"></a>二、数组和指针有什么区别？</h1><p><strong>正文目录：</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 用于声明时两者有重大区别</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="number">2.</span> 你真的理解声明和定义吗？</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="number">3.</span> 数组和指针的底层是如何访问数据的？</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="number">4.</span> 哪些场景可以用指针代替数组？</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="number">5.</span> 为什么C语言要把数组形参退化为指针？</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="number">6.</span> 如何使用指针访问多维数组？</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="number">7.</span> 相关面试题</span></pre></td></tr></table></figure>
+
+<p><strong>写作目的：</strong></p>
+<ul>
+<li>正确看待数组和指针。</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/08/06/%E6%AF%8F%E5%A4%A9%E4%B8%80%E7%82%B9C-%E4%BD%A0%E7%9C%9F%E7%9A%84%E6%87%82%E6%95%B0%E7%BB%84%E5%92%8C%E6%8C%87%E9%92%88%E5%90%97/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/08/05/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E5%88%86%E6%9E%90%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6Triggerhappy2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1010,111 +1108,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/07/08/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E7%AE%A1%E9%81%93%E5%85%A5%E9%97%A82/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="es-hacker">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式Hacker (es-hacker)">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/07/08/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E7%AE%A1%E9%81%93%E5%85%A5%E9%97%A82/" class="post-title-link" itemprop="url">Linux系统编程-管道入门2</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-07-08 07:01:22" itemprop="dateCreated datePublished" datetime="2020-07-08T07:01:22+08:00">2020-07-08</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-07-15 18:40:01" itemprop="dateModified" datetime="2020-07-15T18:40:01+08:00">2020-07-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Program/" itemprop="url" rel="index"><span itemprop="name">Linux-Program</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>早，几天不见，是否有人想念我。</p>
-<h1 id="你是在进行无效阅读吗？"><a href="#你是在进行无效阅读吗？" class="headerlink" title="你是在进行无效阅读吗？"></a>你是在进行无效阅读吗？</h1><h2 id="1-什么是无效阅读："><a href="#1-什么是无效阅读：" class="headerlink" title="1. 什么是无效阅读："></a>1. 什么是无效阅读：</h2><ul>
-<li><p>每天都读十几篇干货满满的文章，但读完也就忘了，记不住也学不到，这就是无效阅读。</p>
-</li>
-<li><p>无效阅读的目标不是要通过阅读解决一个什么问题、学习一个什么技巧、思考一个什么话题。一篇文章或者一本书读完了，任务也就完成了，这样的阅读只能起到自我安慰的作用。</p>
-</li>
-<li><p>很多人把阅读目标定为 “我这周要读完2本书”，“我今天要看完10篇文章”，其实根本没用，因为读完不是目的，吸收才是目的。</p>
-</li>
-</ul>
-<h2 id="2-几个提高阅读效果的技巧："><a href="#2-几个提高阅读效果的技巧：" class="headerlink" title="2. 几个提高阅读效果的技巧："></a>2. 几个提高阅读效果的技巧：</h2><ul>
-<li><p>要带着目标和预期阅读；</p>
-</li>
-<li><p>边阅读边思考，创造环境去做笔记，善用手机，善用微信。</p>
-</li>
-<li><p>进行主题式聚焦阅读；</p>
-</li>
-<li><p>好内容要反复阅读;</p>
-</li>
-<li><p>带着批判性思维和学习的心态阅读；</p>
-</li>
-<li><p>阅读时，不断代入自己的工作和生活场景。</p>
-</li>
-</ul>
-<h1 id="以下是正文，先明确正文目的"><a href="#以下是正文，先明确正文目的" class="headerlink" title="以下是正文，先明确正文目的:"></a>以下是正文，先明确正文目的:</h1><ul>
-<li>举例说明在 Linux 中如何使用 pipe 进行父子进程间的同步。
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/07/08/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E7%AE%A1%E9%81%93%E5%85%A5%E9%97%A82/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1184,7 +1177,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
