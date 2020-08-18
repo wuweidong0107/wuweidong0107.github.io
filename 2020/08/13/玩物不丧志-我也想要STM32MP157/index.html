@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wuweidong0107.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="哈喽，我是老吴，今天分享一点小经验。 一、个人玩家，如何判断一块开发板好坏？ 了解 cpu 原厂的综合实力，谷歌一下就能看到全球各大半导体公司的排名。一般来说，无论是代码质量，文档资料，还是技术支持，外企的芯片会比国产芯片好，唯一的缺点就是价格更贵，但这对个人玩家来说是无所谓的。对于一款 cpu，一般就买一个板子。这样的话，1 个芯片的溢价最多就 100~200 块，但是对于带来的品味提升和学习">
+<meta name="keywords" content="Embedded, Linux, OpenWrt, Buildroot, Opensource, Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="玩物不丧志-我也想要STM32MP157">
+<meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;08&#x2F;13&#x2F;%E7%8E%A9%E7%89%A9%E4%B8%8D%E4%B8%A7%E5%BF%97-%E6%88%91%E4%B9%9F%E6%83%B3%E8%A6%81STM32MP157&#x2F;index.html">
+<meta property="og:site_name" content="嵌入式Hacker (es-hacker)">
+<meta property="og:description" content="哈喽，我是老吴，今天分享一点小经验。 一、个人玩家，如何判断一块开发板好坏？ 了解 cpu 原厂的综合实力，谷歌一下就能看到全球各大半导体公司的排名。一般来说，无论是代码质量，文档资料，还是技术支持，外企的芯片会比国产芯片好，唯一的缺点就是价格更贵，但这对个人玩家来说是无所谓的。对于一款 cpu，一般就买一个板子。这样的话，1 个芯片的溢价最多就 100~200 块，但是对于带来的品味提升和学习">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;life&#x2F;photo&#x2F;shiqiao1.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;basic&#x2F;wechat_channel.jpg">
+<meta property="og:updated_time" content="2020-08-15T01:07:02.636Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;life&#x2F;photo&#x2F;shiqiao1.jpg">
+
+<link rel="canonical" href="https://wuweidong0107.github.io/2020/08/13/%E7%8E%A9%E7%89%A9%E4%B8%8D%E4%B8%A7%E5%BF%97-%E6%88%91%E4%B9%9F%E6%83%B3%E8%A6%81STM32MP157/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>玩物不丧志-我也想要STM32MP157 | 嵌入式Hacker (es-hacker)</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">嵌入式Hacker (es-hacker)</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Embedded bsp developer enjoys thinking and hacking opensource and develop boards(NanoPi, LicheePi, RPi...)</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/wuweidong0107" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/08/13/%E7%8E%A9%E7%89%A9%E4%B8%8D%E4%B8%A7%E5%BF%97-%E6%88%91%E4%B9%9F%E6%83%B3%E8%A6%81STM32MP157/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="es-hacker">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式Hacker (es-hacker)">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          玩物不丧志-我也想要STM32MP157
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-08-13 07:37:34" itemprop="dateCreated datePublished" datetime="2020-08-13T07:37:34+08:00">2020-08-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-15 09:07:02" itemprop="dateModified" datetime="2020-08-15T09:07:02+08:00">2020-08-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%8E%A9%E7%89%A9%E4%B8%8D%E4%B8%A7%E5%BF%97/" itemprop="url" rel="index"><span itemprop="name">玩物不丧志</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="/images/life/photo/shiqiao1.jpg" alt=""></p>
+<p>哈喽，我是老吴，今天分享一点小经验。</p>
+<h1 id="一、个人玩家，如何判断一块开发板好坏？"><a href="#一、个人玩家，如何判断一块开发板好坏？" class="headerlink" title="一、个人玩家，如何判断一块开发板好坏？"></a>一、个人玩家，如何判断一块开发板好坏？</h1><ol>
+<li><strong>了解 cpu 原厂的综合实力，谷歌一下就能看到全球各大半导体公司的排名</strong>。一般来说，无论是代码质量，文档资料，还是技术支持，外企的芯片会比国产芯片好，唯一的缺点就是价格更贵，但这对个人玩家来说是无所谓的。对于一款 cpu，一般就买一个板子。这样的话，1 个芯片的溢价最多就 100~200 块，<strong>但是对于带来的品味提升和学习难度的下降，以及后续带来的求职竞争力的提升(前提是你投入了时间去学习)，这点小钱不值得一提，这笔投资性价比超高</strong>。</li>
+</ol>
+<a id="more"></a>
+<ol start="2">
+<li><p><strong>查阅 cpu 原厂提供的 sdk，检查 cpu 的 bsp 版本是否够新</strong>。一般来说，越是新版本的Linux内核，例如现在就能采用Linux-5.4 LTS内核作为sdk的STM32MP157，是比较适合个人玩家学习的。因为<strong>内核版本越高，各种驱动框架的设计都会更先进，学习者就能品味到更高质量的代码</strong>。另外，也说明这颗<strong>芯片和开源社区联系得比较紧密</strong>，这一点对个人玩家而言意味着可玩性更高。</p>
+</li>
+<li><p><strong>检查 cpu 原厂的文档资料 (包括网页资料和pdf) 是否足够丰富和开放</strong>。阅读文档的能力是嵌入式开发人员的核心能力之一，<strong>嵌入式里许多问题的解决，有赖于你对芯片的熟悉程度</strong>，这就得靠一份完善的芯片手册了。如果你阅读了足够多的文档资料(包括英文文档)，应该很容易就能感知到某颗芯片的文档资料的好坏。好的文档是思路清晰，内容齐全，比较烂的文档读起来则让人感觉云里雾里。</p>
+</li>
+<li><p><strong>检查开发板厂商的适配程度和教材资料的完善程度</strong>。教材资料一般包括示例代码，中文文档(一般是wiki的形式)，视频教程。由于开发板本身利润不是很高，如果一个开发板厂商能坚持输出高质量的教程，是一件非常难能可贵的事。<strong>市面上能把嵌入式培训和开发板两件事都做好的厂商很少，一般都是只抓住其中一个点做好就行</strong>。两手都抓，韦老师的百问网算是比较突出的一家。</p>
+</li>
+<li><p><strong>最后一个值得关注的点，就是板子的稳定性</strong>。这一点对于企业来说特别重要，对于个人玩家来说则不用把标准定得跟企业一样。<strong>一般来说，所有开发板的主要销售目标都是企业客户，其次才是个人玩家，所以稳定性方面大概率是满足个人玩家的</strong>。</p>
+</li>
+<li><p>其他的包括板子的<strong>易用性(烧写是否方便，有人喜欢gui，有人喜欢命令行)，外形是否美观，接口布局是否合理，接口是否齐全(有的人喜欢简洁，有的人喜欢丰富)，保值率(考虑回血)等</strong>，则见仁见智，看个人喜好。</p>
+</li>
+</ol>
+<p>结合上面 6 条来看，百问网的 STM32MP157 有点香啊~</p>
+<hr>
+<h1 id="二、百问网-STM32MP157-官方介绍"><a href="#二、百问网-STM32MP157-官方介绍" class="headerlink" title="二、百问网 STM32MP157 官方介绍"></a>二、百问网 STM32MP157 官方介绍</h1><ul>
+<li>自行淘宝搜索吧~</li>
+</ul>
+<hr>
+<h1 id="三、思考技术，也思考人生"><a href="#三、思考技术，也思考人生" class="headerlink" title="三、思考技术，也思考人生"></a>三、思考技术，也思考人生</h1><p><strong>学习技术，更要学习如何生活</strong>。</p>
+<p>你和我各有一个苹果，如果我们交换苹果的话，我们还是只有一个苹果。但当你和我各有一个想法，我们交换想法的话，我们就都有两个想法了。</p>
+<p><img src="/images/basic/wechat_channel.jpg" alt=""></p>
+<p>对 <strong>嵌入式系统 (Linux、RTOS、OpenWrt、Android) 和 开源软件</strong> 感兴趣，想和更多人互相交流学习，请关注公众号：<strong>嵌入式Hacker</strong>，一起来学习吧。</p>
+<p>无论是关注或转发，还是打赏，都是对作者莫大的支持。觉得文章对你有价值的话，不妨点个 <strong>在看和点赞</strong> 哦。</p>
+<p>欢迎加入我的微信群：先加我，我拉你进群，暗号(我最棒)。</p>
+<p>祝各位工作顺利，家庭幸福，财源滚滚<del>~</del></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>这是一篇有趣的文章吗？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="es-hacker 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/basic/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/08/06/%E6%AF%8F%E5%A4%A9%E4%B8%80%E7%82%B9C-%E4%BD%A0%E7%9C%9F%E7%9A%84%E6%87%82%E6%95%B0%E7%BB%84%E5%92%8C%E6%8C%87%E9%92%88%E5%90%97/" rel="prev" title="每天一点C-你知道数组和指针有什么区别吗?(附面试题)">
+      <i class="fa fa-chevron-left"></i> 每天一点C-你知道数组和指针有什么区别吗?(附面试题)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/08/17/Linux%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91-%E5%AD%97%E7%AC%A6%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E5%86%85%E5%B9%951/" rel="next" title="Linux驱动开发 / 字符设备驱动内幕 (1)">
+      Linux驱动开发 / 字符设备驱动内幕 (1) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、个人玩家，如何判断一块开发板好坏？"><span class="nav-number">1.</span> <span class="nav-text">一、个人玩家，如何判断一块开发板好坏？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、百问网-STM32MP157-官方介绍"><span class="nav-number">2.</span> <span class="nav-text">二、百问网 STM32MP157 官方介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、思考技术，也思考人生"><span class="nav-number">3.</span> <span class="nav-text">三、思考技术，也思考人生</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">es-hacker</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">es-hacker</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

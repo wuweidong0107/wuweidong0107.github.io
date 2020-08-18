@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wuweidong0107.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="看他人如何分析代码最关键的目的是了解别人是怎么思考和探索的，其次才是获取内容相关的知识点。即吃别人的鱼不如学别人怎么钓鱼。 本文是我学生时代留下的关于输入子系统的学习笔记，对我个人而言很有纪念意义，对初学者来说也许有一丢丢参考价值。 最近工作上需要驱动一些输入设备，不由得感慨：Input 子系统设计得真好，这么多年了 Input core 的设计和 API 可以认为是仅发生了察觉不到的变化，这就是">
+<meta name="keywords" content="driver,input">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux-Input入门-一次快乐的代码分析">
+<meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;05&#x2F;09&#x2F;Linux-Input%E5%85%A5%E9%97%A8-%E4%B8%80%E4%BA%9B%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90&#x2F;index.html">
+<meta property="og:site_name" content="嵌入式Hacker (es-hacker)">
+<meta property="og:description" content="看他人如何分析代码最关键的目的是了解别人是怎么思考和探索的，其次才是获取内容相关的知识点。即吃别人的鱼不如学别人怎么钓鱼。 本文是我学生时代留下的关于输入子系统的学习笔记，对我个人而言很有纪念意义，对初学者来说也许有一丢丢参考价值。 最近工作上需要驱动一些输入设备，不由得感慨：Input 子系统设计得真好，这么多年了 Input core 的设计和 API 可以认为是仅发生了察觉不到的变化，这就是">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;linux_input&#x2F;wds&#x2F;1.png">
+<meta property="og:updated_time" content="2020-07-28T02:13:01.336Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;linux_input&#x2F;wds&#x2F;1.png">
+
+<link rel="canonical" href="https://wuweidong0107.github.io/2020/05/09/Linux-Input%E5%85%A5%E9%97%A8-%E4%B8%80%E4%BA%9B%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Linux-Input入门-一次快乐的代码分析 | 嵌入式Hacker (es-hacker)</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">嵌入式Hacker (es-hacker)</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Embedded bsp developer enjoys thinking and hacking opensource and develop boards(NanoPi, LicheePi, RPi...)</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/wuweidong0107" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/05/09/Linux-Input%E5%85%A5%E9%97%A8-%E4%B8%80%E4%BA%9B%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="es-hacker">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式Hacker (es-hacker)">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux-Input入门-一次快乐的代码分析
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-09 14:18:46" itemprop="dateCreated datePublished" datetime="2020-05-09T14:18:46+08:00">2020-05-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-28 10:13:01" itemprop="dateModified" datetime="2020-07-28T10:13:01+08:00">2020-07-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8/" itemprop="url" rel="index"><span itemprop="name">Linux设备驱动</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>看他人如何分析代码最关键的目的是了解别人是怎么思考和探索的，其次才是获取内容相关的知识点。即吃别人的鱼不如学别人怎么钓鱼。</p>
+<p>本文是我学生时代留下的关于输入子系统的学习笔记，对我个人而言很有纪念意义，对初学者来说也许有一丢丢参考价值。</p>
+<p>最近工作上需要驱动一些输入设备，不由得感慨：Input 子系统设计得真好，这么多年了 Input core 的设计和 API 可以认为是仅发生了察觉不到的变化，这就是驱动界的典范子系统啊。反过来想想，Input 子系统之所以这么经典，恰恰是因为Input device driver 的数量太多了，如果设计得不够好，那将是 Maintainer 们的噩梦(整日疲于修改成吨的Input device driver)。</p>
+<p>Linux 内核/驱动开发并不是特殊的存在，它仍然属于软件开发，或许它有许多自己独有的软件设计模式，但是上层软件开发的很多原则和方法仍然是适用的，不展开来讲了，那样就扯太远了。</p>
+<a id="more"></a>
+
+<p><strong>下面是正文</strong></p>
+<p><strong>相关参考：</strong></p>
+<ul>
+<li>韦东山嵌入式 Linux 视频教程第二期: 第13课 输入子系统 (Linux-2.6)</li>
+<li>Essential Linux Device Drivers</li>
+</ul>
+<p>关注并且后台回复“ELDD”即可下载。</p>
+<p><strong>预备知识：</strong>  </p>
+<ul>
+<li>Linux 字符设备驱动</li>
+</ul>
+<h1 id="查看入口"><a href="#查看入口" class="headerlink" title="查看入口"></a>查看入口</h1><p>在 drivers/input/input.c 中，查看模块入口函数 input_init()：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">err = register_chrdev(INPUT_MAJOR, <span class="string">"input"</span>, &amp;input_fops);</span></pre></td></tr></table></figure>
+
+<p>而 input_fops 只有 open 和 llseek 函数:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">file_operations</span> <span class="title">input_fops</span> = </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="class">&#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    .owner = THIS_MODULE,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    .<span class="built_in">open</span> = input_open_file,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    .llseek = noop_llseek,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">&#125;;</span></pre></td></tr></table></figure>
+
+<h1 id="没有-read-函数的话该怎么读数据呢？"><a href="#没有-read-函数的话该怎么读数据呢？" class="headerlink" title="没有 read 函数的话该怎么读数据呢？"></a>没有 read 函数的话该怎么读数据呢？</h1><p>分析 input_open_file 函数:  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 定义一个input_handler指针 */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">input_handler</span> *<span class="title">handler</span>;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 根据传入文件的次设备号从 input_table中提取出一个input_handler */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">handler = input_table[iminor(inode) &gt;&gt; <span class="number">5</span>];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 从input_handler中提取出new_fops */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">new_fops = fops_get(handler-&gt;fops);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 将new_fops赋值给当前文件的file_operations */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">file-&gt;f_op = new_fops;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">err = new_fops-&gt;<span class="built_in">open</span>(inode, file);</span></pre></td></tr></table></figure>
+
+<p>经过这些操作后，当 app 再来调用 read，write，open 等函数时，最终都会调用到file-&gt;f_op 中的 read，write，open 等函数。  </p>
+<h1 id="input-open-file-函数中的-input-table-从何而来？"><a href="#input-open-file-函数中的-input-table-从何而来？" class="headerlink" title="input_open_file 函数中的 input_table 从何而来？"></a>input_open_file 函数中的 input_table 从何而来？</h1><p>搜索代码可知，在 input.c 的input_register_handler 函数中填充了 input_table：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (handler-&gt;fops != <span class="literal">NULL</span>) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">if</span> (input_table[handler-&gt;minor &gt;&gt; <span class="number">5</span>]) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">        retval = -EBUSY;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">goto</span> out;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    <span class="comment">/* 给 input_table 中的第 handler-&gt;minor &gt;&gt; 5 项赋值 */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    input_table[handler-&gt;minor &gt;&gt; <span class="number">5</span>] = handler;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<h1 id="谁在调用-input-register-handler？"><a href="#谁在调用-input-register-handler？" class="headerlink" title="谁在调用 input_register_handler？"></a>谁在调用 input_register_handler？</h1><p>搜索内核可知：<br>evdev.c，tsdev.c，joydev.c，keyboard.c，mousedev.c 等文件调用了     input_register_handler，我们以 evdev.c 为例，在 drivers/input/evdev.c 中，模块入口函数 evdev_init：  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> input_register_handler(&amp;evdev_handler);</span></pre></td></tr></table></figure>
+
+<p>evdev_handler的定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">input_handler</span> <span class="title">evdev_handler</span> = &#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">.event		= evdev_event,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">.<span class="built_in">connect</span>	= evdev_connect,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">.<span class="built_in">disconnect</span>	= evdev_disconnect,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">.fops		= &amp;evdev_fops,<span class="comment">//前面所用到的 new_fops 指的就是这里定义的的fops</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">.minor		= EVDEV_MINOR_BASE,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">.name		= <span class="string">"evdev"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">.id_table	= evdev_ids,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">&#125;;</span></pre></td></tr></table></figure>
+
+<h1 id="先了解一下输入子系统的架构"><a href="#先了解一下输入子系统的架构" class="headerlink" title="先了解一下输入子系统的架构"></a>先了解一下输入子系统的架构</h1><p><img src="/images/linux_input/wds/1.png" alt=""></p>
+<p>当通过 input_register_device 注册一个 input_dev 设备或者通过 input_register_handler 注册一个input_handler 时，input_dev 与 input_handler 会进行匹配。</p>
+<p><strong>如何匹配？</strong><br>在 input_handler 中有一个 id_table 结构体和 match 函数，id_table 里面包含的就是这个 input_handler 能处理的 input_dev，当 input_handler 与 input_dev 匹配成功的话(即 match() 返回１)，则会调用 input_handler 里的 connect 函数。</p>
+<h1 id="input-register-device-和-input-register-handler-分别做了什么？"><a href="#input-register-device-和-input-register-handler-分别做了什么？" class="headerlink" title="input_register_device 和 input_register_handler 分别做了什么？"></a>input_register_device 和 input_register_handler 分别做了什么？</h1><p><strong>input_register_device：</strong>  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 将刚注册的 input_dev 放入 input_dev_list 链表 */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">list_add_tail(&amp;dev-&gt;node, &amp;input_dev_list);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 对 input_handler_list 中的每一个 input_handler 都调用</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> * input_attach_handler(dev, handler) 函数来查看是否有 input_handler</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> * 合适该 input_dev</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> */</span>	</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">list_for_each_entry(handler, &amp;input_handler_list, node)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    input_attach_handler(dev, handler);</span></pre></td></tr></table></figure>
+
+<p><strong>input_register_handler：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 将刚注册的 input_handler 放入 input_table 中 */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">input_table[handler-&gt;minor &gt;&gt; <span class="number">5</span>] = handler;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 将刚注册的 input_handler 放入 input_handler_list 链表中 */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">list_add_tail(&amp;handler-&gt;node, &amp;input_handler_list);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 对 input_dev_list 中的每一个 input_dev 都调用</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> * input_attach_handler(dev, handler) 函数,</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> * 来查看是否有 input_dev 合适该 input_handler</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">list_for_each_entry(dev, &amp;input_dev_list, node)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    input_attach_handler(dev, handler);</span></pre></td></tr></table></figure>
+
+<p>由此可以看出，无论是先注册 input_handler 还是先注册 input_dev ，最终都会调用 input_attach_handler(dev, handler) 来进行两两匹配。</p>
+<p>input_attach_handler 是如何将 input_handler 和 input_dev 进行匹配的？</p>
+<p><strong>在input_attach_handler函数中：</strong>  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 先进行匹配，匹配的依据就是 input_handler 中的 id_table 与</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> * input_dev 中的 id 里的信息是否相同</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">id = input_match_device(handler, dev);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 再调用 input_handler 中的 connect 函数完成连接，具体如何连接,</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> * 需要分析connect函数</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">error = handler-&gt;<span class="built_in">connect</span>(handler, dev, id);</span></pre></td></tr></table></figure>
+
+<p>我们以 evdev.c 中的 input_handler 结构中的 connect 函数为例，分析 connect 函数做了些什么。  </p>
+<p><strong>在 evdev_connect 函数中：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/*分配一个 evdev 结构体，该结构体中含一个 input_handle 结构</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> *注意：不同于 input_handler 结构</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">evdev = kzalloc(<span class="keyword">sizeof</span>(struct evdev), GFP_KERNEL);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/*设置 evdev 结构中的 input_handle</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> * @input_handle 的 dev变量 指向input_dev结构</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> * @input_handle 的 handler 变量指向input_handler结构</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="comment">*/</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">evdev-&gt;handle.dev = input_get_device(dev);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">evdev-&gt;handle.name = dev_name(&amp;evdev-&gt;dev);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">evdev-&gt;handle.handler = handler;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">evdev-&gt;handle.<span class="keyword">private</span> = evdev;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 向内核注册input_handle */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">error = input_register_handle(&amp;evdev-&gt;handle);</span></pre></td></tr></table></figure>
+
+<h1 id="input-register-handle-做了些什么？"><a href="#input-register-handle-做了些什么？" class="headerlink" title="input_register_handle 做了些什么？"></a>input_register_handle 做了些什么？</h1><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 将 input_handle 添加到 input_dev 中的 h_list 链表中</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> * 以后当 input_dev 需要使用对应的 input_handler 时就可以通过自身的</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> * h_list 链表找到 input_handle，从而找到匹配的 input_handler。</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">list_add_tail_rcu(&amp;handle-&gt;d_node, &amp;dev-&gt;h_list);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 将input_handle添加到input_handler中的h_list链表中,</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> * 以后当input_handler需要使用对应的input_dev时就可以通过自身的</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> * h_list链表找到input_handle，从而找到匹配的input_dev</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">list_add_tail_rcu(&amp;handle-&gt;h_node, &amp;handler-&gt;h_list);</span></pre></td></tr></table></figure>
+
+<h1 id="如何读取到数据？"><a href="#如何读取到数据？" class="headerlink" title="如何读取到数据？"></a>如何读取到数据？</h1><p>对于输入设备，我们最终的目的就是读取其数据，那么经过上述的一些列动作后又是如何读取到数据的呢？  </p>
+<p>分析 evdev.c 中的 input_handler 中的 fops 中的 read 函数就可以确定了。</p>
+<p><strong>在 evdev_read 函数中：</strong>  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果没有数据且 nonblock 的话，则 EAGAIN</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (client-&gt;head == client-&gt;tail &amp;&amp; evdev-&gt;exist &amp;&amp;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    (file-&gt;f_flags &amp; O_NONBLOCK))</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">return</span> -EAGAIN;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 否则，睡眠</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">retval = wait_event_interruptible(evdev-&gt;wait,client-&gt;head != client-&gt;tail || !		evdev-&gt;exist);</span></pre></td></tr></table></figure>
+
+<p>既然有睡眠，那么何时被唤醒，搜索代码。</p>
+<p><strong>在 evdev_event 函数中：</strong>  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">//唤醒</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">wake_up_interruptible(&amp;evdev-&gt;wait);</span></pre></td></tr></table></figure>
+<p>evdev_event 就是 input_handler 中的 event 成员，当有数据可读(如触摸屏被按下，按键被按下)时，event 函数会被调用。而 event 函数是怎么被调用到的？这就得看设备层了。</p>
+<p><strong>设备层的驱动做了如下工作：</strong>  </p>
+<ol>
+<li>在中断函数中确定判断发生了什么事件，并且相应的值是多少;</li>
+<li>通过input_event()函数上报事件;</li>
+<li>通过input_sync()函数表明上报结束;</li>
+</ol>
+<p>分析 input_event 函数我们就可以知道 input_handler 中的 event 函数是如何被调用到的了。  </p>
+<p>在 input_event 中，调用了 input_handle_event 函数，在 input_handle_event 函数中调用了input_pass_event 函数;</p>
+<p><strong>在 input_pass_event 函数中：</strong>  </p>
+<pre><code class="c"><span class="class"><span class="keyword">struct</span> <span class="title">input_handler</span> *<span class="title">handler</span>;</span>
+
+<span class="comment">/* 从注册的 input_dev 的 h_list 中将 input_handle 一个个拿出来，</span>
+<span class="comment"> * 如果该 input_handle 被打开过，</span>
+<span class="comment"> * 则该input_handle-&gt;input_handler 即为可处理该 input_dev的 handler</span>
+<span class="comment"> */</span>
+list_for_each_entry_rcu(handle, &amp;dev-&gt;h_list, d_node) {
+    <span class="keyword">if</span> (!handle-&gt;<span class="built_in">open</span>)
+        <span class="keyword">continue</span>;
+    handler = handle-&gt;handler;
+    <span class="keyword">if</span> (!handler-&gt;filter) {
+        <span class="keyword">if</span> (filtered)
+            <span class="keyword">break</span>;
+
+        <span class="comment">/*最终调用到event函数*/</span>
+        handler-&gt;event(handle, type, code, value);
+    } <span class="keyword">else</span> <span class="keyword">if</span> (handler-&gt;filter(handle, type, code, value))
+        filtered = <span class="literal">true</span>;
+}    </code></pre>
+<h1 id="如何写符合输入子系统框架的驱动程序"><a href="#如何写符合输入子系统框架的驱动程序" class="headerlink" title="如何写符合输入子系统框架的驱动程序 ?"></a>如何写符合输入子系统框架的驱动程序 ?</h1><p><strong>水到渠成：</strong>  </p>
+<ol>
+<li>分配一个 input_dev 结构体;</li>
+<li>设置 input_dev;</li>
+<li>注册 input_dev：input_register_device(input_dev);</li>
+<li>在中断函数中上报事件：input_event()</li>
+</ol>
+<p>你和我各有一个苹果，如果我们交换苹果的话，我们还是只有一个苹果。但当你和我各有一个想法，我们交换想法的话，我们就都有两个想法了。如果你也对 <strong>嵌入式系统和开源软件</strong> 感兴趣，并且想和更多人互相交流学习的话，请关注我的公众号：<strong>嵌入式系统砖家</strong>，一起来学习吧，关注或转发都是是对作者最大的支持，谢谢大家，祝工作顺利~</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>这是一篇有趣的文章吗？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="es-hacker 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/basic/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/driver/" rel="tag"><i class="fa fa-tag"></i> driver</a>
+              <a href="/tags/input/" rel="tag"><i class="fa fa-tag"></i> input</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/27/DesignPattern%E5%85%A5%E9%97%A8_%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" rel="prev" title="Design Pattern 系列_策略模式">
+      <i class="fa fa-chevron-left"></i> Design Pattern 系列_策略模式
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/05/13/%E5%85%B3%E4%BA%8E%E4%B9%A0%E6%83%AF%E7%9A%84%E7%A0%94%E7%A9%B6%E4%B8%8E%E5%AD%A6%E4%B9%A0/" rel="next" title="关于习惯的研究与学习">
+      关于习惯的研究与学习 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#查看入口"><span class="nav-number">1.</span> <span class="nav-text">查看入口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#没有-read-函数的话该怎么读数据呢？"><span class="nav-number">2.</span> <span class="nav-text">没有 read 函数的话该怎么读数据呢？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#input-open-file-函数中的-input-table-从何而来？"><span class="nav-number">3.</span> <span class="nav-text">input_open_file 函数中的 input_table 从何而来？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#谁在调用-input-register-handler？"><span class="nav-number">4.</span> <span class="nav-text">谁在调用 input_register_handler？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#先了解一下输入子系统的架构"><span class="nav-number">5.</span> <span class="nav-text">先了解一下输入子系统的架构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#input-register-device-和-input-register-handler-分别做了什么？"><span class="nav-number">6.</span> <span class="nav-text">input_register_device 和 input_register_handler 分别做了什么？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#input-register-handle-做了些什么？"><span class="nav-number">7.</span> <span class="nav-text">input_register_handle 做了些什么？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何读取到数据？"><span class="nav-number">8.</span> <span class="nav-text">如何读取到数据？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何写符合输入子系统框架的驱动程序"><span class="nav-number">9.</span> <span class="nav-text">如何写符合输入子系统框架的驱动程序 ?</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">es-hacker</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">es-hacker</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

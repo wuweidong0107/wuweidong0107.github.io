@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wuweidong0107.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="早，几天不见，是否有人想念我。 你是在进行无效阅读吗？1. 什么是无效阅读： 每天都读十几篇干货满满的文章，但读完也就忘了，记不住也学不到，这就是无效阅读。  无效阅读的目标不是要通过阅读解决一个什么问题、学习一个什么技巧、思考一个什么话题。一篇文章或者一本书读完了，任务也就完成了，这样的阅读只能起到自我安慰的作用。  很多人把阅读目标定为 “我这周要读完2本书”，“我今天要看完10篇文章”，其实">
+<meta name="keywords" content="Linux_Program">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux系统编程-管道入门2">
+<meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;07&#x2F;08&#x2F;Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E7%AE%A1%E9%81%93%E5%85%A5%E9%97%A82&#x2F;index.html">
+<meta property="og:site_name" content="嵌入式Hacker (es-hacker)">
+<meta property="og:description" content="早，几天不见，是否有人想念我。 你是在进行无效阅读吗？1. 什么是无效阅读： 每天都读十几篇干货满满的文章，但读完也就忘了，记不住也学不到，这就是无效阅读。  无效阅读的目标不是要通过阅读解决一个什么问题、学习一个什么技巧、思考一个什么话题。一篇文章或者一本书读完了，任务也就完成了，这样的阅读只能起到自我安慰的作用。  很多人把阅读目标定为 “我这周要读完2本书”，“我今天要看完10篇文章”，其实">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;linux&#x2F;pipe&#x2F;pipe_sync_data.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;basic&#x2F;wechat_qun.jpg">
+<meta property="og:updated_time" content="2020-07-15T10:40:01.279Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;linux&#x2F;pipe&#x2F;pipe_sync_data.png">
+
+<link rel="canonical" href="https://wuweidong0107.github.io/2020/07/08/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E7%AE%A1%E9%81%93%E5%85%A5%E9%97%A82/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Linux系统编程-管道入门2 | 嵌入式Hacker (es-hacker)</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">嵌入式Hacker (es-hacker)</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Embedded bsp developer enjoys thinking and hacking opensource and develop boards(NanoPi, LicheePi, RPi...)</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/wuweidong0107" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/07/08/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E7%AE%A1%E9%81%93%E5%85%A5%E9%97%A82/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="es-hacker">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式Hacker (es-hacker)">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux系统编程-管道入门2
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-08 07:01:22" itemprop="dateCreated datePublished" datetime="2020-07-08T07:01:22+08:00">2020-07-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-15 18:40:01" itemprop="dateModified" datetime="2020-07-15T18:40:01+08:00">2020-07-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Program/" itemprop="url" rel="index"><span itemprop="name">Linux-Program</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>早，几天不见，是否有人想念我。</p>
+<h1 id="你是在进行无效阅读吗？"><a href="#你是在进行无效阅读吗？" class="headerlink" title="你是在进行无效阅读吗？"></a>你是在进行无效阅读吗？</h1><h2 id="1-什么是无效阅读："><a href="#1-什么是无效阅读：" class="headerlink" title="1. 什么是无效阅读："></a>1. 什么是无效阅读：</h2><ul>
+<li><p>每天都读十几篇干货满满的文章，但读完也就忘了，记不住也学不到，这就是无效阅读。</p>
+</li>
+<li><p>无效阅读的目标不是要通过阅读解决一个什么问题、学习一个什么技巧、思考一个什么话题。一篇文章或者一本书读完了，任务也就完成了，这样的阅读只能起到自我安慰的作用。</p>
+</li>
+<li><p>很多人把阅读目标定为 “我这周要读完2本书”，“我今天要看完10篇文章”，其实根本没用，因为读完不是目的，吸收才是目的。</p>
+</li>
+</ul>
+<h2 id="2-几个提高阅读效果的技巧："><a href="#2-几个提高阅读效果的技巧：" class="headerlink" title="2. 几个提高阅读效果的技巧："></a>2. 几个提高阅读效果的技巧：</h2><ul>
+<li><p>要带着目标和预期阅读；</p>
+</li>
+<li><p>边阅读边思考，创造环境去做笔记，善用手机，善用微信。</p>
+</li>
+<li><p>进行主题式聚焦阅读；</p>
+</li>
+<li><p>好内容要反复阅读;</p>
+</li>
+<li><p>带着批判性思维和学习的心态阅读；</p>
+</li>
+<li><p>阅读时，不断代入自己的工作和生活场景。</p>
+</li>
+</ul>
+<h1 id="以下是正文，先明确正文目的"><a href="#以下是正文，先明确正文目的" class="headerlink" title="以下是正文，先明确正文目的:"></a>以下是正文，先明确正文目的:</h1><ul>
+<li>举例说明在 Linux 中如何使用 pipe 进行父子进程间的同步。<a id="more"></a>
+
+</li>
+</ul>
+<p><strong>目录：</strong> </p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">一、基础知识</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">二、使用管道实现相关进程间的同步</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    <span class="number">1.</span> 以不交互的方式实现同步</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    <span class="number">2.</span> 以交互的方式实现同步</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">三、参考书籍</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">四、欢迎加入我的微信群</span></pre></td></tr></table></figure>
+
+<h1 id="一、基础知识"><a href="#一、基础知识" class="headerlink" title="一、基础知识"></a>一、基础知识</h1><h2 id="1-关于竞争"><a href="#1-关于竞争" class="headerlink" title="1. 关于竞争"></a>1. 关于竞争</h2><p>当多个进程都企图对共享数据进行某种处理，而最后的结果又取决于进程运行的顺序时，我们认为发生了 <strong>竞争条件 (race condition)</strong>。如果在 fork 之后的某种逻辑显式或隐式地依赖于在 fork 之后是父进程先运行还是子进程先运行，那么 fork 函数就会是竞争条件活跃的滋生地。通常，我们不能预料哪一个进程先运行。即使我们知道哪一个进程先运行，在该进程开始运行后所发生的事情也依赖于系统负载以及内核的调度算法。</p>
+<p><strong>演示 demo (tellwait1.c)：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">charatatime</span><span class="params">(<span class="keyword">char</span> *)</span></span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">pid_t</span> pid;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">if</span> ((pid = fork()) &lt; <span class="number">0</span>) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">        err_sys(<span class="string">"fork error"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">        charatatime(<span class="string">"output from child\n"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    &#125; <span class="keyword">else</span> &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">        charatatime(<span class="string">"output from parent\n"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">void</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">charatatime(<span class="keyword">char</span> *str)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">char</span>    *ptr;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">int</span>        c;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">    <span class="comment">/* set unbuffered */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">    setbuf(<span class="built_in">stdout</span>, <span class="literal">NULL</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">for</span> (ptr = str; (c = *ptr++) != <span class="number">0</span>; )</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">        putc(c, <span class="built_in">stdout</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p><strong>运行效果：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ./tellwait1</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">output from parento</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">utput from child</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ./tellwait1</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">output from parent</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">output from child</span></pre></td></tr></table></figure>
+
+<p><strong>相关要点：</strong></p>
+<ul>
+<li><p>将标准输出设置为不带缓冲的，从而让每个字符输出都需调用一次 write()。目的是使内核能尽可能多次地在两个进程之间进行切换，以便演示竞争条件。</p>
+</li>
+<li><p>为了避免竞争条件和轮询，在多个进程之间需要有某种传递信息的方法,这种做法就叫做同步。在 UNIX 中可以使用 <strong>信号机制</strong> 和 <strong>各种进程间通信 (IPC)</strong> 来达到此目的</p>
+</li>
+<li><p>演示 demo (tellwait2.c)：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ((pid = fork()) &lt; <span class="number">0</span>) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    err_sys(<span class="string">"fork error"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    <span class="comment">/* parent goes first */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    WAIT_PARENT();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    charatatime(<span class="string">"output from child\n"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">&#125; <span class="keyword">else</span> &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    charatatime(<span class="string">"output from parent\n"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    TELL_CHILD(pid);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h2 id="2-用于同步的工具-Synchronization-Facilities）"><a href="#2-用于同步的工具-Synchronization-Facilities）" class="headerlink" title="2. 用于同步的工具 (Synchronization Facilities）"></a>2. 用于同步的工具 (Synchronization Facilities）</h2><p>计算机科学中，同步 ( synchronization ) 是指两个不同但有联系的概念：<strong>进程同步</strong> 与 <strong>数据同步</strong>。</p>
+<p><strong>进程同步指多个进程在特定点会合 ( join up ) 或者握手使得达成协议或者使得操作序列有序</strong>。数据同步指一个数据集的多份拷贝一致以维护完整性。</p>
+<p>常用进程同步实现数据同步。</p>
+<p>同步工具可以协调进程的操作。通过同步可以防止进程执行诸如同时更新一块共享内存或同时更新文件的同一个数据块之类的操作。如果没有同步，同时更新的操作可能会导致应用程序产生错误的结果。</p>
+<p><strong>UNIX 系统提供了下列同步工具：</strong></p>
+<ul>
+<li><p><strong>信号量 ( Semaphores )：</strong></p>
+<ul>
+<li>一个信号量是一个由内核维护的整数，其值永远不会小于0。一个进程可以增加或减小一个信号量的值。如果一个进程试图将信号量的值减小到小于0，那么内核会阻塞该操作直至信号量的值增长到允许执行该操作的程度。</li>
+<li>Linux 既提供了 System V 信号量，又提供了 POSIX 信号量，它们的功能类似。</li>
+</ul>
+</li>
+<li><p><strong>文件锁 ( File locks )：</strong></p>
+<ul>
+<li>文件锁是设计用来协调操作同一文件的多个进程的动作的一种同步方法。</li>
+<li>Linux 通过 flock() 和 fcntl() 来提供文件加锁功能。</li>
+</ul>
+</li>
+<li><p><strong>互斥体和条件变量 (Mutexes and condition)：</strong></p>
+<ul>
+<li>通常用于 POSIX 线程。</li>
+</ul>
+</li>
+<li><p><strong>通信工具 ( Communication facilities )：</strong></p>
+<ul>
+<li>通信工具也可以用来进行同步，例如信号、管道。</li>
+<li>一般来讲，所有数据传输工具都可以用来同步，只是同步操作是通过在工具中交换消息来完成的。</li>
+</ul>
+</li>
+</ul>
+<p>在执行进程间同步时通常需要根据功能需求来选择工具。当协调对文件的访问时文件记录加锁通常是最佳的选择，而对于协调对其他共享资源的访问来讲，信号量通常是更佳的选择。</p>
+<h1 id="二、使用管道实现相关进程间的同步"><a href="#二、使用管道实现相关进程间的同步" class="headerlink" title="二、使用管道实现相关进程间的同步"></a>二、使用管道实现相关进程间的同步</h1><h2 id="1-以不交互的方式实现同步"><a href="#1-以不交互的方式实现同步" class="headerlink" title="1. 以不交互的方式实现同步"></a>1. 以不交互的方式实现同步</h2><p><strong>演示 demo (pipe_sync.c)：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">int</span> pfd[<span class="number">2</span>];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">int</span> j, dummy;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    ...</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    setbuf(<span class="built_in">stdout</span>, <span class="literal">NULL</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">printf</span>(<span class="string">"%s  Parent started\n"</span>, currTime(<span class="string">"%T"</span>));</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">if</span> (pipe(pfd) == <span class="number">-1</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">        errExit(<span class="string">"pipe"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">for</span> (j = <span class="number">1</span>; j &lt; argc; j++) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">switch</span> (fork()) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">case</span> <span class="number">-1</span>:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">            errExit(<span class="string">"fork %d"</span>, j);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">case</span> <span class="number">0</span>: <span class="comment">/* Child */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">if</span> (<span class="built_in">close</span>(pfd[<span class="number">0</span>]) == <span class="number">-1</span>)        <span class="comment">/* Read end is unused */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">                errExit(<span class="string">"close"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">            <span class="comment">/* Child does some work, and lets parent know it's done */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">            sleep(getInt(argv[j], GN_NONNEG, <span class="string">"sleep-time"</span>));</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">            <span class="built_in">printf</span>(<span class="string">"%s  Child %d (PID=%ld) closing pipe\n"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">                    currTime(<span class="string">"%T"</span>), j, (<span class="keyword">long</span>) getpid());</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">if</span> (<span class="built_in">close</span>(pfd[<span class="number">1</span>]) == <span class="number">-1</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">                errExit(<span class="string">"close"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">30</span></pre></td><td class="code"><pre><span class="line">            _exit(EXIT_SUCCESS);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">31</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">32</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">default</span>: <span class="comment">/* Parent loops to create next child */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">33</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">break</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">34</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">35</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">36</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">37</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">if</span> (<span class="built_in">close</span>(pfd[<span class="number">1</span>]) == <span class="number">-1</span>)    <span class="comment">/* Write end is unused */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">38</span></pre></td><td class="code"><pre><span class="line">        errExit(<span class="string">"close"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">39</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">40</span></pre></td><td class="code"><pre><span class="line">    <span class="comment">/* Parent synchronizes with children */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">41</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">if</span> (<span class="built_in">read</span>(pfd[<span class="number">0</span>], &amp;dummy, <span class="number">1</span>) != <span class="number">0</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">42</span></pre></td><td class="code"><pre><span class="line">        fatal(<span class="string">"parent didn't get EOF"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">43</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">printf</span>(<span class="string">"%s  Parent ready to go\n"</span>, currTime(<span class="string">"%T"</span>));</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">44</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">exit</span>(EXIT_SUCCESS);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">45</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p><strong>运行效果：</strong>  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ ./pipe_sync <span class="number">2</span> <span class="number">4</span> <span class="number">6</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="number">08</span>:<span class="number">16</span>:<span class="number">32</span>  Parent started</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="number">08</span>:<span class="number">16</span>:<span class="number">34</span>  Child <span class="number">1</span> (PID=<span class="number">23166</span>) closing pipe</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="number">08</span>:<span class="number">16</span>:<span class="number">36</span>  Child <span class="number">2</span> (PID=<span class="number">23167</span>) closing pipe</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="number">08</span>:<span class="number">16</span>:<span class="number">38</span>  Child <span class="number">3</span> (PID=<span class="number">23168</span>) closing pipe</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="number">08</span>:<span class="number">16</span>:<span class="number">38</span>  Parent <span class="built_in">ready</span> to go</span></pre></td></tr></table></figure>
+
+<p><strong>程序分析：</strong>  </p>
+<ul>
+<li><p>这个程序创建了多个子进程（每个命令行参数对应一个子进程），每个子进程都完成某个动作，在本例中则是睡眠一段时间。父进程等待直到所有子进程完成了自己的动作为止。</p>
+</li>
+<li><p>父进程在创建子进程之前构建了一个管道。每个子进程会继承管道的写入端的文件描述符并在完成动作之后关闭这些描述符。当所有子进程都关闭了管道的写入端的文件描述符之后，父进程在管道上的 read() 就会结束并返回文件结束 EOF。这时，父进程就能够做其他工作了。</p>
+</li>
+</ul>
+<p><strong>相关要点：</strong></p>
+<ul>
+<li><p>在父进程中关闭管道的未使用写入端对于这项技术的正常运转是至关重要的，否则父进程在试图从管道中读取数据时会被永远阻塞。</p>
+</li>
+<li><p><strong>管道同步有一个优势：</strong> 它可以同来协调一个进程的动作使之与多个相关进程匹配。而多个标准信号无法排队的事实使得信号不适用于这种情形。</p>
+</li>
+<li><p><strong>对这项技术进行扩展：</strong> 不关闭管道，每个子进程向管道写入一条包含其进程 ID 和状态信息的消息。或者每个子进程可以向管道写入一个字节。父进程可以计数和分析这些消息。这种方法考虑到了子进程意外终止而不是显式地关闭管道的情形。</p>
+</li>
+</ul>
+<h2 id="2-以交互的方式实现同步"><a href="#2-以交互的方式实现同步" class="headerlink" title="2. 以交互的方式实现同步"></a>2. 以交互的方式实现同步</h2><p><strong>演示 demo (tellwait.c)：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">int</span> pfd1[<span class="number">2</span>], pfd2[<span class="number">2</span>];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TELL_WAIT</span><span class="params">(<span class="keyword">void</span>)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">if</span> (pipe(pfd1) &lt; <span class="number">0</span> || pipe(pfd2) &lt; <span class="number">0</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">        err_sys(<span class="string">"pipe error"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TELL_PARENT</span><span class="params">(<span class="keyword">pid_t</span> pid)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">if</span> (<span class="built_in">write</span>(pfd2[<span class="number">1</span>], <span class="string">"c"</span>, <span class="number">1</span>) != <span class="number">1</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">        err_sys(<span class="string">"write error"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">WAIT_PARENT</span><span class="params">(<span class="keyword">void</span>)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">char</span> c;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">if</span> (<span class="built_in">read</span>(pfd1[<span class="number">0</span>], &amp;c, <span class="number">1</span>) != <span class="number">1</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">        err_sys(<span class="string">"read error"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">if</span> (c != <span class="string">'p'</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">        err_quit(<span class="string">"WAIT_PARENT: incorrect data"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TELL_CHILD</span><span class="params">(<span class="keyword">pid_t</span> pid)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">if</span> (<span class="built_in">write</span>(pfd1[<span class="number">1</span>], <span class="string">"p"</span>, <span class="number">1</span>) != <span class="number">1</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">        err_sys(<span class="string">"write error"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">30</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">31</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">WAIT_CHILD</span><span class="params">(<span class="keyword">void</span>)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">32</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">33</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">char</span>    c;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">34</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">35</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">if</span> (<span class="built_in">read</span>(pfd2[<span class="number">0</span>], &amp;c, <span class="number">1</span>) != <span class="number">1</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">36</span></pre></td><td class="code"><pre><span class="line">        err_sys(<span class="string">"read error"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">37</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">38</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">if</span> (c != <span class="string">'c'</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">39</span></pre></td><td class="code"><pre><span class="line">        err_quit(<span class="string">"WAIT_CHILD: incorrect data"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">40</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p><strong>运行效果：</strong>  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ./proc/tellwait2 </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">output from parent</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">output from child</span></pre></td></tr></table></figure>
+
+<p><strong>程序分析：</strong></p>
+<ul>
+<li><p>在调用fork之前创建了两个管道(pfd1 和 pfd2)。</p>
+</li>
+<li><p>父进程在调用 TELL_CHILD 时，向第一个管道 pfd1 写一个字符 “p”，子进程在调用 TELL_PARENT 时，向第二个管道写一个字符 “c”。相应的 WAIT_XXX 函数调用 read() 读一个字符，没有读到字符时则阻塞，即休眠等待。</p>
+</li>
+<li><p>示意图：<br><img src="/images/linux/pipe/pipe_sync_data.png" alt=""></p>
+</li>
+</ul>
+<h1 id="三、参考书籍"><a href="#三、参考书籍" class="headerlink" title="三、参考书籍"></a>三、参考书籍</h1><ul>
+<li><p>《UNIX 环境高级编程》</p>
+<ul>
+<li>8.9 竞争条件</li>
+<li>15.2 管道</li>
+</ul>
+</li>
+<li><p>《Linux / UNIX 系统编程手册》</p>
+<ul>
+<li>43.进程间通信简介</li>
+<li>44.管道和FIFO</li>
+</ul>
+</li>
+<li><p>《Linux 程序设计 - 13 进程间通信：管道》</p>
+</li>
+<li><p>《UNIX-Linux编程实践教程 - 10 I/O 重定向和管道》</p>
+</li>
+<li><p>《UNIX操作系统设计 - 5.12 管道》</p>
+</li>
+<li><p>《Linux内核设计的艺术图解 - 8.1 管道机制》</p>
+</li>
+</ul>
+<p><strong>更多值得学习的知识点：</strong>  </p>
+<ul>
+<li>将管道作为一种进程同步的方法 (done);</li>
+<li>使用管道连接过滤器;</li>
+<li>通过管道与 shell 命令进行通信：popen();</li>
+<li>管道和 stdio 缓冲;</li>
+<li>管道的内核实现;</li>
+<li>命名管道：FIFO;</li>
+</ul>
+<p>鉴于大多数人的注意力无法在一篇文章里上集中太久，更多的内容请大家先自行去阅读吧，不是自己理解到的东西是消化不了的。有机会的话我会把更多的读书心得放在后面的文章。</p>
+<h1 id="四、欢迎加入我的微信群"><a href="#四、欢迎加入我的微信群" class="headerlink" title="四、欢迎加入我的微信群"></a>四、欢迎加入我的微信群</h1><p><img src="/images/basic/wechat_qun.jpg" alt=""></p>
+<p>你和我各有一个苹果，如果我们交换苹果的话，我们还是只有一个苹果。但当你和我各有一个想法，我们交换想法的话，我们就都有两个想法了。如果你也对 <strong>嵌入式系统和开源软件</strong> 感兴趣，并且想和更多人互相交流学习的话，请关注我的公众号：<strong>嵌入式Hacker</strong>，一起来学习吧，无论是 <strong>关注或转发</strong> , 还是赏赐，都是对作者莫大的支持，感谢 <strong>各位的大拇指</strong> ，祝工作顺利，家庭和睦~</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>这是一篇有趣的文章吗？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="es-hacker 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/basic/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Linux-Program/" rel="tag"><i class="fa fa-tag"></i> Linux_Program</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/07/03/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E7%AE%A1%E9%81%93%E5%85%A5%E9%97%A81/" rel="prev" title="Linux系统编程-管道入门1">
+      <i class="fa fa-chevron-left"></i> Linux系统编程-管道入门1
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/07/13/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E9%80%9A%E7%94%A8%E6%96%87%E4%BB%B6%E6%A8%A1%E5%9E%8B/" rel="next" title="Linux系统编程-通用文件模型">
+      Linux系统编程-通用文件模型 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#你是在进行无效阅读吗？"><span class="nav-number">1.</span> <span class="nav-text">你是在进行无效阅读吗？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-什么是无效阅读："><span class="nav-number">1.1.</span> <span class="nav-text">1. 什么是无效阅读：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-几个提高阅读效果的技巧："><span class="nav-number">1.2.</span> <span class="nav-text">2. 几个提高阅读效果的技巧：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#以下是正文，先明确正文目的"><span class="nav-number">2.</span> <span class="nav-text">以下是正文，先明确正文目的:</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一、基础知识"><span class="nav-number">3.</span> <span class="nav-text">一、基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-关于竞争"><span class="nav-number">3.1.</span> <span class="nav-text">1. 关于竞争</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-用于同步的工具-Synchronization-Facilities）"><span class="nav-number">3.2.</span> <span class="nav-text">2. 用于同步的工具 (Synchronization Facilities）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、使用管道实现相关进程间的同步"><span class="nav-number">4.</span> <span class="nav-text">二、使用管道实现相关进程间的同步</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-以不交互的方式实现同步"><span class="nav-number">4.1.</span> <span class="nav-text">1. 以不交互的方式实现同步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-以交互的方式实现同步"><span class="nav-number">4.2.</span> <span class="nav-text">2. 以交互的方式实现同步</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、参考书籍"><span class="nav-number">5.</span> <span class="nav-text">三、参考书籍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、欢迎加入我的微信群"><span class="nav-number">6.</span> <span class="nav-text">四、欢迎加入我的微信群</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">es-hacker</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">es-hacker</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

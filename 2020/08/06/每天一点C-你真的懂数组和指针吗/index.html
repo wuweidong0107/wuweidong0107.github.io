@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wuweidong0107.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="哈喽，我是老吴，继续记录我的学习心得。 一、能力错觉当书本（或谷歌）摆在眼前时，大脑会产生错觉，以为学习材料也同样存入了大脑，阅读毕竟比回想简单多了。 以为反复的阅读资料就是自己已经掌握知识，这就是能力错觉。 解决能力错觉的方法:    积极回想——让大脑提取关键概念，而非通过重复阅读被动地获取知识，这样才能高效地学习。  现在网络上盛行各种it类的视频教程，我不否认不少视频教程是高质量的，但是">
+<meta name="keywords" content="C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="每天一点C-你知道数组和指针有什么区别吗?(附面试题)">
+<meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;08&#x2F;06&#x2F;%E6%AF%8F%E5%A4%A9%E4%B8%80%E7%82%B9C-%E4%BD%A0%E7%9C%9F%E7%9A%84%E6%87%82%E6%95%B0%E7%BB%84%E5%92%8C%E6%8C%87%E9%92%88%E5%90%97&#x2F;index.html">
+<meta property="og:site_name" content="嵌入式Hacker (es-hacker)">
+<meta property="og:description" content="哈喽，我是老吴，继续记录我的学习心得。 一、能力错觉当书本（或谷歌）摆在眼前时，大脑会产生错觉，以为学习材料也同样存入了大脑，阅读毕竟比回想简单多了。 以为反复的阅读资料就是自己已经掌握知识，这就是能力错觉。 解决能力错觉的方法:    积极回想——让大脑提取关键概念，而非通过重复阅读被动地获取知识，这样才能高效地学习。  现在网络上盛行各种it类的视频教程，我不否认不少视频教程是高质量的，但是">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;life&#x2F;photo&#x2F;shiqiao2.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;08&#x2F;06&#x2F;%E6%AF%8F%E5%A4%A9%E4%B8%80%E7%82%B9C-%E4%BD%A0%E7%9C%9F%E7%9A%84%E6%87%82%E6%95%B0%E7%BB%84%E5%92%8C%E6%8C%87%E9%92%88%E5%90%97&#x2F;images&#x2F;lang&#x2F;c&#x2F;array_pointer&#x2F;access_array.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;08&#x2F;06&#x2F;%E6%AF%8F%E5%A4%A9%E4%B8%80%E7%82%B9C-%E4%BD%A0%E7%9C%9F%E7%9A%84%E6%87%82%E6%95%B0%E7%BB%84%E5%92%8C%E6%8C%87%E9%92%88%E5%90%97&#x2F;images&#x2F;lang&#x2F;c&#x2F;array_pointer&#x2F;access_pointer.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;08&#x2F;06&#x2F;%E6%AF%8F%E5%A4%A9%E4%B8%80%E7%82%B9C-%E4%BD%A0%E7%9C%9F%E7%9A%84%E6%87%82%E6%95%B0%E7%BB%84%E5%92%8C%E6%8C%87%E9%92%88%E5%90%97&#x2F;images&#x2F;lang&#x2F;c&#x2F;array_pointer&#x2F;pointer_array.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;basic&#x2F;wechat_channel.jpg">
+<meta property="og:updated_time" content="2020-08-15T01:03:34.266Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;life&#x2F;photo&#x2F;shiqiao2.jpg">
+
+<link rel="canonical" href="https://wuweidong0107.github.io/2020/08/06/%E6%AF%8F%E5%A4%A9%E4%B8%80%E7%82%B9C-%E4%BD%A0%E7%9C%9F%E7%9A%84%E6%87%82%E6%95%B0%E7%BB%84%E5%92%8C%E6%8C%87%E9%92%88%E5%90%97/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>每天一点C-你知道数组和指针有什么区别吗?(附面试题) | 嵌入式Hacker (es-hacker)</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">嵌入式Hacker (es-hacker)</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Embedded bsp developer enjoys thinking and hacking opensource and develop boards(NanoPi, LicheePi, RPi...)</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/wuweidong0107" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/08/06/%E6%AF%8F%E5%A4%A9%E4%B8%80%E7%82%B9C-%E4%BD%A0%E7%9C%9F%E7%9A%84%E6%87%82%E6%95%B0%E7%BB%84%E5%92%8C%E6%8C%87%E9%92%88%E5%90%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="es-hacker">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式Hacker (es-hacker)">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          每天一点C-你知道数组和指针有什么区别吗?(附面试题)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-08-06 07:59:25" itemprop="dateCreated datePublished" datetime="2020-08-06T07:59:25+08:00">2020-08-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-15 09:03:34" itemprop="dateModified" datetime="2020-08-15T09:03:34+08:00">2020-08-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C%E8%AF%AD%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">C语言</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="/images/life/photo/shiqiao2.jpg" alt=""></p>
+<p>哈喽，我是老吴，继续记录我的学习心得。</p>
+<h1 id="一、能力错觉"><a href="#一、能力错觉" class="headerlink" title="一、能力错觉"></a>一、能力错觉</h1><p>当书本（或谷歌）摆在眼前时，大脑会产生错觉，以为学习材料也同样存入了大脑，阅读毕竟比回想简单多了。</p>
+<p><strong>以为反复的阅读资料就是自己已经掌握知识，这就是能力错觉</strong>。</p>
+<p><strong>解决能力错觉的方法</strong>:  </p>
+<ul>
+<li>积极回想——让大脑提取关键概念，而非通过重复阅读被动地获取知识，这样才能高效地学习。</li>
+</ul>
+<p><strong>现在网络上盛行各种it类的视频教程，我不否认不少视频教程是高质量的，但是所有视频类资料都有一个问题</strong>:  </p>
+<ul>
+<li>可以让人不用阅读书籍，减少思考，只要被动地听老师们讲课就能舒舒服服地获取到知识，这很容易会让某些初级的软件开发人员形成能力错觉，仿佛视频里写过的代码，解决过的 bug 都是自己已经学到的知识似的。</li>
+</ul>
+<p><strong>有效的解决办法是</strong>：  </p>
+<ul>
+<li><p>公开学习笔记和练习代码。公开学习笔记的目的是借助外部压力，高效回想，进而提高自己的学习标准。</p>
+</li>
+<li><p>另外，公开写作则会给你的写作增加很多维度的外部压力，你会想如何让别人更好地理解我要表达的意思；如何传递更多价值，让别人读完有所收获；如何让更多人看到；如何让别人读得下去；如何排版让大家看得更舒服；</p>
+</li>
+</ul>
+<hr>
+<h1 id="二、数组和指针有什么区别？"><a href="#二、数组和指针有什么区别？" class="headerlink" title="二、数组和指针有什么区别？"></a>二、数组和指针有什么区别？</h1><p><strong>正文目录：</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 用于声明时两者有重大区别</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="number">2.</span> 你真的理解声明和定义吗？</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="number">3.</span> 数组和指针的底层是如何访问数据的？</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="number">4.</span> 哪些场景可以用指针代替数组？</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="number">5.</span> 为什么C语言要把数组形参退化为指针？</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="number">6.</span> 如何使用指针访问多维数组？</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="number">7.</span> 相关面试题</span></pre></td></tr></table></figure>
+
+<p><strong>写作目的：</strong></p>
+<ul>
+<li>正确看待数组和指针。</li>
+</ul>
+<a id="more"></a>
+
+<p><strong>测试环境：</strong></p>
+<ul>
+<li>Ubuntu 16.04</li>
+<li>Gcc 5.4.0</li>
+</ul>
+<h2 id="1-用于声明时两者有重大区别"><a href="#1-用于声明时两者有重大区别" class="headerlink" title="1. 用于声明时两者有重大区别"></a>1. 用于声明时两者有重大区别</h2><p><strong>1) 误导新手的说法：</strong>  </p>
+<p>由于数组和指针的所谓等价性非常接近，不少程序员有时忽视了二者之间的其他重要区别 ，最误导新手的说法之一就是 “数组和指针是相同的”，这是一种非常危险的说法。</p>
+<p>看下面这个例子：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="keyword">int</span> *x;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="keyword">int</span> x[];</span></pre></td></tr></table></figure>
+
+<ul>
+<li><p>第一条语句声明 x 是个 int 型的指针；</p>
+</li>
+<li><p>第二条语句声明 x 是个 int 型数组，长度尚未确定，即存储长度在别处定义。</p>
+</li>
+</ul>
+<p><strong>2) 为什么有些人会误以为指针和数组总是可以互换？</strong></p>
+<p><strong>最主要原因是</strong>：<br><strong>对数组的引用 ( x[i] ) 总是可以写成对指针的引用 ( *(x+i) )</strong>。</p>
+<ul>
+<li>即确实存在一种指针和数组的定义完全相同的上下文环境。不幸的是，这只是数组的一种极为普通的用法，并非所有情况下都是如此。</li>
+</ul>
+<hr>
+<h2 id="2-你真的理解声明和定义吗？"><a href="#2-你真的理解声明和定义吗？" class="headerlink" title="2. 你真的理解声明和定义吗？"></a>2. 你真的理解声明和定义吗？</h2><p>想要要真正理解为什么 extern int *x 不等于 extern int x[]，我们首先需要搞清楚什么是声明，什么是定义。</p>
+<p><strong>1) 链接器的视角：</strong>  </p>
+<ul>
+<li><strong>C 语言中的对象必须有且只有一个定义，但它可以有多个 extern 声明</strong>。这里所说的对象跟 C++ 中的对象并无关系，这里说的对象是 <strong>从链接器的视角来看的，链接器将各个函数、变量都视为对象</strong>。</li>
+</ul>
+<p><strong>2) 定义和声明的联系与区别：</strong></p>
+<ul>
+<li><p><strong>定义是一种特殊的声明</strong>，它创建了一个对象；声明简单地说明了在其他地方创建的对象的名字。</p>
+</li>
+<li><p><strong>定义只能出现在一个地方</strong>，它指定了对象的类型并分配内存以创建新的对象。<strong>声明可以多次出现</strong> 以描述对象的类型，用于指代其他地方定义的对象，它不为对象分配内存。</p>
+</li>
+<li><p><strong>extern 对象声明告诉编译器对象的类型和名字，对象的内存分配则在别处进行</strong>。由于并未在声明中为数组分配内存，所以并不需要提供关于数组长度的信息 (多维数组例外)。</p>
+</li>
+</ul>
+<p><strong>3) 总结成一句话：</strong></p>
+<ul>
+<li>定义 = 声明 + 分配内存 (创建对象)</li>
+</ul>
+<p><strong>4) 回过头来看这个例子：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="keyword">int</span> *x;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="keyword">int</span> x[];</span></pre></td></tr></table></figure>
+<p>前者声明了一个指针，后者声明了一个数组，那么它们对应的指针和数组的定义(最重要的是内存分配) 能相等吗？</p>
+<hr>
+<h2 id="3-数组和指针的底层是如何访问数据的？"><a href="#3-数组和指针的底层是如何访问数据的？" class="headerlink" title="3. 数组和指针的底层是如何访问数据的？"></a>3. 数组和指针的底层是如何访问数据的？</h2><p>现在我们来看看指针和数组的定义与使用。</p>
+<p><strong>1) “地址 X (Address)” 和 “地址 X 的内容(Contents of Address)” 之间的区别：</strong></p>
+<p>对于”地址 X” 和 “地址 X 的内容”，在 C 语言中是用同一个符号来表示这两样东西，由编译器根据上下文环境判断它的具体含义。</p>
+<p><strong>2) 看下面这个例子：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">X = Y</span></pre></td></tr></table></figure>
+
+<ul>
+<li><p>符号 X 的含义是 X 所代表的地址，它是左值，编译时可知;</p>
+</li>
+<li><p>符号 Y 的含义是 Y 所代表的地址上的内容，它是右值，运行时才知;</p>
+</li>
+<li><p>左值包括可修改的左值和不可修改的左值，C 语言中，一般的数据类型都是都可作为可修改的左值，只有数组是不可修改的左值;</p>
+</li>
+<li><p>数组的地址在编译时可知，编译器有了这个地址 (即数组首地址)，就可以直接进行读写操作。而指针必须在运行时取得它的当前值，然后才能对它进行解除引用操作，才能进行读写操作。</p>
+</li>
+</ul>
+<p><strong>3) 数组和指针的访问方式是不同的：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> a[<span class="number">9</span>] = <span class="string">"abcedefgh"</span>;</span></pre></td></tr></table></figure>
+
+<p><img src="images/lang/c/array_pointer/access_array.png" alt="访问数组"></p>
+<ul>
+<li><p>上面这个例子中，a 是一个数组。</p>
+</li>
+<li><p>在编译器符号表里有一个符号 a ,它的地址为9980;</p>
+</li>
+<li><p>数组内的字符都可以从这个地址 + 偏移量找到，编译器甚至并不需要知道数组的总长度;</p>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> c = <span class="string">'F'</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> *p = &amp;c;</span></pre></td></tr></table></figure>
+
+<p><img src="images/lang/c/array_pointer/access_pointer.png" alt="使用指针访问字符"></p>
+<ul>
+<li><p>上面这个例子中，p 是一个指针。</p>
+</li>
+<li><p>在编译器符号表中有一个符号 p, 它的地址为 4624;</p>
+</li>
+<li><p>p 指向的对象是一个字符。为了取得这个字符，必须得到地址 p 的内容 (5081)，把它作为字符的地址并从这个地址中取得这个字符 (‘F’)。</p>
+</li>
+</ul>
+<p><strong>4) 当定义为指针 (char *p)，并以数组方式 (p[i]) 引用时会发生什么？</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> *p = ”abcdefgh”</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">"%c\n"</span>, p[<span class="number">3</span>]);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> *a = ”abcdefgh”</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">"%c\n"</span>, a[<span class="number">3</span>]);</span></pre></td></tr></table></figure>
+
+<ul>
+<li><p>p[3] 和 a[3] 都能成功访问到字符 ‘d’;</p>
+</li>
+<li><p>p[i] 表示 “从 a 的地址开始，前进 i 步，每步都是一个字符（数组类型的长度）”;</p>
+</li>
+<li><p>p[i] 表示 “从 p <strong>所指的</strong>地址开始，前进 i 步，每步都是一个字符（即指针所指类型的长度）”;</p>
+</li>
+<li><p>所以，当你你用 extern char <em>p 来声明 char p[10]时，编译器会把 p[i] 当成一个指针(Address)，然后去获取 <em>(p[i]) (即 Content of Addrss)，</em></em>这时最好的结果是程序立马崩溃，你能快点发现问题。最糟糕的情况是，程序崩溃在将来的某个时刻，你则 debug 到怀疑人生**。</p>
+</li>
+</ul>
+<hr>
+<h2 id="4-哪些场景可以用指针代替数组？"><a href="#4-哪些场景可以用指针代替数组？" class="headerlink" title="4. 哪些场景可以用指针代替数组？"></a>4. 哪些场景可以用指针代替数组？</h2><p>数组和指针容易混淆使用的 2 大类场景：</p>
+<ul>
+<li><p>声明</p>
+</li>
+<li><p>在表达式中使用;</p>
+</li>
+</ul>
+<p><strong>1) 声明：</strong><br>声明的场景包括 3 种：</p>
+<ul>
+<li><p>1&gt; 不可以的场景：定义也是一种声明，定义数组时不能用指针的形式;</p>
+</li>
+<li><p>2&gt; 不可以的场景：extern 数组时不能改写成指针的形式, 例如:</p>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> <span class="keyword">char</span>[<span class="number">10</span>];    <span class="comment">// define</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="keyword">char</span> a[]; <span class="comment">// ok</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="keyword">char</span> *a;  <span class="comment">// error</span></span></pre></td></tr></table></figure>
+
+<ul>
+<li>3&gt; 可以的场景：函数的形参，用数组形式还是指针形式，随你自己的喜好。</li>
+</ul>
+<p><strong>2) 在表达式中使用：</strong></p>
+<ul>
+<li>在表达式中，指针形式和数组形式等效。</li>
+</ul>
+<p><strong>3) 几条重要的规则：</strong></p>
+<ul>
+<li><p>规则1：”表达式中的数组名” 就是指针;</p>
+</li>
+<li><p>规则2：把数组下标可当作指针的偏移量;</p>
+</li>
+<li><p>规则3: “作为函数参数的数组名” 等同于指针;</p>
+</li>
+</ul>
+<hr>
+<h2 id="5-为什么-C-语言要把数组形参退化为指针？"><a href="#5-为什么-C-语言要把数组形参退化为指针？" class="headerlink" title="5. 为什么 C 语言要把数组形参退化为指针？"></a>5. 为什么 C 语言要把数组形参退化为指针？</h2><p><strong>1) 出于效率的考虑：</strong></p>
+<ul>
+<li><p>在 C 语言中，所有非数组形式的数据实参均以传值形式（对实参作一份拷贝并传递给调用的函数，函数不能修改作为实参的实际变量的值)。</p>
+</li>
+<li><p>如果要拷贝整个数组，<strong>无论在时间上还是在内存空间上的开销都可能是非常大的</strong>。</p>
+</li>
+</ul>
+<p><strong>2) 出于简化编译器的考虑：</strong></p>
+<ul>
+<li><p>在 C 语言中，所有的数组在作为参数传递时都转换为指向数组起始地址的指针，而其他的参数均采用传值调用。</p>
+</li>
+<li><p>允许程序员把形参声明为数组 (程序员打算传递给函数的东西) 或者指针 (函数实际所接收到的东西)。<strong>在函数内部，编译器始终把它当作一个指向数组第一个元素的指针</strong>。</p>
+</li>
+</ul>
+<p><strong>3) 看下面这个例子：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">int</span> <span class="built_in">array</span>[<span class="number">10</span>], array2[<span class="number">10</span>];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">func1</span><span class="params">(<span class="keyword">int</span> *ptr)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    ptr[<span class="number">1</span>] = <span class="number">3</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    *ptr = <span class="number">3</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    ptr = array2;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">func2</span><span class="params">(<span class="keyword">int</span> <span class="built_in">array</span>[])</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">array</span>[<span class="number">1</span>] = <span class="number">3</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">    *<span class="built_in">array</span> = <span class="number">3</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">array</span> = array2;   <span class="comment">// OK, because array is a pointer</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">printf</span>(<span class="string">"*array=%d\n"</span>, *<span class="built_in">array</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">    func1(<span class="built_in">array</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">    func2(<span class="built_in">array</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">array</span>[<span class="number">1</span>] = <span class="number">3</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">    *<span class="built_in">array</span> = <span class="number">3</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">array</span> = array2; <span class="comment">// ERROR</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+<p>编译运行：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// main 中调用 array = array2时：</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="number">11</span>: error: assignment to expression with <span class="built_in">array</span> type</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 去掉 main / array = array2时：</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">$ ./point_array_arg</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">*<span class="built_in">array</span>=<span class="number">0</span></span></pre></td></tr></table></figure>
+
+
+<hr>
+<h2 id="6-如何使用指针访问多维数组？"><a href="#6-如何使用指针访问多维数组？" class="headerlink" title="6. 如何使用指针访问多维数组？"></a>6. 如何使用指针访问多维数组？</h2><p><strong>1) C 语言的多维数组：</strong></p>
+<ul>
+<li><p>采用最右的下标先变化原则，<strong>其最大的用途是存储多个字符串</strong>;</p>
+</li>
+<li><p>单个元素的存储和引用实际上是以线性形式排列在内存中;</p>
+</li>
+<li><p>不能把一个数组赋值给另一个数组，因为数组作为一个整体不能成为赋值的对象;</p>
+</li>
+<li><p>可以把数组名赋值给一个指针，是因为<strong>在表达式中的数组名被编译器当作一个指针</strong>;</p>
+</li>
+<li><p>指针下标引用的规则告诉我们 pea[i][j] 被编译器解释为 <em>(</em>(pea + i) + j);</p>
+</li>
+<li><p>可以通过声明一个一维指针数组 ( (char *)pea[4]，下标方括号的优先级比指针的星号高)，其中每个指针指向一个字符串，来取得类似二维字符数组的效果;</p>
+</li>
+</ul>
+<p><img src="images/lang/c/array_pointer/pointer_array.png" alt="指针数组"></p>
+<h2 id="7-相关面试题"><a href="#7-相关面试题" class="headerlink" title="7. 相关面试题"></a>7. 相关面试题</h2><p><strong>1) 找错：计算字符串长度</strong></p>
+<p>下面这段程序是为了把字符串转换为大写：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UpperCase</span><span class="params">(<span class="keyword">char</span> str[])</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">int</span> test = <span class="keyword">sizeof</span>(str);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">int</span> test2 = <span class="keyword">sizeof</span>(str[<span class="number">0</span>]);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">for</span>(<span class="keyword">size_t</span> i=<span class="number">0</span>; i&lt;<span class="keyword">sizeof</span>(str)/<span class="keyword">sizeof</span>(str[<span class="number">0</span>]); ++i) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">if</span>(<span class="string">'a'</span>&lt;=str[i] &amp;&amp; str[i]&lt;=<span class="string">'z'</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">            str[i] -= (<span class="string">'a'</span>-<span class="string">'A'</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">char</span> str[] = <span class="string">"aBcDeefGHijKL"</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">printf</span>(<span class="string">"The length of str is %d\n"</span>, <span class="keyword">sizeof</span>(str)/<span class="keyword">sizeof</span>(str[<span class="number">0</span>]));</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">    UpperCase(str);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">printf</span>(<span class="string">"result: %s\n"</span>, str);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ ./sizeof_array </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">The length of str is <span class="number">14</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">result: ABCDEEFGHijKL</span></pre></td></tr></table></figure>
+
+<p>问题出在 UpperCase() 里的 sizeof(str)，这里的 <strong>str 是一个指针而不是数组</strong>。</p>
+<p><strong>正确的写法有2种</strong>：</p>
+<ul>
+<li>给UpperCase　传递长度参数，这是最稳妥的方式。</li>
+<li>在UpperCase 内使用strlen 获取字符串长度，这种方法仅适用于以 ‘\0’ 结尾的字符数组;</li>
+</ul>
+<h2 id="相关参考"><a href="#相关参考" class="headerlink" title="相关参考"></a>相关参考</h2><ul>
+<li>《你必须知道的 495 个 C语言问题》, 第 6.1-6.23 章节</li>
+<li>《C 专家编程》, 第 4/9/10 章节</li>
+<li>《C Primer Plus 6th》, 第 10 章节</li>
+<li>《C 和 C++ 程序员面试秘籍》, 第 3 章</li>
+<li>《C 和指针》, NULL</li>
+</ul>
+<hr>
+<h1 id="三、思考技术，也思考人生"><a href="#三、思考技术，也思考人生" class="headerlink" title="三、思考技术，也思考人生"></a>三、思考技术，也思考人生</h1><p><strong>学习技术，更要学习如何生活</strong>。</p>
+<p>你和我各有一个苹果，如果我们交换苹果的话，我们还是只有一个苹果。但当你和我各有一个想法，我们交换想法的话，我们就都有两个想法了。</p>
+<p><img src="/images/basic/wechat_channel.jpg" alt=""></p>
+<p>对 <strong>嵌入式系统 (Linux、RTOS、OpenWrt、Android) 和 开源软件</strong> 感兴趣，想和更多人互相交流学习，请关注公众号：<strong>嵌入式Hacker</strong>，一起来学习吧。</p>
+<p>无论是关注或转发，还是打赏，都是对作者莫大的支持。觉得文章对你有价值的话，不妨点个 <strong>在看和点赞</strong> 哦。</p>
+<p>欢迎加入我的微信群：先加我，我拉你进群，暗号(我最棒)。</p>
+<p>祝各位工作顺利，家庭幸福，财源滚滚<del>~</del></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>这是一篇有趣的文章吗？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="es-hacker 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/basic/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"><i class="fa fa-tag"></i> C</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/08/05/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E5%88%86%E6%9E%90%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6Triggerhappy2/" rel="prev" title="Linux系统编程-分析开源软件Triggerhappy (2)">
+      <i class="fa fa-chevron-left"></i> Linux系统编程-分析开源软件Triggerhappy (2)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/08/13/%E7%8E%A9%E7%89%A9%E4%B8%8D%E4%B8%A7%E5%BF%97-%E6%88%91%E4%B9%9F%E6%83%B3%E8%A6%81STM32MP157/" rel="next" title="玩物不丧志-我也想要STM32MP157">
+      玩物不丧志-我也想要STM32MP157 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、能力错觉"><span class="nav-number">1.</span> <span class="nav-text">一、能力错觉</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、数组和指针有什么区别？"><span class="nav-number">2.</span> <span class="nav-text">二、数组和指针有什么区别？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-用于声明时两者有重大区别"><span class="nav-number">2.1.</span> <span class="nav-text">1. 用于声明时两者有重大区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-你真的理解声明和定义吗？"><span class="nav-number">2.2.</span> <span class="nav-text">2. 你真的理解声明和定义吗？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-数组和指针的底层是如何访问数据的？"><span class="nav-number">2.3.</span> <span class="nav-text">3. 数组和指针的底层是如何访问数据的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-哪些场景可以用指针代替数组？"><span class="nav-number">2.4.</span> <span class="nav-text">4. 哪些场景可以用指针代替数组？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-为什么-C-语言要把数组形参退化为指针？"><span class="nav-number">2.5.</span> <span class="nav-text">5. 为什么 C 语言要把数组形参退化为指针？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-如何使用指针访问多维数组？"><span class="nav-number">2.6.</span> <span class="nav-text">6. 如何使用指针访问多维数组？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-相关面试题"><span class="nav-number">2.7.</span> <span class="nav-text">7. 相关面试题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关参考"><span class="nav-number">2.8.</span> <span class="nav-text">相关参考</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、思考技术，也思考人生"><span class="nav-number">3.</span> <span class="nav-text">三、思考技术，也思考人生</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">es-hacker</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">es-hacker</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

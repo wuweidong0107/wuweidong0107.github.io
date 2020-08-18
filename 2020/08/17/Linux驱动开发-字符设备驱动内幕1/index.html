@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wuweidong0107.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="哈喽，我是老吴，继续记录我的学习心得。 一、保持专注的几个技巧 将最重要的事放在早上做。  待在无干扰环境下，比如图书馆。  意识到刚坐下开始投入工作前，有点负面小情绪是特别正常的现象。  让“开心一刻”成为计划的一部分。  拥有合情合理的日计划和周计划。    二、Linux 字符设备驱动内幕 (1)正文目录： 11. 什么是字符设备驱动？22. 快速体验字符设备驱动和应用程序 (超简单的 d">
+<meta name="keywords" content="Embedded, Linux, OpenWrt, Buildroot, Opensource, Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux驱动开发 &#x2F; 字符设备驱动内幕 (1)">
+<meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;08&#x2F;17&#x2F;Linux%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91-%E5%AD%97%E7%AC%A6%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E5%86%85%E5%B9%951&#x2F;index.html">
+<meta property="og:site_name" content="嵌入式Hacker (es-hacker)">
+<meta property="og:description" content="哈喽，我是老吴，继续记录我的学习心得。 一、保持专注的几个技巧 将最重要的事放在早上做。  待在无干扰环境下，比如图书馆。  意识到刚坐下开始投入工作前，有点负面小情绪是特别正常的现象。  让“开心一刻”成为计划的一部分。  拥有合情合理的日计划和周计划。    二、Linux 字符设备驱动内幕 (1)正文目录： 11. 什么是字符设备驱动？22. 快速体验字符设备驱动和应用程序 (超简单的 d">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;life&#x2F;photo&#x2F;20200818.jpeg">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;linux&#x2F;driver&#x2F;char&#x2F;soc-dev.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;linux&#x2F;driver&#x2F;char&#x2F;fs-dev.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;linux&#x2F;driver&#x2F;char&#x2F;linux-dev-drv2.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;basic&#x2F;wechat_channel.jpg">
+<meta property="og:updated_time" content="2020-08-18T01:41:13.456Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;life&#x2F;photo&#x2F;20200818.jpeg">
+
+<link rel="canonical" href="https://wuweidong0107.github.io/2020/08/17/Linux%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91-%E5%AD%97%E7%AC%A6%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E5%86%85%E5%B9%951/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Linux驱动开发 / 字符设备驱动内幕 (1) | 嵌入式Hacker (es-hacker)</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">嵌入式Hacker (es-hacker)</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Embedded bsp developer enjoys thinking and hacking opensource and develop boards(NanoPi, LicheePi, RPi...)</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/wuweidong0107" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/08/17/Linux%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91-%E5%AD%97%E7%AC%A6%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E5%86%85%E5%B9%951/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="es-hacker">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式Hacker (es-hacker)">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux驱动开发 / 字符设备驱动内幕 (1)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-08-17 07:46:47" itemprop="dateCreated datePublished" datetime="2020-08-17T07:46:47+08:00">2020-08-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-18 09:41:13" itemprop="dateModified" datetime="2020-08-18T09:41:13+08:00">2020-08-18</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="/images/life/photo/20200818.jpeg" alt=""></p>
+<p>哈喽，我是老吴，继续记录我的学习心得。</p>
+<h1 id="一、保持专注的几个技巧"><a href="#一、保持专注的几个技巧" class="headerlink" title="一、保持专注的几个技巧"></a>一、保持专注的几个技巧</h1><ul>
+<li><p>将最重要的事放在早上做。</p>
+</li>
+<li><p>待在无干扰环境下，比如图书馆。</p>
+</li>
+<li><p>意识到刚坐下开始投入工作前，有点负面小情绪是特别正常的现象。</p>
+</li>
+<li><p>让“开心一刻”成为计划的一部分。</p>
+</li>
+<li><p>拥有合情合理的日计划和周计划。</p>
+</li>
+</ul>
+<hr>
+<h1 id="二、Linux-字符设备驱动内幕-1"><a href="#二、Linux-字符设备驱动内幕-1" class="headerlink" title="二、Linux 字符设备驱动内幕 (1)"></a>二、Linux 字符设备驱动内幕 (1)</h1><p><strong>正文目录：</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 什么是字符设备驱动？</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="number">2.</span> 快速体验字符设备驱动和应用程序 (超简单的 demo)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="number">3.</span> 字符设备在内核里的抽象</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    <span class="number">3.1</span> 字符设备核心代码概览</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    <span class="number">3.2</span> 对字符设备进行抽象: struct cdev</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    <span class="number">3.3</span> 对字符设备的操作进行抽象：struct file_operations</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="number">4.</span> 更多值得学习的知识点</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="number">5.</span> 相关参考</span></pre></td></tr></table></figure>
+
+<p><strong>写作目的：</strong></p>
+<ul>
+<li>探索 Linux 字符设备驱动。</li>
+</ul>
+<a id="more"></a>
+
+<p><strong>测试环境：</strong></p>
+<ul>
+<li>Ubuntu 16.04</li>
+<li>Gcc 5.4.0</li>
+</ul>
+<h2 id="1-什么是字符设备驱动？"><a href="#1-什么是字符设备驱动？" class="headerlink" title="1. 什么是字符设备驱动？"></a>1. 什么是字符设备驱动？</h2><ul>
+<li>现实世界中存在着成千上万的硬件设备，这些设备在硬件特性和使用方式上都各不相同。<strong>Linux 系统的大牛们从这些形形色色的设备中提取出共性，将它们抽象为三大类：字符设备、块设备和网络设备</strong>。</li>
+</ul>
+<p><img src="/images/linux/driver/char/soc-dev.png" alt="soc-dev"></p>
+<ul>
+<li><p>基于代码质量和复用性的考虑，Linux 内核针对每一类硬件设备都提供了对应的驱动模型框架，一般包括基本的内核设施和文件系统接口。开发人员在写某类设备驱动程序时，能一套完整的驱动模型框架可以使用，从而将精力放在硬件设备本身的控制上。</p>
+</li>
+<li><p>简单的 Linux 设备驱动程序结构图：</p>
+</li>
+</ul>
+<p><img src="/images/linux/driver/char/fs-dev.png" alt="fs-dev"></p>
+<ul>
+<li>详细一点的 Linux 设备驱动程序结构图：</li>
+</ul>
+<p><img src="/images/linux/driver/char/linux-dev-drv2.png" alt="linux-dev-drv2"></p>
+<h2 id="2-快速体验字符设备驱动和应用程序-超简单的-demo"><a href="#2-快速体验字符设备驱动和应用程序-超简单的-demo" class="headerlink" title="2. 快速体验字符设备驱动和应用程序 (超简单的 demo)"></a>2. 快速体验字符设备驱动和应用程序 (超简单的 demo)</h2><p><strong>1) 字符设备驱动 (chrdev_drv.c):</strong></p>
+<p>字符设备的打开和读函数:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">cdev</span> <span class="title">chr_dev</span>;</span> <span class="comment">// 字符设备抽象</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">dev_t</span> ndev;          <span class="comment">// 设备号</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">chr_open</span><span class="params">(struct inode *nd, struct file *filp)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    printk(<span class="string">"chr_open, major=%d, minor=%d\n"</span>, MAJOR(nd-&gt;i_rdev), MINOR(nd-&gt;i_rdev));</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> ssize_t <span class="title">chr_read</span><span class="params">(struct file *filp, <span class="keyword">char</span> __user *u, <span class="keyword">size_t</span> sz, <span class="keyword">loff_t</span> *off)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    printk(<span class="string">"In chr_read()\n"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">chr_release</span><span class="params">(struct inode *nd, struct file *filp)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">    printk(<span class="string">"In chr_release()\n"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p>文件操作函数集:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">file_operations</span> <span class="title">chr_ops</span> =</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="class">&#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    .owner = THIS_MODULE,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    .<span class="built_in">open</span> = chr_open,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    .<span class="built_in">read</span> = chr_read,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    .<span class="built_in">release</span> = chr_release,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">&#125;;</span></pre></td></tr></table></figure>
+
+<p>模块加载和卸载：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">demo_init</span><span class="params">(<span class="keyword">void</span>)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">int</span> ret;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    cdev_init(&amp;chr_dev, &amp;chr_ops);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    ret = alloc_chrdev_region(&amp;ndev, <span class="number">0</span>, <span class="number">1</span>, <span class="string">"chr_dev"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">if</span>(ret &lt; <span class="number">0</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">return</span> ret;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    printk(<span class="string">"demo_init():major=%d, minor=%d\n"</span>, MAJOR(ndev), MINOR(ndev));</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    ret = cdev_add(&amp;chr_dev, ndev, <span class="number">1</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">if</span>(ret &lt; <span class="number">0</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">return</span> ret;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">demo_exit</span><span class="params">(<span class="keyword">void</span>)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">    printk(<span class="string">"demo_exit...\n"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">    cdev_del(&amp;chr_dev);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">    unregister_chrdev_region(ndev, <span class="number">1</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p><strong>2) 访问字符设备的应用程序：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">int</span> ret;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">char</span> buf[<span class="number">32</span>];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">int</span> fd = <span class="built_in">open</span>(<span class="string">"/dev/chr_dev"</span>, O_RDONLY|O_NDELAY);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">if</span>(fd &lt; <span class="number">0</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">        <span class="built_in">printf</span>(<span class="string">"open file %s failed!\n"</span>, CHR_DEV_NAME);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">read</span>(fd, buf, <span class="number">32</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">close</span>(fd);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p><strong>3) 不用完全理解代码的含义，直接看运行效果：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译驱动程序</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">$ make KERNELDIR=XXX/linux ARCH=arm CROSS_COMPILE=arm-linux-</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译应用程序</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">$ arm-linux-gcc chrdev_app.c -o chrdev_app</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加载驱动模块</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">$ insmod chrdev_drv.ko</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">demo_init():major=242, minor=0</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># 手动创建字符设备文件节点</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">$ mknod /dev/chr_dev c 242 0</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># 运行应用程序</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">$ ./chrdev_app</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">chr_open, major=242, minor=0</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">In chr_read()</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">In chr_release()</span></pre></td></tr></table></figure>
+
+<p>从上面测运行结果可知，应用程序调用 chrdev_app.c / open() 会导致驱动程序 chrdev_drv.c / struct file_operations chr_ops-&gt;open() 被调用，read 操作也是类似。</p>
+<p><strong>内核是如何实现上述功能的？</strong></p>
+<p>带着这个困惑来了解字符设备驱动的框架，才不会迷失在内核里各种复杂的代码细节里。</p>
+<h2 id="3-字符设备在内核里的抽象"><a href="#3-字符设备在内核里的抽象" class="headerlink" title="3 字符设备在内核里的抽象"></a>3 字符设备在内核里的抽象</h2><h3 id="3-1-字符设备核心代码概览"><a href="#3-1-字符设备核心代码概览" class="headerlink" title="3.1 字符设备核心代码概览"></a>3.1 字符设备核心代码概览</h3><p><strong>在深入阅读各种代码之前，先整体地概览一遍将会涉及到的程序文件，找出核心主干，能有效地避免陷入繁杂的代码细节中。</strong></p>
+<p><strong>1) 分解 C source 文件，fs/char_dev.c (Linux-4.14):</strong></p>
+<p><strong>作用：</strong><br>char_dev.c 是字符设备驱动框架的核心实现文件，它位于 fs 目录中，说明了字符设备驱动和文件系统是紧密联系在一起的。</p>
+<p><strong>内容(以重要性排序)：</strong><br><strong>1&gt; public 函数：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 字符设备子系统初始化</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> __<span class="function">init <span class="title">chrdev_init</span><span class="params">(<span class="keyword">void</span>)</span> </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="comment">// 2. struct cdev 管理相关</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">chrdev_show</span><span class="params">(struct seq_file *f, <span class="keyword">off_t</span> offset)</span> </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cdev_put</span><span class="params">(struct cdev *p)</span> </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cd_forget</span><span class="params">(struct inode *inode)</span> </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">cdev_add</span><span class="params">(struct cdev *p, <span class="keyword">dev_t</span> dev, <span class="keyword">unsigned</span> count)</span> </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cdev_set_parent</span><span class="params">(struct cdev *p, struct kobject *kobj)</span> </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">cdev_device_add</span><span class="params">(struct cdev *cdev, struct device *dev)</span> </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cdev_device_del</span><span class="params">(struct cdev *cdev, struct device *dev)</span> </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cdev_del</span><span class="params">(struct cdev *p)</span> </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"><span class="function">struct cdev *<span class="title">cdev_alloc</span><span class="params">(<span class="keyword">void</span>)</span> </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cdev_init</span><span class="params">(struct cdev *cdev, <span class="keyword">const</span> struct file_operations *fops)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="comment">// 3. 设备号管理相关</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line"><span class="function">__<span class="title">register_chrdev_region</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> major, <span class="keyword">unsigned</span> <span class="keyword">int</span> baseminor, </span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="params">__unregister_chrdev_region(<span class="keyword">unsigned</span> major, <span class="keyword">unsigned</span> baseminor, <span class="keyword">int</span> minorct) </span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="params"><span class="keyword">int</span> register_chrdev_region(<span class="keyword">dev_t</span> from, <span class="keyword">unsigned</span> count, <span class="keyword">const</span> <span class="keyword">char</span> *name) </span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="params"><span class="keyword">int</span> alloc_chrdev_region(<span class="keyword">dev_t</span> *dev, <span class="keyword">unsigned</span> baseminor, <span class="keyword">unsigned</span> count, </span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="params"><span class="keyword">int</span> __register_chrdev(<span class="keyword">unsigned</span> <span class="keyword">int</span> major, <span class="keyword">unsigned</span> <span class="keyword">int</span> baseminor, </span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="params"><span class="keyword">void</span> unregister_chrdev_region(<span class="keyword">dev_t</span> from, <span class="keyword">unsigned</span> count) </span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="params"><span class="keyword">void</span> __unregister_chrdev(<span class="keyword">unsigned</span> <span class="keyword">int</span> major, <span class="keyword">unsigned</span> <span class="keyword">int</span> baseminor,</span></span></span></pre></td></tr></table></figure>
+<ul>
+<li><p>在 Linux 代码中，双下划线(__)开始的函数名表示这是一个低层接口, 应当小心使用。如果你调用这个函数，确信你知道你在做什么。也就是说，阅读代码时，双下划线开头的函数可以暂时放一边。</p>
+</li>
+<li><p>struct cdev 管理相关： cdev_add() / cdev_del() / cdev_init()，需重点关注。</p>
+</li>
+<li><p>设备号管理相关： alloc_chrdev_region() / register_chrdev_region()，需重点关注。</p>
+</li>
+</ul>
+<p><strong>2&gt; public 变量：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">file_operations</span> <span class="title">def_chr_fops</span> = &#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	.<span class="built_in">open</span> = chrdev_open,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">	.llseek = noop_llseek,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">&#125;;</span></pre></td></tr></table></figure>
+<ul>
+<li>类似于高级语言的多态机制，在 Linux 各个子系统的驱动框架中一般用一个统一的 file_operations-&gt;open 函数关联到各个具体的硬件驱动的 struct file_operations，需要重点关注。</li>
+</ul>
+<p><strong>3&gt; private 变量：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">char_device_struct</span> &#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">char_device_struct</span> *<span class="title">next</span>;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> major;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> baseminor;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">int</span> minorct;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">char</span> name[<span class="number">64</span>];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">cdev</span> *<span class="title">cdev</span>;</span>		<span class="comment">/* will die */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">&#125; *chrdevs[CHRDEV_MAJOR_HASH_SIZE];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">kobj_map</span> *<span class="title">cdev_map</span>;</span> </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">kobj_type</span> <span class="title">ktype_cdev_default</span>;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">kobj_type</span> <span class="title">ktype_cdev_dynamic</span>;</span></span></pre></td></tr></table></figure>
+<ul>
+<li>struct char_device_struct *chrdevs[] 数组是字符设备驱动框架的核心数据结构，需重点关注。</li>
+</ul>
+<p><strong>4&gt; private 函数：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">major_to_index</span><span class="params">(<span class="keyword">unsigned</span> major)</span> </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">find_dynamic_major</span><span class="params">(<span class="keyword">void</span>)</span> </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> struct kobject *<span class="title">cdev_get</span><span class="params">(struct cdev *p)</span> </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">chrdev_open</span><span class="params">(struct inode *inode, struct file *filp)</span> </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">cdev_purge</span><span class="params">(struct cdev *cdev)</span> </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> struct kobject *<span class="title">exact_match</span><span class="params">(<span class="keyword">dev_t</span> dev, <span class="keyword">int</span> *part, <span class="keyword">void</span> *data)</span> </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">exact_lock</span><span class="params">(<span class="keyword">dev_t</span> dev, <span class="keyword">void</span> *data)</span> </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">cdev_unmap</span><span class="params">(<span class="keyword">dev_t</span> dev, <span class="keyword">unsigned</span> count)</span> </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">cdev_default_release</span><span class="params">(struct kobject *kobj)</span> </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">cdev_dynamic_release</span><span class="params">(struct kobject *kobj)</span> </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> struct kobject *<span class="title">base_probe</span><span class="params">(<span class="keyword">dev_t</span> dev, <span class="keyword">int</span> *part, <span class="keyword">void</span> *data)</span></span></span></pre></td></tr></table></figure>
+<ul>
+<li>helper 类函数，不太重要。</li>
+</ul>
+<p><strong>2) 分解 C header 文件，include/linux/cdev.h (Linux-4.14):</strong></p>
+<p><strong>作用：</strong><br>包含字符设备驱动相关结构体的定义、以及一些字符设备核心 API 的声明。</p>
+<p><strong>内容：</strong><br><strong>1&gt; struct cdev 结构体：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">cdev</span> &#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">kobject</span> <span class="title">kobj</span>;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">module</span> *<span class="title">owner</span>;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">file_operations</span> *<span class="title">ops</span>;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">list</span>;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">dev_t</span> dev;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> count;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">&#125; __randomize_layout;</span></pre></td></tr></table></figure>
+<ul>
+<li>struct cdev 是字符设备驱动的核心抽象，需重点关注。</li>
+</ul>
+<h3 id="3-2-对字符设备进行抽象-struct-cdev"><a href="#3-2-对字符设备进行抽象-struct-cdev" class="headerlink" title="3.2 对字符设备进行抽象: struct cdev"></a>3.2 对字符设备进行抽象: struct cdev</h3><p><strong>编写字符设备驱动程序就是为了管理和控制字符设备，Linux 内核将字符设备抽象为一<br>个数据结构：struct cdev</strong>。这个结构体似乎从 Linux-2.6 到现在 Linux-5.8 都没有发生变化。</p>
+<p><strong>1) struct cdev 成员简介：</strong></p>
+<p>目前没必要完全理解这些成员的作用，有个大概印象就好：</p>
+<ul>
+<li><p>struct kobject kobj: 内嵌的内核对象，与 Linux 设备驱动模型相关，后续需专门写一篇文章来介绍。</p>
+</li>
+<li><p>struct module *owner: 指向拥有这个结构体的模块的指针，这个成员用来在它的操作还在被使用时阻止模块被卸载，一般初始化为 THIS_MODULE;</p>
+</li>
+<li><p>struct file_operations *ops: 在Linux通用文件模型下，字符设备的文件操作函数集，后续详解。</p>
+</li>
+<li><p>struct list_head list：用于管理 struct cdev 的链表，后续需专门写一篇文章来介绍。</p>
+</li>
+<li><p>字符设备的设备号，由主设备号和次设备号构成，后续需专门写一篇文章来介绍。</p>
+</li>
+</ul>
+<p><strong>2) 两种方式创建 struct cdev 对象：</strong>　　</p>
+<p><strong>这里用对象一词，是为了引导大家用面向对象的思维来看待 Linux 内核的设计</strong>。</p>
+<p>面向过程还是面向对象，不应该和语言绑定在一起，应该理解为 2 种不同的编程思维。人脑是很美妙的，在不同的场景，只要你愿意，它就能应用不同的思维方式来解决问题。设计 Linux 内核代码的神牛们，可谓是各个都是面向对象编程的大牛，练习编程就应该练习对事物的抽象能力，C 程序员如果觉得自己缺乏这方面的能力，不如学习一下 Java 编程。</p>
+<p><strong>静态定义:</strong>  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">cdev</span> <span class="title">chr_dev</span>;</span></span></pre></td></tr></table></figure>
+
+<p><strong>动态分配：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">cdev</span> *<span class="title">my_cdev</span> = <span class="title">cdev_alloc</span>();</span></span></pre></td></tr></table></figure>
+
+<p>cdev_alloc() 不仅会为struct cdev对象分配内存空间，还会对该对象进行必要的初始化：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function">struct cdev *<span class="title">cdev_alloc</span><span class="params">(<span class="keyword">void</span>)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">cdev</span> *<span class="title">p</span> = <span class="title">kzalloc</span>(<span class="title">sizeof</span>(<span class="title">struct</span> <span class="title">cdev</span>), <span class="title">GFP_KERNEL</span>);</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">if</span> (p) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">		INIT_LIST_HEAD(&amp;p-&gt;<span class="built_in">list</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">		kobject_init(&amp;p-&gt;kobj, &amp;ktype_cdev_dynamic);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">	&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">return</span> p;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+<p><strong>一个值得注意的点：</strong><br>我搜索了一下内核源码，发现大多数驱动都选择静态定义 struct cdev，这样更简单省事。</p>
+<p><strong>3) 某个真实字符硬件的抽象：</strong></p>
+<p><strong>数据结构 struct cdev 作为字符设备的抽象，仅仅是为了满足 Linux 内核对字符设备驱动程序框架结构设计的需要</strong>。</p>
+<p>现实中，一个具体的字符硬件设备的数据结构的抽象往往要复杂得多，在这种情况下 struct cdev 常常作为一种内嵌的成员变量出现在实际设备的数据结构中。</p>
+<p>例如 drvier/watchdog/watchdog_dev.c：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">watchdog_core_data</span> &#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">kref</span> <span class="title">kref</span>;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">cdev</span> <span class="title">cdev</span>;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">watchdog_device</span> *<span class="title">wdd</span>;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">mutex</span> <span class="title">lock</span>;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span> last_keepalive;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span> last_hw_keepalive;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">delayed_work</span> <span class="title">work</span>;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span> status;		<span class="comment">/* Internal status bits */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">&#125;;</span></pre></td></tr></table></figure>
+
+<p><strong>4) 初始化 cdev 对象：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cdev_init</span><span class="params">(struct cdev *cdev, <span class="keyword">const</span> struct file_operations *fops)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="function"></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">	<span class="built_in">memset</span>(cdev, <span class="number">0</span>, <span class="keyword">sizeof</span> *cdev);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">	INIT_LIST_HEAD(&amp;cdev-&gt;<span class="built_in">list</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">	kobject_init(&amp;cdev-&gt;kobj, &amp;ktype_cdev_default);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">	cdev-&gt;ops = fops;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+<p>cdev_init() 最重要的作用就是将 struct cdev 对象和 struct file_operations 对象绑定在一起。</p>
+<p><strong>一些值得注意的点</strong>：</p>
+<ul>
+<li><p>cdev_init() 和 cdev_alloc() 中有一部分功能是重叠的(例如 kobject_init())，所以 cdev_init() 只能搭配静态定义 struct cdev 的方式来使用。</p>
+</li>
+<li><p>如果采用 cdev_alloc() 动态分配 struct cdev 对象，则需自行 cdev-&gt;ops = fops 。</p>
+</li>
+</ul>
+<h3 id="3-3-对字符设备的操作进行抽象：struct-file-operations"><a href="#3-3-对字符设备的操作进行抽象：struct-file-operations" class="headerlink" title="3.3 对字符设备的操作进行抽象：struct file_operations"></a>3.3 对字符设备的操作进行抽象：struct file_operations</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">file_operations</span> &#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">module</span> *<span class="title">owner</span>;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">loff_t</span> (*llseek) (struct file *, <span class="keyword">loff_t</span>, <span class="keyword">int</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">ssize_t</span> (*<span class="built_in">read</span>) (struct file *, <span class="keyword">char</span> __user *, <span class="keyword">size_t</span>, <span class="keyword">loff_t</span> *);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">ssize_t</span> (*<span class="built_in">write</span>) (struct file *, <span class="keyword">const</span> <span class="keyword">char</span> __user *, <span class="keyword">size_t</span>, <span class="keyword">loff_t</span> *);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">ssize_t</span> (*read_iter) (struct kiocb *, struct iov_iter *);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">ssize_t</span> (*write_iter) (struct kiocb *, struct iov_iter *);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    [...]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">int</span> (*mmap) (struct file *, struct vm_area_struct *);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">int</span> (*<span class="built_in">open</span>) (struct inode *, struct file *);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">int</span> (*<span class="built_in">flush</span>) (struct file *, <span class="keyword">fl_owner_t</span> id);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">int</span> (*<span class="built_in">release</span>) (struct inode *, struct file *);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">int</span> (*fsync) (struct file *, <span class="keyword">loff_t</span>, <span class="keyword">loff_t</span>, <span class="keyword">int</span> datasync);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">int</span> (*fasync) (<span class="keyword">int</span>, struct file *, <span class="keyword">int</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">int</span> (*lock) (struct file *, <span class="keyword">int</span>, struct file_lock *);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">	[...];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">&#125; __randomize_layout;</span></pre></td></tr></table></figure>
+
+<ul>
+<li><p>目前没必要完全理解这些成员的作用，有个大概印象就好。</p>
+</li>
+<li><p>字符设备驱动程序中一个极其关键的数据结构，字符设备驱动程序的编写，就是是围绕着如何实现 struct file_operations 中的那些函数指针成员而展开的。</p>
+</li>
+<li><p>通过内核文件系统组件在其间的穿针引线，应用程序中对文件类函数(open、read、write)的调用，将最终被转接到 struct file_operations 中对应函数指针的具体实现上，后续需专门写一篇文章来介绍。</p>
+</li>
+</ul>
+<p>鉴于大多数人的注意力无法在一篇文章里上集中太久，更多的内容将放在后面的文章里。建议大家可以先自行阅读相关书籍，不是自己理解到的东西是消化不了的。</p>
+<h2 id="4-更多值得学习的知识点"><a href="#4-更多值得学习的知识点" class="headerlink" title="4. 更多值得学习的知识点"></a>4. 更多值得学习的知识点</h2><ul>
+<li><p>字符设备号的构成与管理</p>
+</li>
+<li><p>字符设备的注册</p>
+</li>
+<li><p>生成字符设备文件的方式有哪些？</p>
+</li>
+<li><p>创建字符设备文件是发生了什么？</p>
+</li>
+<li><p>字符设备文件是如何关联到字符设备驱动的？</p>
+</li>
+<li><p>分析一些真实的字符设备驱动</p>
+</li>
+</ul>
+<h2 id="5-相关参考"><a href="#5-相关参考" class="headerlink" title="5. 相关参考"></a>5. 相关参考</h2><ul>
+<li><p>《Linux 内核文档》</p>
+</li>
+<li><p>《Linux设备驱动程序》(ldd) / 第 3 章节</p>
+</li>
+<li><p>《深入Linux设备驱动程序内核机制》(ildd) / 第 2 章节</p>
+</li>
+<li><p>《精通Linux设备驱动程序开发》(eldd) / 第 2 章节</p>
+</li>
+<li><p>《Linux设备驱动开发详解》(ldds) / 第 6 章节</p>
+</li>
+<li><p>《深入Linux内核架构》(plka) / 第 6 章节</p>
+</li>
+<li><p>《嵌入式应用开发完全手册》</p>
+</li>
+</ul>
+<hr>
+<h1 id="三、思考技术，也思考人生"><a href="#三、思考技术，也思考人生" class="headerlink" title="三、思考技术，也思考人生"></a>三、思考技术，也思考人生</h1><p><strong>学习技术，更要学习如何生活</strong>。</p>
+<p>你和我各有一个苹果，如果我们交换苹果的话，我们还是只有一个苹果。但当你和我各有一个想法，我们交换想法的话，我们就都有两个想法了。</p>
+<p><img src="/images/basic/wechat_channel.jpg" alt=""></p>
+<p>对 <strong>嵌入式系统 (Linux、RTOS、OpenWrt、Android) 和 开源软件</strong> 感兴趣，想和更多人互相交流学习，请关注公众号：<strong>嵌入式Hacker</strong>，一起来学习吧。</p>
+<p>无论是关注或转发，还是打赏，都是对作者莫大的支持。觉得文章对你有价值的话，不妨点个 <strong>在看和点赞</strong> 哦。</p>
+<p>欢迎加入我的微信群：先加我，我拉你进群，暗号(我最棒)。</p>
+<p>祝各位工作顺利，家庭幸福，财源滚滚<del>~</del></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>这是一篇有趣的文章吗？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="es-hacker 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/basic/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/08/13/%E7%8E%A9%E7%89%A9%E4%B8%8D%E4%B8%A7%E5%BF%97-%E6%88%91%E4%B9%9F%E6%83%B3%E8%A6%81STM32MP157/" rel="prev" title="玩物不丧志-我也想要STM32MP157">
+      <i class="fa fa-chevron-left"></i> 玩物不丧志-我也想要STM32MP157
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、保持专注的几个技巧"><span class="nav-number">1.</span> <span class="nav-text">一、保持专注的几个技巧</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、Linux-字符设备驱动内幕-1"><span class="nav-number">2.</span> <span class="nav-text">二、Linux 字符设备驱动内幕 (1)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-什么是字符设备驱动？"><span class="nav-number">2.1.</span> <span class="nav-text">1. 什么是字符设备驱动？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-快速体验字符设备驱动和应用程序-超简单的-demo"><span class="nav-number">2.2.</span> <span class="nav-text">2. 快速体验字符设备驱动和应用程序 (超简单的 demo)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-字符设备在内核里的抽象"><span class="nav-number">2.3.</span> <span class="nav-text">3 字符设备在内核里的抽象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-字符设备核心代码概览"><span class="nav-number">2.3.1.</span> <span class="nav-text">3.1 字符设备核心代码概览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-对字符设备进行抽象-struct-cdev"><span class="nav-number">2.3.2.</span> <span class="nav-text">3.2 对字符设备进行抽象: struct cdev</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-对字符设备的操作进行抽象：struct-file-operations"><span class="nav-number">2.3.3.</span> <span class="nav-text">3.3 对字符设备的操作进行抽象：struct file_operations</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-更多值得学习的知识点"><span class="nav-number">2.4.</span> <span class="nav-text">4. 更多值得学习的知识点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-相关参考"><span class="nav-number">2.5.</span> <span class="nav-text">5. 相关参考</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、思考技术，也思考人生"><span class="nav-number">3.</span> <span class="nav-text">三、思考技术，也思考人生</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">es-hacker</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">es-hacker</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
