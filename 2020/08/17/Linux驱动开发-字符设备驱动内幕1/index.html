@@ -21,7 +21,7 @@
   </script>
 
   <meta name="description" content="哈喽，我是老吴，继续记录我的学习心得。 一、保持专注的几个技巧 将最重要的事放在早上做。  待在无干扰环境下，比如图书馆。  意识到刚坐下开始投入工作前，有点负面小情绪是特别正常的现象。  让“开心一刻”成为计划的一部分。  拥有合情合理的日计划和周计划。    二、Linux 字符设备驱动内幕 (1)正文目录： 11. 什么是字符设备驱动？22. 快速体验字符设备驱动和应用程序 (超简单的 d">
-<meta name="keywords" content="Embedded, Linux, OpenWrt, Buildroot, Opensource, Android">
+<meta name="keywords" content="driver,chardev">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux驱动开发 &#x2F; 字符设备驱动内幕 (1)">
 <meta property="og:url" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;2020&#x2F;08&#x2F;17&#x2F;Linux%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91-%E5%AD%97%E7%AC%A6%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E5%86%85%E5%B9%951&#x2F;index.html">
@@ -33,7 +33,7 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;linux&#x2F;driver&#x2F;char&#x2F;fs-dev.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;linux&#x2F;driver&#x2F;char&#x2F;linux-dev-drv2.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;basic&#x2F;wechat_channel.jpg">
-<meta property="og:updated_time" content="2020-08-18T01:41:13.456Z">
+<meta property="og:updated_time" content="2020-08-18T02:07:45.838Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;life&#x2F;photo&#x2F;20200818.jpeg">
 
@@ -221,8 +221,17 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-18 09:41:13" itemprop="dateModified" datetime="2020-08-18T09:41:13+08:00">2020-08-18</time>
+                <time title="修改时间：2020-08-18 10:07:45" itemprop="dateModified" datetime="2020-08-18T10:07:45+08:00">2020-08-18</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8/" itemprop="url" rel="index"><span itemprop="name">Linux设备驱动</span></a>
+                </span>
+            </span>
 
           
             <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
@@ -474,6 +483,11 @@
 
 
       <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/driver/" rel="tag"><i class="fa fa-tag"></i> driver</a>
+              <a href="/tags/chardev/" rel="tag"><i class="fa fa-tag"></i> chardev</a>
+          </div>
 
         
   <div class="post-widgets">
@@ -573,7 +587,7 @@
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
