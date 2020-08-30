@@ -181,6 +181,180 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/07/22/%E6%AF%8F%E5%A4%A9%E4%B8%80%E7%82%B9C-%E4%B8%80%E7%BB%B4%E6%95%B0%E7%BB%84%E4%B8%8E%E6%8C%87%E9%92%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="es-hacker">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式Hacker (es-hacker)">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/07/22/%E6%AF%8F%E5%A4%A9%E4%B8%80%E7%82%B9C-%E4%B8%80%E7%BB%B4%E6%95%B0%E7%BB%84%E4%B8%8E%E6%8C%87%E9%92%88/" class="post-title-link" itemprop="url">每天一点C / 一维数组与指针</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-22 07:43:45" itemprop="dateCreated datePublished" datetime="2020-07-22T07:43:45+08:00">2020-07-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-29 09:12:02" itemprop="dateModified" datetime="2020-08-29T09:12:02+08:00">2020-08-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C%E8%AF%AD%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">C语言</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="哈喽，我是老吴，继续记录我的学习心得。"><a href="#哈喽，我是老吴，继续记录我的学习心得。" class="headerlink" title="哈喽，我是老吴，继续记录我的学习心得。"></a>哈喽，我是老吴，继续记录我的学习心得。</h1><p>每天一点系列是我对微习惯的践行。现在能做到每天一点 C，将来就会有更多的每天一点系列，没人规定嵌入式软件工程师就只能学习 C 语言和折腾 Linux，不要给自己设限。</p>
+<p><strong>为什么是每天一点？</strong><br>养成写作习惯的第一步：放弃追求大段的、固定的、安静的写作时间，培养随时写作的能力。</p>
+<p>同样的技巧也能应用到技术学习上，工程师也可以放弃追求大段的、固定的、安静的看书写代码的时间。遇到一个新知识，第一时间找到相关资料，找到切入点并将其记录在自己的技术笔记中，并且定期复查及完善。</p>
+<p>30 岁的中年工程师能做到每天坚持学习，你还抱怨没时间学习吗？</p>
+<hr>
+<h1 id="每天一点C-数组和指针"><a href="#每天一点C-数组和指针" class="headerlink" title="每天一点C / 数组和指针"></a>每天一点C / 数组和指针</h1><p><strong>正文目录：</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 数组名是该数组首元素的地址</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="number">2.</span> 用指针操作数组</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="number">3.</span> 数组和指针的关系密切</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="number">4.</span> 编写处理一维数组的函数：传递数组起始地址＋数组长度</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="number">5.</span> 编写处理一维数组的函数：传递数组起始地址＋结束地址</span></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/07/22/%E6%AF%8F%E5%A4%A9%E4%B8%80%E7%82%B9C-%E4%B8%80%E7%BB%B4%E6%95%B0%E7%BB%84%E4%B8%8E%E6%8C%87%E9%92%88/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/07/21/%E6%AF%8F%E5%A4%A9%E4%B8%80%E7%82%B9C-%E4%B8%80%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="es-hacker">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式Hacker (es-hacker)">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/07/21/%E6%AF%8F%E5%A4%A9%E4%B8%80%E7%82%B9C-%E4%B8%80%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96/" class="post-title-link" itemprop="url">每天一点C / 一维数组的初始化</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-21 07:30:49" itemprop="dateCreated datePublished" datetime="2020-07-21T07:30:49+08:00">2020-07-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-29 09:11:57" itemprop="dateModified" datetime="2020-08-29T09:11:57+08:00">2020-08-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C%E8%AF%AD%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">C语言</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="哈喽，继续记录我的学习心得。"><a href="#哈喽，继续记录我的学习心得。" class="headerlink" title="哈喽，继续记录我的学习心得。"></a>哈喽，继续记录我的学习心得。</h1><p>每天一点系列是我对微习惯的践行。现在能做到每天一点 C，将来就会有更多的每天一点系列，没人规定嵌入式软件工程师就只能学习 C 语言和折腾 Linux，不要给自己设限。</p>
+<p><strong>为什么是每天一点？</strong><br>养成写作习惯的第一步：放弃追求大段的、固定的、安静的写作时间，培养随时写作的能力。</p>
+<p>同样的技巧也能应用到技术学习上，工程师也可以放弃追求大段的、固定的、安静的看书写代码的时间。遇到一个新知识，第一时间找到相关资料，找到切入点并将其记录在自己的技术笔记中，并且定期复查及完善。</p>
+<p>30 岁的中年工程师能做到每天坚持学习，你还抱怨没时间学习吗？</p>
+<hr>
+<h1 id="每天一点C-一维数组的初始化"><a href="#每天一点C-一维数组的初始化" class="headerlink" title="每天一点C / 一维数组的初始化"></a>每天一点C / 一维数组的初始化</h1><p><strong>正文目录：</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 用以逗号分隔的值列表来初始化数组</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="number">2.</span> 把数组设置为只读</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="number">3.</span> 忘记初始化数组</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="number">4.</span> 部分初始化数组</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="number">5.</span> 让编译器自动推导数组大小</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="number">6.</span> 指定初始化器 （designated initializer )</span></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/07/21/%E6%AF%8F%E5%A4%A9%E4%B8%80%E7%82%B9C-%E4%B8%80%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/07/13/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E9%80%9A%E7%94%A8%E6%96%87%E4%BB%B6%E6%A8%A1%E5%9E%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -891,165 +1065,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/06/08/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E4%BD%BF%E7%94%A8mmap-%E6%95%B0%E7%BB%84%E7%9A%84%E6%96%B9%E5%BC%8F%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="es-hacker">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式Hacker (es-hacker)">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/08/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E4%BD%BF%E7%94%A8mmap-%E6%95%B0%E7%BB%84%E7%9A%84%E6%96%B9%E5%BC%8F%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6/" class="post-title-link" itemprop="url">Linux系统编程_用mmap+数组的方式修改数据文件</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-06-08 07:23:05 / 修改时间：08:18:01" itemprop="dateCreated datePublished" datetime="2020-06-08T07:23:05+08:00">2020-06-08</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>正文开始前，先聊点非技术的东西，推荐2本生动有趣的书：</p>
-<ul>
-<li>《经济学原理 宏观经济学》，曼昆，豆瓣评分，9.3 4945人评价</li>
-<li>《经济学原理 微观经济学》，曼昆，豆瓣评分9.6，1879人评价</li>
-</ul>
-<p>我想看这两本书原因是：Joel on Software 在一篇 <strong>给计算机系学生</strong> 的忠告文章里说，毕业之前你一定要修一门经济学课程，Joel( stackoverflow 的创始人 ) 的话在我心里有很重的分量，我愿意接受他的建议，甚至认为自己 <strong>应该在高中时</strong> 就阅读上面２本书。</p>
-<p>这两本书在豆瓣上的评价极高：</p>
-<blockquote>
-<p>一看到《经济学原理》这样的书名，我会立即把它归为异次元一类，碰都不会去碰，别说读它了，自从大学毕业后，对于任何此类教科书，我会毫不客气地说，滚！<br><br>这种情绪的对立既包含了对中国教育制度的控诉，又体现了对死读书无法改变命运的残酷现实的无奈。<br><br>工作约7到8年后，自我体会到和社会的逐渐脱节，这里不止是因为工作环境的隔离性和社交圈的狭窄，还有自身知识量的乏馈，光是义务教育和本科教育所建立的知识结构显然已经无法支撑起我的求知欲所对应的飞速发展的社会万物，可是学习从何开始呢？</p>
-</blockquote>
-<p>话说到这里，志同道合的人应该知道怎么做了，我就不再讲废话了，下面回归到技术上。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/06/08/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E4%BD%BF%E7%94%A8mmap-%E6%95%B0%E7%BB%84%E7%9A%84%E6%96%B9%E5%BC%8F%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wuweidong0107.github.io/2020/06/05/Shell%E5%85%A5%E9%97%A8-%E5%8E%BB%E6%8E%89%E7%A9%BA%E8%A1%8C%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="es-hacker">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式Hacker (es-hacker)">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/05/Shell%E5%85%A5%E9%97%A8-%E5%8E%BB%E6%8E%89%E7%A9%BA%E8%A1%8C%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/" class="post-title-link" itemprop="url">Shell入门_去掉空行的几种方法</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-06-05 08:30:00 / 修改时间：08:35:00" itemprop="dateCreated datePublished" datetime="2020-06-05T08:30:00+08:00">2020-06-05</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%84%9A%E6%9C%AC%E8%AF%AD%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">脚本语言</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>昨天听到一个很有意思的说法：<strong>脚本猛于虎</strong>。</p>
-<p>我非常认可这种说法，这里面有2个意思：</p>
-<ol>
-<li>脚本的功能很强大，可以做很多事情，虽然不是最好的方式;</li>
-<li>脚本很危险，很容易出错;</li>
-</ol>
-<p>或许还能加一句：伴君如伴虎…  </p>
-<p>我本人非常喜欢 shell 脚本，因为它做事太简单粗暴了，适合用来实现 v0.01 版本原型，我甚至认为它很好地 <strong>辅助了软件设计</strong>。</p>
-<p>接下来是主题，做嵌入式软件开发偶尔要收集和分析 log，有时为了格式化输出需要删除掉多余的空白行，我挑选了几个 <strong>简短且容易理解的</strong> 方法分享给大家。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/06/05/Shell%E5%85%A5%E9%97%A8-%E5%8E%BB%E6%8E%89%E7%A9%BA%E8%A1%8C%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1119,7 +1134,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">33</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

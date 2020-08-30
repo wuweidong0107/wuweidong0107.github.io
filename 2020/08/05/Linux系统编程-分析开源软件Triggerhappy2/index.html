@@ -28,11 +28,11 @@
 <meta property="og:site_name" content="嵌入式Hacker (es-hacker)">
 <meta property="og:description" content="哈喽，我是老吴，继续记录我的学习心得。 一、构建思维组块构建组块（chunking）:    就是利用一些概念，组合起信息碎片，这是一种心智上的飞跃。  构建组块的方法：    把注意力集中在需要组块的信息上 。思维就像章鱼触手，一旦分心就无法抓紧。  把基本概念打包成组块，然后理解这个基本概念。专注和发散模式的交替思考，总能理清头绪，把握概念。  获取背景信息，不仅是知道如何进行组块，还要知道何">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;life&#x2F;photo&#x2F;sun2.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;life&#x2F;photo&#x2F;20200831.jpg">
 <meta property="og:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;basic&#x2F;wechat_channel.jpg">
-<meta property="og:updated_time" content="2020-08-06T00:03:03.252Z">
+<meta property="og:updated_time" content="2020-08-30T23:49:10.541Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;life&#x2F;photo&#x2F;sun2.jpg">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;wuweidong0107.github.io&#x2F;images&#x2F;life&#x2F;photo&#x2F;20200831.jpg">
 
 <link rel="canonical" href="https://wuweidong0107.github.io/2020/08/05/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E5%88%86%E6%9E%90%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6Triggerhappy2/">
 
@@ -218,7 +218,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-06 08:03:03" itemprop="dateModified" datetime="2020-08-06T08:03:03+08:00">2020-08-06</time>
+                <time title="修改时间：2020-08-31 07:49:10" itemprop="dateModified" datetime="2020-08-31T07:49:10+08:00">2020-08-31</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -248,7 +248,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><img src="/images/life/photo/sun2.jpg" alt=""><br>哈喽，我是老吴，继续记录我的学习心得。</p>
+        <p><img src="/images/life/photo/20200831.jpg" alt=""><br>哈喽，我是老吴，继续记录我的学习心得。</p>
 <h1 id="一、构建思维组块"><a href="#一、构建思维组块" class="headerlink" title="一、构建思维组块"></a>一、构建思维组块</h1><p><strong>构建组块（chunking）:</strong>  </p>
 <ul>
 <li>就是利用一些概念，组合起信息碎片，这是一种心智上的飞跃。</li>
@@ -294,7 +294,7 @@
 </ul>
 <p><strong>2) 使用者:</strong>  </p>
 <ul>
-<li>私有函数，只有 thd.c / main() 会调用。</li>
+<li>只有 thd.c / main() 会调用。</li>
 </ul>
 <h3 id="1-2-thd-c-start-readers-的内容"><a href="#1-2-thd-c-start-readers-的内容" class="headerlink" title="1.2 thd.c / start_readers() 的内容"></a>1.2 thd.c / start_readers() 的内容</h3><p><strong>1) 根据命令行参数，判断是否需要打开 socket：</strong></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/* open command pipe */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (cmd_file) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">	cmd_fd = bind_cmdsocket(cmd_file);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">if</span> (cmd_fd &lt; <span class="number">0</span>) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">		<span class="keyword">return</span> <span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">	&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
@@ -432,12 +432,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/08/04/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E5%88%86%E6%9E%90%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6happytrigger1/" rel="prev" title="Linux系统编程/分析开源软件Triggerhappy (1)">
+    <a href="/2020/08/04/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B-%E5%88%86%E6%9E%90%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6triggerhappy1/" rel="prev" title="Linux系统编程/分析开源软件Triggerhappy (1)">
       <i class="fa fa-chevron-left"></i> Linux系统编程/分析开源软件Triggerhappy (1)
     </a></div>
       <div class="post-nav-item">
-    <a href="/2020/08/06/%E6%AF%8F%E5%A4%A9%E4%B8%80%E7%82%B9C-%E4%BD%A0%E7%9C%9F%E7%9A%84%E6%87%82%E6%95%B0%E7%BB%84%E5%92%8C%E6%8C%87%E9%92%88%E5%90%97/" rel="next" title="每天一点C-你知道数组和指针有什么区别吗?(附面试题)">
-      每天一点C-你知道数组和指针有什么区别吗?(附面试题) <i class="fa fa-chevron-right"></i>
+    <a href="/2020/08/06/%E6%AF%8F%E5%A4%A9%E4%B8%80%E7%82%B9C-%E4%BD%A0%E7%9C%9F%E7%9A%84%E6%87%82%E6%95%B0%E7%BB%84%E5%92%8C%E6%8C%87%E9%92%88%E5%90%97/" rel="next" title="每天一点C / 你知道数组和指针有什么区别吗?(附面试题)">
+      每天一点C / 你知道数组和指针有什么区别吗?(附面试题) <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -511,7 +511,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">33</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
